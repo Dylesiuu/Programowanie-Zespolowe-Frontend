@@ -1,23 +1,22 @@
 import { useState, useEffect } from 'react';
 import AnimalCard from '../src/swiping/components/animalCard'; 
 import styles from '../src/styles/swipePage.module.css';        
-import { mockAnimals } from '../src/swiping/mockData';
-// import { mockUserData } from '../src/localization/mockUserData'; // Removed this line
 import Menu from '../src/menu/components/menu'; 
 import LocationBar from '../src/localization/components/locationBar';
 
 const SwipePage = () => {
   const [currentIndex, setCurrentIndex] = useState(0); 
-  const [location, setLocation] = useState(""); // Revert to empty string to fetch from backend
+  const [location, setLocation] = useState(""); // Initialize with empty string to fetch from backend
   const [range, setRange] = useState(30); // Domyślnie 30 km
+  const [pets, setPets] = useState([]); // New state for pet data
 
   const handleSwipe = (decision) => {
     // Zmiana zwierzaczka
-    if (currentIndex < mockAnimals.length) {
+    if (currentIndex < pets.length) {
       setCurrentIndex(currentIndex + 1);
     }
     // Możesz obsłużyć 'like' i 'dislike' tutaj (np. zapis do bazy).
-    //console.log(`User swiped ${decision} on ${mockAnimals[currentIndex].name}`);
+    //console.log(`User swiped ${decision} on ${pets[currentIndex].name}`);
   };
 
   useEffect(() => {
@@ -34,25 +33,41 @@ const SwipePage = () => {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [currentIndex]);
+  }, [currentIndex, pets]);
 
   useEffect(() => {
     // Branie lokalizacji z backendu
-    const fetchUserLocation = async () => {
+    // const fetchUserLocation = async () => {
+    //   try {
+    //     const response = await fetch("/api/user"); // Ścieżka do endpointu
+    //     if (response.ok) {
+    //       const userData = await response.json();
+    //       setLocation(userData.location); // Ustaw lokalizację z backendu
+    //     } else {
+    //       console.error("Błąd podczas pobierania lokalizacji");
+    //     }
+    //   } catch (error) {
+    //     console.error("Błąd połączenia z backendem:", error);
+    //   }
+    // };
+
+    // Fetch pet data
+    const fetchPets = async () => {
       try {
-        const response = await fetch("/api/user"); // Ścieżka do endpointu
+        const response = await fetch("http://localhost:3000/scrolling/1"); // Ścieżka do endpointu
         if (response.ok) {
-          const userData = await response.json();
-          setLocation(userData.location); // Ustaw lokalizację z backendu
+          const petData = await response.json();
+          setPets(petData);
         } else {
-          console.error("Błąd podczas pobierania lokalizacji");
+          console.error("Błąd podczas pobierania danych zwierząt");
         }
       } catch (error) {
         console.error("Błąd połączenia z backendem:", error);
       }
     };
 
-    fetchUserLocation(); // Wywołanie funkcji przy załadowaniu komponentu
+    // fetchUserLocation(); // Wywołanie funkcji przy załadowaniu komponentu
+    fetchPets(); // Fetch pets data
   }, []);
 
   useEffect(() => {
@@ -70,22 +85,21 @@ const SwipePage = () => {
           onLocationChange={setLocation}
           onRangeChange={setRange}
         />
-        {currentIndex < mockAnimals.length ? (
+        {currentIndex < pets.length ? (
           <>
           <div className={styles.cardWrapper}>
-            <AnimalCard {...mockAnimals[currentIndex]} />
+            <AnimalCard {...pets[currentIndex]} />
           </div>
           
           <div className={styles.buttons}>
-          <button onClick={() => handleSwipe('dislike')} className={styles.dislike}>
-            ✖
-          </button>
-          <button onClick={() => handleSwipe('like')} className={styles.like}>
-            ❤️
-          </button>
-        </div>
-        </>
-          
+            <button onClick={() => handleSwipe('dislike')} className={styles.dislike}>
+              ✖
+            </button>
+            <button onClick={() => handleSwipe('like')} className={styles.like}>
+              ❤️
+            </button>
+          </div>
+          </>
         ) : (
           <div>No more animals :c</div>
         )}
