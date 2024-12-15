@@ -1,0 +1,54 @@
+.card {
+  width: 100%;
+  max-width: 350px;
+  border-radius: 22px;
+  border: 3px solid #AF6B6B;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  background-color: #FEFEFE;
+  padding: 15px 22px 30px 22px;
+  margin: 0 0 20px 0;
+  z-index: 1;
+}
+
+.imageContainer {
+  border-radius: 22px;
+  border: 1px groove #AF6B6B;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 315px;
+  height: 350px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 22px;
+  position: relative;
+}
+
+.info {
+  text-align: left;
+  gap: 3px;
+}
+
+.traits {
+  display: flex;
+  justify-content: flex-start;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.trait {
+  background-color: #A0D1C8;
+  color: #345049;
+  padding: 7px 12px;
+  border-radius: 46px;
+  font-size: 12px;
+}
