@@ -1,0 +1,43 @@
+@media (min-width: 768px) {
+  .card {
+    max-width: 500px;
+  }
+
+  .buttons {
+    justify-content: space-between;
+    padding: 0 16px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    flex-direction: row;
+  }
+
+  .cardWrapper {
+    width: 60%;
+  }
+
+  .buttons {
+    flex-direction: column;
+    width: auto;
+    gap: 16px;
+  }
+}
+
+/* Add responsiveness for height */
+@media (max-height: 600px) {
+  .card {
+    max-height: 300px;
+  }
+
+  .imageContainer {
+    height: 200px;
+  }
+
+  .buttons {
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+
