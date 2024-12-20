@@ -11,11 +11,6 @@ const LoginForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (password !== confirmPassword) {
-      setMessage("Hasła muszą być takie same!");
-      return;
-    }
-
     const userData = { email, password };
 
     try {
