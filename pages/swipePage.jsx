@@ -15,23 +15,18 @@ const SwipePage = () => {
     if (currentIndex < pets.length) {
       setCurrentIndex(currentIndex + 1);
     }
-    // Możesz obsłużyć 'like' i 'dislike' tutaj (np. zapis do bazy).
+    // obsłuha 'like' i 'dislike' tutaj bnędzie kiedyś :pp
     //console.log(`User swiped ${decision} on ${pets[currentIndex].name}`);
   };
 
   useEffect(() => {
-    // Obsługa swipeowania strzałkami
+    // Obsługa swipeowania strzałkami (NIE DZIALA TERAZ NWM CZEMU )
     const handleKeyDown = (event) => {
       if (event.key === 'ArrowLeft') {
         handleSwipe('dislike');
       } else if (event.key === 'ArrowRight') {
         handleSwipe('like');
       }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
     };
   }, [currentIndex, pets]);
 
@@ -51,10 +46,10 @@ const SwipePage = () => {
     //   }
     // };
 
-    // Fetch pet data
+    // Branie tablicy zwierzaków z backendu
     const fetchPets = async () => {
       try {
-        const response = await fetch("http://localhost:3000/scrolling/1"); // Ścieżka do endpointu
+        const response = await fetch("http://localhost:3000/scrolling"); // Ścieżka do endpointu
         if (response.ok) {
           const petData = await response.json();
           setPets(petData);
@@ -67,7 +62,7 @@ const SwipePage = () => {
     };
 
     // fetchUserLocation(); // Wywołanie funkcji przy załadowaniu komponentu
-    fetchPets(); // Fetch pets data
+    fetchPets(); 
   }, []);
 
   useEffect(() => {
@@ -101,7 +96,10 @@ const SwipePage = () => {
           </div>
           </>
         ) : (
-          <div>No more animals :c</div>
+          <div>
+            <p>Koniec pjesków i kotków :c</p>
+            <img src="https://media1.tenor.com/m/t7_iTN0iYekAAAAd/sad-sad-cat.gif" alt="Koniec pjesków i kotków" />
+          </div>
         )}
         
       </div>
