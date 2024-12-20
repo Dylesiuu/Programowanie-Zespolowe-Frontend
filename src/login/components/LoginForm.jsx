@@ -2,7 +2,8 @@ import { useState } from "react";
 import styles from "../../register/Register.module.css";
 import { useNavigate } from "react-router-dom";
 
-const RegisterForm = () => {
+const LoginForm = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -34,8 +35,9 @@ const RegisterForm = () => {
           `Błąd: ${errorData.message || "Wystąpił problem podczas logowania"}`
         );
       }
-    } catch {
+    } catch (error) {
       setMessage("Wystąpił problem z połączeniem. Spróbuj ponownie później.");
+      console.error("Error:", error);
     }
   };
 
@@ -77,4 +79,4 @@ const RegisterForm = () => {
   );
 };
 
-export default RegisterForm;
+export default LoginForm;
