@@ -3,7 +3,7 @@ import styles from "../../register/Register.module.css";
 import { useNavigate } from "react-router-dom";
 
 const LoginForm = () => {
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -23,7 +23,8 @@ const LoginForm = () => {
       if (response.ok) {
         const data = await response.json();
         localStorage.setItem("token", data.token);
-        navigate("/SwipePage"); //sprawdzic czy jest ok
+        //navigate("/SwipePage"); //sprawdzic czy jest ok
+        setMessage("Logowanie powiodło się!");
       } else {
         const errorData = await response.json();
         setMessage(
