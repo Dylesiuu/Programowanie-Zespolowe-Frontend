@@ -1,0 +1,138 @@
+@font-face {
+    font-family: 'Parkinsans';
+    src: url(../styles/fonts/Parkinsans-Regular.ttf) format('truetype');
+    font-weight: normal;
+    font-size: normal;
+  }
+
+
+
+/* Register Page */
+/* .registerPageContainer{
+
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: linear-gradient(#ffa7b7, #fcdcdc);
+    padding: 0;
+    margin-top: 0;
+    font-family: 'Parkinsans', sans-serif;
+} */
+
+/* Register Form */
+
+ .registerFormContainer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+} 
+
+.title {
+    font-size: 4rem; 
+    font-family: "Coiny", cursive; 
+    text-align: center; 
+    color: #e9436c;
+    margin-bottom: 2rem; 
+    letter-spacing: 0.2rem; 
+    text-shadow: 
+    2px 2px 0px #FF85A1,  
+    -2px -2px 0px #FFD1DC, 
+    4px 4px 8px rgba(0, 0, 0, 0.2); 
+  }
+
+  /* .headerContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 2rem; 
+  } 
+  */
+  
+
+.registerform {
+    
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    border: 1px solid #ccc;
+    border-radius: 3rem;
+    width: 35vw; 
+    max-width: 50vw; 
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    padding: 2rem; 
+
+    
+  }
+  
+  .registerform div {
+    margin-bottom: 1rem; 
+    width: 100%; 
+  }
+  
+
+  
+  .registerform button {
+    width: 60%;
+    height: 7vh;
+    padding: 0.5rem;
+    background-color: #FF859B;
+    color: white;
+    border: none;
+    border-radius: 1rem;
+    cursor: pointer;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    font-size: 1.2rem;
+    transition: transform 0.4s ease;
+  }
+  
+  .registerform button:hover {
+    background-color: #fc7089;
+    transform: scale(1.1);
+  }
+  
+  .registerform p {
+    color: red;
+    margin-top: 1rem;
+  }
+  .registerform h1 {
+    color: #dd3755;
+    margin: 2rem;
+  }
+
+  .registerform input{
+    transition: transform 0.4s ease;
+  }
+  .registerform input:focus{
+    outline: solid 2px #fc7089;
+    transform: scale(1.01);
+  }
+
+  .registerform input::placeholder{
+    font-family: 'Parkinsans', sans-serif;  
+  }
+ 
+  .nameAndLastnameInput{
+    display: flex; 
+    gap: 1rem; 
+    width: 100%; 
+
+  }
+  .userNamesInput{
+    flex: 1; 
+    padding: 0.8rem;
+    border: 1px solid #ccc;
+    border-radius: 0.5rem;
+    box-sizing: border-box; 
+  }
+
+  .userInput{
+    width: 100%; 
+    padding: 0.8rem;
+    border: 1px solid #ccc;
+    border-radius: 0.5rem;
+    box-sizing: border-box;
+  }
