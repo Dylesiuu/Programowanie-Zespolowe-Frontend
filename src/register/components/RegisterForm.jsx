@@ -3,7 +3,7 @@ import styles from "../Register.module.css";
 import { useNavigate } from "react-router-dom";
 
 const RegisterForm = () => {
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
   const [name, setName] = useState("");
   const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState("");
@@ -39,7 +39,8 @@ const RegisterForm = () => {
       });
 
       if (response.ok) {
-        navigate("/SwipePage"); //sprawdzic czy jest ok
+        // navigate("/SwipePage"); //sprawdzic czy jest ok
+        setMessage("Rejestacja powiodła się!");
       } else {
         const errorData = await response.json();
         setMessage(
