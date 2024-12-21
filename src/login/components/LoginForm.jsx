@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styles from "../../register/Register.module.css";
-import { useNavigate } from "react-router-dom";
+import router from "next/router";
 
 const LoginForm = () => {
   //const navigate = useNavigate();
@@ -25,6 +25,7 @@ const LoginForm = () => {
         localStorage.setItem("token", data.token);
         //navigate("/SwipePage"); //sprawdzic czy jest ok
         setMessage("Logowanie powiodło się!");
+        await router.replace("/swipePage");
       } else {
         const errorData = await response.json();
         setMessage(
