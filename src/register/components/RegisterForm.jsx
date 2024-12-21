@@ -1,9 +1,10 @@
 import { useState } from "react";
 import styles from "../Register.module.css";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/router";
+
 
 const RegisterForm = () => {
-  //const navigate = useNavigate();
+  const router = useRouter();
   const [name, setName] = useState("");
   const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState("");
@@ -41,6 +42,8 @@ const RegisterForm = () => {
       if (response.ok) {
         // navigate("/SwipePage"); //sprawdzic czy jest ok
         setMessage("Rejestacja powiodła się!");
+        await router.replace("/loginPage");
+        
       } else {
         const errorData = await response.json();
         setMessage(
