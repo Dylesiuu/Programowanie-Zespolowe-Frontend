@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import LoginForm from "../src/login/components/LoginForm";
 import styles from "../src/styles/registerPage.module.css";
+import "normalize.css/normalize.css";
 
 const LoginPage = () => {
   useEffect(() => {
