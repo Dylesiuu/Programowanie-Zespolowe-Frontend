@@ -4,6 +4,8 @@ import 'leaflet/dist/leaflet.css';
 import styles from '../mapComponent.module.css';
 import axios from 'axios';
 
+
+
 // Fix for default marker icon not showing
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -31,7 +33,7 @@ const MapComponent = ({ onLocationSelect, setLocationName }) => {
 
   const reverseGeocode = async (latlng) => {
     const { lat, lng } = latlng;
-    const apiKey = 'd79af32da41f4f25ad806ef3e3ef1948'; // OpenCage API key
+    const apiKey = process.env.NEXT_PUBLIC_MAP_TRANSLATE; // OpenCage API key
     const url = `https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lng}&key=${apiKey}`;
 
     try {
