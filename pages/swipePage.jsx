@@ -1,8 +1,12 @@
+import React from 'react';
 import { useState, useEffect } from 'react';
 import AnimalCard from '../src/swiping/components/animalCard'; 
 import styles from '../src/styles/swipePage.module.css';        
 import Menu from '../src/menu/components/menu'; 
 import LocationBar from '../src/localization/components/locationBar';
+import 'normalize.css/normalize.css';
+import { FaTimes, FaHeart } from 'react-icons/fa'; 
+
 
 const SwipePage = () => {
   const [currentIndex, setCurrentIndex] = useState(0); 
@@ -65,34 +69,33 @@ const SwipePage = () => {
     fetchPets(); 
   }, []);
 
-  useEffect(() => {
-    // Ensure no margin on body
-    document.body.style.margin = '0';
-  }, []);
-
   return (
     <div className={styles.page}>
       <Menu />
 
       <div className={styles.container}>
-        <LocationBar
-          defaultLocation={location}
-          onLocationChange={setLocation}
-          onRangeChange={setRange}
-        />
+        <div className={styles.locationBarWrapper}>
+          <LocationBar
+            defaultLocation={location}
+            onLocationChange={setLocation}
+            onRangeChange={setRange}
+          />
+        </div>
         {currentIndex < pets.length ? (
           <>
-          <div className={styles.cardWrapper}>
-            <AnimalCard {...pets[currentIndex]} />
-          </div>
-          
-          <div className={styles.buttons}>
-            <button onClick={() => handleSwipe('dislike')} className={styles.dislike}>
-              ✖
-            </button>
-            <button onClick={() => handleSwipe('like')} className={styles.like}>
-              ❤️
-            </button>
+          <div className={styles.cardModule}>
+            <div className={styles.cardWrapper}>
+              <AnimalCard {...pets[currentIndex]} />
+            </div>
+            
+            <div className={styles.buttons}>
+              <button onClick={() => handleSwipe('dislike')} className={styles.dislike}>
+                <FaTimes />
+              </button>
+              <button onClick={() => handleSwipe('like')} className={styles.like}>
+                <FaHeart />
+              </button>
+            </div>
           </div>
           </>
         ) : (
