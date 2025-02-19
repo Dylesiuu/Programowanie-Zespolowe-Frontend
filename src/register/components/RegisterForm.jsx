@@ -1,7 +1,6 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import styles from "../Register.module.css";
 import { useRouter } from "next/router";
-
 
 const RegisterForm = () => {
   const router = useRouter();
@@ -43,7 +42,6 @@ const RegisterForm = () => {
         // navigate("/SwipePage"); //sprawdzic czy jest ok
         setMessage("Rejestacja powiodła się!");
         await router.replace("/loginPage");
-        
       } else {
         const errorData = await response.json();
         setMessage(
@@ -117,7 +115,7 @@ const RegisterForm = () => {
         <button className={styles.registerButton} type="submit">
           Zarejestruj
         </button>
-        {message && <p>{message}</p>}
+        {message && <p className={styles.errorMessage}>{message}</p>}
       </form>
     </div>
   );
