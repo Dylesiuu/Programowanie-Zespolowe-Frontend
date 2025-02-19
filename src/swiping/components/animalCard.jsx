@@ -1,6 +1,7 @@
+import React from 'react';
 import styles from '../animalCard.module.css';
 
-const AnimalCard = ({ name, location, gender, age, traits, image, shelter }) => {
+const AnimalCard = ({ name, location, gender, age, traits = [], image, shelter }) => {
   return (
     <div className={styles.card}>
       <div className={styles.imageContainer}>
