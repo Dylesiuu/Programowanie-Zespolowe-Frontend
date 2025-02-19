@@ -1,0 +1,58 @@
+@font-face {
+    font-family: 'MyFont';
+    src: url(fonts/Parkinsans-Regular.ttf) format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.page {
+    font-family: 'MyFont', sans-serif;
+    display: flex;
+    flex-direction: row;
+  
+}
+
+
+.menu {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 10000; /* Ensure menu is on top */
+    background-color: white; /* Add background color to menu */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add shadow for better visibility */
+    padding: 10px 0; /* Add padding for better spacing */
+  }
+  
+.container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  
+  padding: 0px;
+  margin: 0px;
+  height: 100vh;
+  background: #f5f5f5;
+  z-index: 1; /* Ensure content is above the menu */
+  position: relative; /* Ensure z-index works */
+  margin-top: 0; /* Remove space between menu and container */
+}
+
+
+/* Add media query for mobile mode */
+@media (max-width: 768px) {
+  .page {
+    flex-direction: column;
+  }
+
+  .menu {
+    position: fixed; /* Ensure fixed positioning */
+    width: 100%;
+    z-index: 1000;    /* Maintain high z-index */
+    /* Adjust other styles as needed */
+  }
+
+  .container {
+    margin-top: 0; /* Remove space between menu and container */
+  }
+}

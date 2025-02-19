@@ -1,4 +1,6 @@
+import React from 'react';
 import { useState } from 'react';
+import Link from 'next/link';
 import styles from '../menu.module.css'; 
 
 export default function Menu() {
@@ -15,8 +17,8 @@ export default function Menu() {
       </button>
       <nav className={styles.menu}>
         <ul>
-          <li>Home</li>
-          <li>Swipe</li>
+          <li><Link href="/homePage">Home</Link></li>
+          <li><Link href="/swipePage">Swipe</Link></li>
           <li>Favourite</li>
           <li>Profile</li>
           <li>Settings</li>
