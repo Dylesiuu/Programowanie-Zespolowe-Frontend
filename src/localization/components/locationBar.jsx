@@ -1,14 +1,21 @@
 import React, { useState } from "react";
 import styles from "../locationBar.module.css"; 
+import MapComponent from '../../map/components/mapComponent';
 
 const LocationBar = ({ defaultLocation, onLocationChange, onRangeChange }) => {
-  const [location, setLocation] = useState(defaultLocation);
+  //const [location, setLocation] = useState(defaultLocation);
   const [range, setRange] = useState(30);
-  const [isEditing, setIsEditing] = useState(false);
+  const [showMap, setShowMap] = useState(false);
+  const [locationName, setLocationName] = useState(defaultLocation);
 
-  const handleLocationInput = (e) => {
-    setLocation(e.target.value);
-    if (onLocationChange) onLocationChange(e.target.value);
+  const handleLocationClick = () => {
+    setShowMap(true);
+  };
+
+  const handleLocationSelect = (position, locationName ) => {
+    onLocationChange(position);
+    setLocationName(locationName);
+    setShowMap(false);
   };
 
   const handleRangeChange = (e) => {
@@ -20,21 +27,13 @@ const LocationBar = ({ defaultLocation, onLocationChange, onRangeChange }) => {
     <div className={styles.container}>
       {/* Lokalizacja */}
       <div className={styles.locationWrapper}>
-        {isEditing ? (
-          <input
-            type="text"
-            value={location}
-            onChange={handleLocationInput}
-            onBlur={() => setIsEditing(false)}
-            autoFocus
-            className={styles.input}
-            placeholder="Podaj lokalizację"
-          />
-        ) : (
-          <span className={styles.locationText} onClick={() => setIsEditing(true)}>
-            {location}
-          </span>
-        )}
+      <input
+        type="text"
+        value={locationName}
+        onClick={handleLocationClick}
+        readOnly
+      />
+      {showMap && <MapComponent onLocationSelect={handleLocationSelect} setLocationName={setLocationName}/>}
       </div>
 
       {/* Dropdown z promieniem */}

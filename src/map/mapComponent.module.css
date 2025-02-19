@@ -1,0 +1,34 @@
+.mapOverlay {
+    position: fixed;
+    top: 0;
+    left: 240px;
+    width: calc(100% - 240px);
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Optional: Add a semi-transparent background */
+    z-index: 1000; /* Ensure it is on top of other components */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .mapContainer {
+    width: 50%;
+    height: 80%;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .saveButton {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 1001; /* Ensure it is on top of the map */
+  }

@@ -9,7 +9,7 @@
     font-family: 'MyFont', sans-serif;
     display: flex;
     flex-direction: row;
-    /* ...existing code... */
+
 }
 
 .menu {
@@ -19,7 +19,7 @@
   top: 0;
   width: 100%;
   z-index: 10000; /* Increased z-index to ensure menu is on top */
-  /* ...existing code... */
+
 }
 
 .container {
@@ -27,10 +27,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  
+  justify-content: space-evenly;
   padding: 0px;
   margin: 0px;
   height: 100vh;
+  min-height: 100vh;
   background: #f5f5f5;
   z-index: 1; /* Ensure content is above the menu */
   position: relative; /* Ensure z-index works */
@@ -40,24 +41,42 @@
 .cardWrapper {
   /* Ensure card is below the menu */
   z-index: 1; /* Lowered z-index */
-  flex-grow: 1;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 0px;
   margin: 0px;
 }
+.locationBarWrapper {
+  width: 100%;
+  padding: 10px 0;
+  z-index: 10; /* Ensure it stays above other content */
+  display: flex;
+  justify-content: center;
+}
 
-.buttons {
+/* cardModule to group AnimalCard and buttons */
+.cardModule {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1; /* Take up remaining space */
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+ .buttons {
   display: flex;
   justify-content: space-around;
   width: 100%;
   max-width: 400px;
-  margin: 16px 0;
+  margin: 20px 0;
 }
-
+/*
 .dislike {
-  background: #f88;
+  background: rgb(235, 80, 119);
   color: white;
   border: none;
   border-radius: 50%;
@@ -67,14 +86,38 @@
 }
 
 .like {
-  background: #8f8;
+  background: rgb(255, 187, 0);
   color: white;
   border: none;
   border-radius: 50%;
   padding: 12px;
   font-size: 24px;
   cursor: pointer;
+} */
+/* components/TinderButtons.module.css */
+
+
+.dislike,
+.like {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1PX solid gray;
+  border-radius: 50%;
+  padding: 20px;
+ 
 }
+
+.dislike {
+  background-color: #ff6b6b; 
+  color: white;
+}
+
+.like {
+  background-color: #4cd964;
+  color: white;
+}
+
 
 /* Add media query for mobile mode */
 @media (max-width: 768px) {
