@@ -1,5 +1,5 @@
 .card {
-  width: 100%;
+  width: 90%;
   max-width: 350px;
   border-radius: 22px;
   border: 3px solid #AF6B6B;
@@ -7,7 +7,7 @@
   overflow: hidden;
   background-color: #FEFEFE;
   padding: 15px 22px 30px 22px;
-  margin: 0 0 20px 0;
+  margin: 0 auto 20px;
   z-index: 1;
 
   display: flex;
@@ -70,4 +70,29 @@
   color: #555;
   width: 100%;
   text-align: left;
+}
+@media (max-width: 768px) {
+  .card {
+    width: 95%; 
+    max-width: none; 
+    padding: 10px 15px 20px 15px; 
+  }
+
+  .imageContainer {
+    max-width: 100%; 
+    aspect-ratio: 1 / 1; 
+  }
+
+  .info h2 {
+    font-size: 1.5rem; 
+  }
+
+  .info p {
+    font-size: 0.9rem; 
+  }
+
+  .trait {
+    padding: 5px 10px; 
+    font-size: 11px; 
+  }
 }
