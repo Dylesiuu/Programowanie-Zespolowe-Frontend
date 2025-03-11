@@ -1,12 +1,50 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styles from '../animalCard.module.css';
 
-const AnimalCard = ({ name, location, gender, age, traits = [], image, shelter }) => {
+const AnimalCard = ({ image, name, gender, age, location, traits = [], shelter }) => {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isFullImage, setIsFullImage] = useState(false);
+
+  const handleNextImage = (event) => {
+    event.stopPropagation();
+    setCurrentImageIndex((currentImageIndex + 1) % image.length);
+  };
+
+  const handlePrevImage = (event) => {
+    event.stopPropagation();
+    setCurrentImageIndex((currentImageIndex - 1 + image.length) % image.length);
+  };
+
+  const toggleFullImage = () => {
+    setIsFullImage(!isFullImage);
+  };
+
   return (
     <div className={styles.card}>
-      <div className={styles.imageContainer}>
-        <img src={image} alt={name} className={styles.image} />
+      <div className={styles.imageContainer} onClick={toggleFullImage}>
+        <img
+          src={image[currentImageIndex]}
+          alt={name}
+          className={`${styles.image} ${isFullImage ? styles.fullImage : ''}`}
+        />
+        {image.length > 1 && (
+    <>
+      <button
+        onClick={handlePrevImage}
+        className={`${styles.prevButton} ${isFullImage ? styles.fullScreenButton : ''}`}
+      >
+        ‹
+      </button>
+      <button
+        onClick={handleNextImage}
+        className={`${styles.nextButton} ${isFullImage ? styles.fullScreenButton : ''}`}
+      >
+        ›
+      </button>
+          </>
+        )}
       </div>
+      {isFullImage && <div className={styles.overlay} onClick={toggleFullImage} />}
       <div className={styles.info}>
         <h2>{name}</h2>
         <p>{`${gender}, ${age}`}</p>
