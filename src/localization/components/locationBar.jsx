@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styles from "../locationBar.module.css"; 
-import MapComponent from '../../map/components/mapComponent';
+import MapComponent from './mapComponent';
 
 const LocationBar = ({ defaultLocation, onLocationChange, onRangeChange }) => {
   //const [location, setLocation] = useState(defaultLocation);
@@ -18,9 +18,9 @@ const LocationBar = ({ defaultLocation, onLocationChange, onRangeChange }) => {
     setShowMap(false);
   };
 
-  const handleRangeChange = (e) => {
-    setRange(e.target.value);
-    if (onRangeChange) onRangeChange(e.target.value);
+  const handleRangeChange = (event) => {
+    setRange(event.target.value);
+    if (onRangeChange) onRangeChange(event.target.value);
   };
 
   return (
@@ -42,6 +42,8 @@ const LocationBar = ({ defaultLocation, onLocationChange, onRangeChange }) => {
         <option value={30}>+30 km</option>
         <option value={50}>+50 km</option>
         <option value={100}>+100 km</option>
+        <option value={250}>+250 km</option>
+        <option value={500}>+500 km</option>
       </select>
     </div>
   );
