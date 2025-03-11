@@ -1,0 +1,97 @@
+@font-face {
+    font-family: 'MyFont';
+    src: url(fonts/Parkinsans-Regular.ttf) format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.page {
+    font-family: 'MyFont', sans-serif;
+    display: flex;
+    flex-direction: row;
+    /* ...existing code... */
+}
+
+.menu {
+  /* Remove flex properties */
+  /* flex: 0 0 200px; */
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 10000; /* Increased z-index to ensure menu is on top */
+  /* ...existing code... */
+}
+
+.container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px;
+  height: 100vh;
+  background: #f5f5f5;
+  z-index: 1; /* Ensure content is above the menu */
+  position: relative; /* Ensure z-index works */
+  margin-top: 0; /* Remove space between menu and container */
+}
+
+.cardWrapper {
+  /* Ensure card is below the menu */
+  z-index: 1; /* Lowered z-index */
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  max-width: 400px;
+  margin: 16px 0;
+}
+
+.dislike {
+  background: #f88;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  padding: 12px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.like {
+  background: #8f8;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  padding: 12px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+/* Add media query for mobile mode */
+@media (max-width: 768px) {
+  .page {
+    flex-direction: column;
+  }
+
+  .menu {
+    position: fixed; /* Ensure fixed positioning */
+    width: 100%;
+    z-index: 1000;    /* Maintain high z-index */
+    /* Adjust other styles as needed */
+  }
+
+  .container {
+    margin-top: 0; /* Remove space between menu and container */
+    /* Adjust other styles as needed */
+  }
+
+  .cardWrapper {
+    z-index: 0; /* Lower z-index to stay below the menu */
+    /* ...existing code... */
+  }
+}

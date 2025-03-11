@@ -1,0 +1,131 @@
+@font-face {
+  font-family: 'Parkinsans';
+  src: url(../styles/fonts/Parkinsans-Regular.ttf) format('truetype');
+  font-weight: normal;
+  font-style: normal; 
+}
+
+.registerFormContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  max-height: 100vh;
+}
+
+.title {
+  font-size: 2rem;
+  font-family: "Coiny", cursive;
+  color: #e9436c;
+  margin: 1rem 0;
+  text-shadow:
+    1px 1px 0px #FF85A1,
+    -1px -1px 0px #FFD1DC,
+    2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.registerform {
+  background-color: white;
+  width: 100%;
+  max-width: 400px;
+  padding: 1.5rem;
+  border: 1px solid #eee;
+  border-radius: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.headerRegister {
+  color: #dd3755;
+  margin: 1rem 0;
+  font-size: 1.25rem;
+  text-align: center;
+}
+
+.nameAndLastnameInput {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.8rem;
+  width: 100%;
+}
+
+.userNamesInput,
+.userInput {
+  width: calc(100% - 2rem); 
+  padding: 0.6rem;
+  font-size: 0.9rem;
+  border: 1px solid #ddd;
+  border-radius: 0.8rem;
+  transition: all 0.2s ease;
+}
+
+.userInfoInput {
+  margin-bottom: 0.8rem;
+  width: 100%;
+}
+
+.registerform button {
+  width: 100%;
+  padding: 0.8rem;
+  font-size: 1rem;
+  background-color: #FF859B;
+  color: white;
+  border: none;
+  border-radius: 0.8rem;
+  margin: 1rem 0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.errorMessage {
+  color: #ff4444;
+  font-size: 0.8rem;
+  margin-top: 0.3rem;
+  text-align: center;
+}
+
+
+.registerform input:focus {
+  outline: 2px solid #fc7089;
+  box-shadow: 0 0 6px rgba(252, 112, 137, 0.3);
+  transform: scale(1.02);
+}
+
+.registerform button:hover {
+  background-color: #fc7089;
+  transform: scale(1.02);
+}
+
+.registerform button:active {
+  transform: scale(0.98);
+}
+
+
+@media (min-width: 768px) {
+  .registerform {
+    padding: 2rem;
+  }
+  
+  .title {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .userNamesInput,
+  .userInput {
+    padding: 0.7rem;
+    font-size: 1rem;
+  }
+}
+
+
+.registerform input::placeholder {
+  font-family: 'Parkinsans', sans-serif;
+  color: #aaa;
+  font-size: 0.9rem;
+}
+
+.registerform button:disabled {
+  background-color: #ddd;
+  cursor: not-allowed;
+  transform: none;
+}
