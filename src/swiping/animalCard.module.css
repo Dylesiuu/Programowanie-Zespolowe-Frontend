@@ -4,16 +4,15 @@
   border-radius: 22px;
   border: 3px solid #AF6B6B;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
+  overflow: visible; /* Allow content to overflow */
   background-color: #FEFEFE;
   padding: 15px 22px 30px 22px;
   margin: 0 auto 20px;
   z-index: 1;
-
+  position: relative; /* Ensure child elements can position relative to this */
   display: flex;
   flex-direction: column;
-  align-items: center; /* Center content horizontally */
-  /* height: 600px; */ /* Removed fixed height */
+  align-items: center;
 }
 
 .imageContainer {
@@ -22,29 +21,121 @@
   height: 350px; /* Fixed height */
   border-radius: 22px;
   border: 1px groove #AF6B6B;
-  overflow: hidden; /* Hide any overflow */
+  overflow: hidden; /* Hide overflow by default */
   display: flex;
   justify-content: center;
   align-items: center;
   margin: 0 auto;
   position: relative;
-
-  flex-shrink: 0; /* Prevent shrinking */
+  flex-shrink: 0;
+  cursor: pointer;
 }
 
 .image {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Ensure the image covers the container without distortion */
+  object-fit: cover; /* Ensure the image covers the container */
   border-radius: 22px;
-  position: relative;
+  transition: transform 0.3s ease, z-index 0.3s ease;
+}
+
+/* Full-screen image styles */
+.image.fullImage {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 60vw; /* Adjust as needed */
+  max-height: 60vh; /* Adjust as needed */
+  z-index: 1000;
+  object-fit: contain;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+}
+
+/* Adjust for desktop mode (menu visible) */
+@media (min-width: 768px) {
+  .image.fullImage {
+    left: calc(50% + 100px); /* Shift right to account for the left-side menu */
+  }
+}
+
+/* Adjust for phone mode (menu hidden) */
+@media (max-width: 768px) {
+  .image.fullImage {
+    left: 50%; /* No shift needed */
+  }
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8); /* Semi-transparent black overlay */
+  z-index: 999; /* Place it below the full image but above everything else */
+  cursor: pointer; /* Indicate that clicking will close the image */
+}
+
+/* Default button styles */
+.prevButton, .nextButton {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.3s;
+  z-index: 1001; /* Ensure buttons are above the image */
+}
+
+.prevButton:hover, .nextButton:hover {
+  opacity: 1;
+}
+
+.prevButton {
+  left: 10px;
+}
+
+.nextButton {
+  right: 10px;
+}
+
+/* Full-screen button styles */
+.prevButton.fullScreenButton, .nextButton.fullScreenButton {
+  position: fixed; /* Position buttons relative to the viewport */
+  padding: 30px 10px;
+
+}
+
+.prevButton.fullScreenButton {
+  left: calc(50% - 20%); /* Adjust based on photo width and desired gap */
+}
+
+.nextButton.fullScreenButton {
+  right: calc(50% - 200px - 20%); /* Adjust based on photo width and desired gap */
+}
+
+@media (max-width: 768px) {
+  .prevButton.fullScreenButton {
+    left: calc(50% - 150px - 20px); /* Adjust for smaller screens */
+  }
+
+  .nextButton.fullScreenButton {
+    right: calc(50% - 150px - 20px); /* Adjust for smaller screens */
+  }
 }
 
 .info {
   text-align: left;
   gap: 3px;
   width: 100%;
-  margin-top: 10px; /* Add some spacing below the image */
+  margin-top: 10px;
 }
 
 .traits {
@@ -52,7 +143,7 @@
   justify-content: flex-start;
   gap: 8px;
   flex-wrap: wrap;
-  margin-top: 10px; /* Add some spacing below the info */
+  margin-top: 10px;
 }
 
 .trait {
@@ -64,35 +155,35 @@
 }
 
 .shelterInfo {
-  /* Add styles for shelter information if needed */
   margin-top: 10px;
   font-style: italic;
   color: #555;
   width: 100%;
   text-align: left;
 }
+
 @media (max-width: 768px) {
   .card {
-    width: 95%; 
-    max-width: none; 
-    padding: 10px 15px 20px 15px; 
+    width: 95%;
+    max-width: none;
+    padding: 10px 15px 20px 15px;
   }
 
   .imageContainer {
-    max-width: 100%; 
-    aspect-ratio: 1 / 1; 
+    max-width: 100%;
+    aspect-ratio: 1 / 1;
   }
 
   .info h2 {
-    font-size: 1.5rem; 
+    font-size: 1.5rem;
   }
 
   .info p {
-    font-size: 0.9rem; 
+    font-size: 0.9rem;
   }
 
   .trait {
-    padding: 5px 10px; 
-    font-size: 11px; 
+    padding: 5px 10px;
+    font-size: 11px;
   }
 }

@@ -32,3 +32,20 @@
     cursor: pointer;
     z-index: 1001; /* Ensure it is on top of the map */
   }
+
+  /* Adjust for phone mode (menu hidden) */
+@media (max-width: 768px) {
+  .mapOverlay {
+    left: 0; /* No left-side menu in phone mode */
+    width: 100%; /* Take up full width */
+  }
+
+  .mapContainer {
+    width: 90%; /* Make the map container wider on smaller screens */
+    height: 70%; /* Adjust height for smaller screens */
+  }
+
+  .saveButton {
+    bottom: 20px; /* Adjust button position for better visibility */
+  }
+}

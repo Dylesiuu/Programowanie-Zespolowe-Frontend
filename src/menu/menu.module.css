@@ -15,6 +15,7 @@
     width: 30px;        /* Fixed width */
     height: 30px;       /* Fixed height */
     padding: 0;         /* Remove padding */
+    z-index: 11000;
   }
   
   .menu {
