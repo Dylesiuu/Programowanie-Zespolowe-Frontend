@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styles from '../animalCard.module.css';
 
-const AnimalCard = ({ image, name, gender, age, location, traits = [], shelter }) => {
+const AnimalCard = ({ image = [], name, gender, age, location, traits = [], shelter }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isFullImage, setIsFullImage] = useState(false);
 
@@ -21,35 +21,52 @@ const AnimalCard = ({ image, name, gender, age, location, traits = [], shelter }
 
   return (
     <div className={styles.card}>
+
       <div className={styles.imageContainer} onClick={toggleFullImage}>
-        <img
-          src={image[currentImageIndex]}
-          alt={name}
-          className={`${styles.image} ${isFullImage ? styles.fullImage : ''}`}
-        />
-        {image.length > 1 && (
-    <>
-      <button
-        onClick={handlePrevImage}
-        className={`${styles.prevButton} ${isFullImage ? styles.fullScreenButton : ''}`}
-      >
-        ‹
-      </button>
-      <button
-        onClick={handleNextImage}
-        className={`${styles.nextButton} ${isFullImage ? styles.fullScreenButton : ''}`}
-      >
-        ›
-      </button>
+
+        {image.length > 0 ?(
+          <>
+            <img
+              src={image[currentImageIndex]}
+              alt={name}
+              className={`${styles.image} ${isFullImage ? styles.fullImage : ''}`}
+            />
+
+            {/*For multiple images */}
+            {image.length > 1 && (
+              <>
+                <button
+                  onClick={handlePrevImage}
+                  className={`${styles.prevButton} ${isFullImage ? styles.fullScreenButton : ''}`}
+                >
+                  ‹
+                </button>
+
+                <button
+                  onClick={handleNextImage}
+                  className={`${styles.nextButton} ${isFullImage ? styles.fullScreenButton : ''}`}
+                >
+                  ›
+                </button>
+              </>
+            )}
           </>
+        ) : (
+          //When there are no images show message
+          <div className={styles.noImageMessage}>
+            No Image
+          </div>
         )}
       </div>
+
       {isFullImage && <div className={styles.overlay} onClick={toggleFullImage} />}
+
       <div className={styles.info}>
         <h2>{name}</h2>
         <p>{`${gender}, ${age}`}</p>
         <p>{location}</p>
       </div>
+
       <div className={styles.traits}>
         {traits.map((trait) => (
           <span key={trait} className={styles.trait}>
@@ -57,6 +74,7 @@ const AnimalCard = ({ image, name, gender, age, location, traits = [], shelter }
           </span>
         ))}
       </div>
+      
       <div className={styles.shelterInfo}>
         <p>{shelter}</p>
       </div>

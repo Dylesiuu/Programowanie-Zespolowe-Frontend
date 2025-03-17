@@ -5,16 +5,14 @@
   }
   
   .menuButton {
-    display: none; /* Ukrywamy na dużych ekranach */
+    display: none; /* Hidden on bigger screens */
     font-size: 20px;
     background: none;
     border: none;
     cursor: pointer;
-    
-    /* Make the button square */
-    width: 30px;        /* Fixed width */
-    height: 30px;       /* Fixed height */
-    padding: 0;         /* Remove padding */
+    width: 30px;        
+    height: 30px;       
+    padding: 0;         
     z-index: 11000;
   }
   
@@ -37,7 +35,7 @@
     border-bottom: 1px solid #ddd;
   }
   
-  /* Widok na komputerze */
+  /* View on PC*/
   @media (min-width: 768px) {
     .menuContainer {
       flex-direction: row;
@@ -51,25 +49,24 @@
     }
   }
   
-  /* Widok na urządzeniach mobilnych */
+  /* View on mobile */
   @media (max-width: 768px) {
     .menuButton {
-      display: block; /* Widoczny przycisk menu */
+      display: block;
       
-      /* Maintain fixed square dimensions on mobile */
       width: 50px;
       height: 50px;
       padding: 0;
       border-radius: 8px;
     }
     .menu {
-      transform: translateX(-100%); /* Początkowo schowane */
+      transform: translateX(-100%); 
       position: fixed;
-      top: 50px; /* Adjusted from 66px to 50px */
+      top: 50px; 
       left: 0;
       height: 100vh;
     }
     .menuContainer.open .menu {
-      transform: translateX(0); /* Menu rozwija się po kliknięciu */
+      transform: translateX(0);
     }
   }
