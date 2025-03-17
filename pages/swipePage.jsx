@@ -4,120 +4,69 @@ import AnimalCard from '../src/swiping/components/animalCard';
 import Buttons from '../src/swiping/components/buttons';
 import styles from '../src/styles/swipePage.module.css';         
 import LocationBar from '../src/localization/components/locationBar';
-import { FaTimes, FaHeart } from 'react-icons/fa'; 
-
-const mockPets = [
-  {
-    id: 0,
-    image: [
-      'https://pettownsendvet.com/wp-content/uploads/2023/01/iStock-1052880600-1024x683.jpg',
-      'https://upload.wikimedia.org/wikipedia/commons/1/1e/Dog_in_animal_shelter_in_Washington%2C_Iowa.jpg'
-    ],
-    name: 'Mike',
-    gender: 'Male',
-    age: '3 years old',
-    location: 'Gdańsk',
-    traits: ['Friendly', 'Playful', 'Energetic'], 
-    shelter: 'Happy Tails Shelter'
-  },
-  {
-    id: 1,
-    image: [
-      'https://bestfriends.org/sites/default/files/styles/image_small/public/image/Cat-enrichment-Unnamed-Female-Kitty-A-578-Playing-3889_Sellers_1.jpg-546807.jpg?itok=BBtYqHs1',
-      'https://bestfriends.org/sites/default/files/resource_article_images/Cat-enrichment-Valley-6431SAx%255B1%255D.jpg'
-    ],
-    name: 'Mittens',
-    gender: 'Male',
-    age: '2 years old',
-    location: 'Toruń',
-    traits: ['Calm', 'Affectionate', 'Lazy'],
-    shelter: 'Cozy Paws Shelter'
-  },
-  {
-    id: 2,
-    image: [
-      'https://www.rspcasa.org.au/wp-content/uploads/2024/08/Cat-Management-Act-Review-2-768x527.png',
-    ],
-    name: 'Cookie',
-    gender: 'Female',
-    age: '4 years old',
-    location: 'Gorzów Wielkopolski',
-    traits: ['Energetic', 'Loyal', 'Curious'],
-    shelter: 'Furry Friends Shelter'
-  }
-];
 
 const MapComponent = dynamic(() => import('../src/localization/components/mapComponent'), { ssr: false });
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL; 
 
 const SwipePage = () => {
   const [currentIndex, setCurrentIndex] = useState(0); 
-  const [location, setLocation] = useState(""); // Initialize with empty string to fetch from backend
-  const [range, setRange] = useState(30); // Default 30 km
-  const [pets, setPets] = useState(mockPets); // Use mock data for pet data
+  const [location, setLocation] = useState(null); //Initialize with empty string to fetch from backend
+  const [range, setRange] = useState(30); 
+  const [pets, setPets] = useState([]); //Empty array to store pets
+  const [isLoading, setIsLoading] = useState(false); // Loading state
+  const [error, setError] = useState(null); // Error state
 
-  // useEffect(() => {
-  //   const fetchPets = async () => {
-  //     if (!location) return; // Don't fetch if location is empty
+  useEffect(() => {
+    const fetchPets = async () => {
+      if (!location) return; //Don't fetch if location is empty
   
-  //     setIsLoading(true);
-  //     try {
-  //       // Send location and range to the backend
-  //       const response = await fetch("http://localhost:3000/scrolling", {
-  //         method: 'POST', // Use POST to send data
-  //         headers: {
-  //           'Content-Type': 'application/json',
-  //         },
-  //         body: JSON.stringify({ location, range }), // Include location and range in the request
-  //       });
+      setIsLoading(true);
+      setError(null);
+      try {
+        //Send location and range to the backend
+        const response = await fetch(`${API_BASE_URL}/scrolling`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            lat: location.lat,
+            lng: location.lng,
+            range: range,
+          }),
+        });
   
-  //       if (!response.ok) {
-  //         throw new Error('Failed to fetch animals');
-  //       }
+        if (!response.ok) {
+          setError('Wygląda na to, że mamy problemy z serwerem. Spróbuj ponownie później.');
+          return;
+        }
   
-  //       const petData = await response.json(); // Parse the response once
-  //       setPets(petData); // Update the list of pets
-  //       setCurrentIndex(0); // Reset to the first pet
-  //     } catch (error) {
-  //       console.error('Error fetching animals:', error);
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   };
-  
-  //   fetchPets();
-  // }, [location, range]); // Re-fetch when location or range changes
-
-  const fetchPets = async () => {
-    try {
-      const response = await fetch("http://localhost:3000/scrolling"); // Ścieżka do endpointu
-      if (response.ok) {
-        const petData = await response.json();
-        setPets(petData);
-      } else {
-        console.error("Błąd podczas pobierania danych zwierząt");
+        const petData = await response.json(); 
+        setPets(petData); 
+        setCurrentIndex(0); 
+      } catch (error) {
+        console.error('Error fetching animals:', error);
+        setError('Failed to fetch animals. Please try again.');
+      } finally {
+        setIsLoading(false);
       }
-    } catch (error) {
-      console.error("Błąd połączenia z backendem:", error);
-    }
-  };
-
-  // fetchUserLocation(); // Wywołanie funkcji przy załadowaniu komponentu
-  fetchPets(); 
-
+    };
+  
+    fetchPets();
+  }, [location, range]); //Re-fetch when location or range changes
 
   const handleSwipe = (decision) => {
-    if (pets.length === 0) return; // Don't swipe if there are no pets
-    // Zmiana zwierzaczka
+    if (pets.length === 0) return; //Don't swipe if there are no pets
+
     if (currentIndex < pets.length) {
       setCurrentIndex(currentIndex + 1);
     } else {
-      return // Don't swipe if there are no pets
+      return //Don't swipe if there are no pets
     }
     // obsłuha 'like' i 'dislike' tutaj bnędzie kiedyś :pp
   };
 
   useEffect(() => {
-    // Obsługa swipeowania strzałkami
     const handleKeyDown = (event) => {
       if (event.key === 'ArrowLeft') {
         handleSwipe('dislike');
@@ -135,32 +84,47 @@ const SwipePage = () => {
     <div className={styles.page}>
       <div className={styles.container}>
         <div className={styles.locationBarWrapper}>
+          {/*LocationBar component for selecting location and range*/}
           <LocationBar
-            defaultLocation={location}
-            onLocationChange={setLocation}
-            onRangeChange={setRange}
+            defaultLocation={location ? `${location.lat}, ${location.lng}` : ''}
+            onLocationChange={(position) => setLocation(position)} 
+            onRangeChange={(newRange) => setRange(newRange)}
           />
         </div>
-        {currentIndex < pets.length ? (
-          <>
-          <div className={styles.cardModule}>
-            <div className={styles.cardWrapper}>
-              <AnimalCard {...pets[currentIndex]} />
-            </div>
-            <Buttons 
-              onDislike={() => handleSwipe('dislike')} 
-              onLike={() => handleSwipe('like')} 
-              />
-          </div>
-          </>
-        ) : (
-          <div className={styles.cardModule}>
-            <p>Koniec piesków i kotków :c</p>
-            <p>Zmień lokalizację lub zasięg, aby zobaczyć więcej!</p>
-            <img src="https://media1.tenor.com/m/t7_iTN0iYekAAAAd/sad-sad-cat.gif" alt="Koniec pjesków i kotków" />
+
+        {/*Display loading state*/}
+        {isLoading && <p>Ładowanie zwierzaczków...</p>}
+
+        {/*Display error message*/}
+        {error && (
+          <div className={styles.error}>
+            <p>{error}</p>
+            <button onClick={() => window.location.reload()}>Odśwież</button>
           </div>
         )}
-        
+
+        {/*Display pets or a message if no pets are available*/}
+        {!isLoading && !error && (
+          <>
+            {currentIndex < pets.length ? (
+              <div className={styles.cardModule}>
+                <div className={styles.cardWrapper}>
+                  <AnimalCard {...pets[currentIndex]} />
+                </div>
+                <Buttons
+                  onDislike={() => handleSwipe('dislike')}
+                  onLike={() => handleSwipe('like')}
+                />
+              </div>
+            ) : (
+              <div className={styles.cardModule}>
+              <p>Koniec piesków i kotków :c</p>
+              <p>Zmień lokalizację lub zasięg, aby zobaczyć więcej!</p>
+              <img src="https://media1.tenor.com/m/t7_iTN0iYekAAAAd/sad-sad-cat.gif" alt="Koniec pjesków i kotków" />
+            </div>
+            )}
+          </>
+        )}
       </div>
     </div>
   );

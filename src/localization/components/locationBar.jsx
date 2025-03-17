@@ -3,7 +3,6 @@ import styles from "../locationBar.module.css";
 import MapComponent from './mapComponent';
 
 const LocationBar = ({ defaultLocation, onLocationChange, onRangeChange }) => {
-  //const [location, setLocation] = useState(defaultLocation);
   const [range, setRange] = useState(30);
   const [showMap, setShowMap] = useState(false);
   const [locationName, setLocationName] = useState(defaultLocation);
@@ -25,18 +24,18 @@ const LocationBar = ({ defaultLocation, onLocationChange, onRangeChange }) => {
 
   return (
     <div className={styles.container}>
-      {/* Lokalizacja */}
       <div className={styles.locationWrapper}>
+      
       <input
         type="text"
         value={locationName}
         onClick={handleLocationClick}
         readOnly
       />
+      {/* Render the map component if showMap is true */}
       {showMap && <MapComponent onLocationSelect={handleLocationSelect} setLocationName={setLocationName}/>}
       </div>
 
-      {/* Dropdown z promieniem */}
       <select value={range} onChange={handleRangeChange} className={styles.select}>
         <option value={10}>+10 km</option>
         <option value={30}>+30 km</option>
