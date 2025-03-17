@@ -33,7 +33,7 @@
     z-index: 1001; 
   }
 
-  /* Adjust for phone mode (menu hidden) */
+  /*Adjust for phone mode (menu hidden)*/
 @media (max-width: 768px) {
   .mapOverlay {
     left: 0; 

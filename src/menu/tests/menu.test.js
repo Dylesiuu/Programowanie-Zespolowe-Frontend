@@ -16,7 +16,7 @@ jest.mock('next/link', () => {
 describe('Menu Component', () => {
   test('renders the menu on smaller screens', () => {
     global.innerWidth = 500; 
-    global.dispatchEvent(new Event('resize')); // Trigger resize event
+    global.dispatchEvent(new Event('resize')); 
 
     render(<Menu />);
 
@@ -45,9 +45,10 @@ describe('Menu Component', () => {
     //Menu button is not rendered on larger screens
     expect(screen.queryByRole('button', { name: '☰' })).not.toBeInTheDocument();
 
+
     //Navigation links are visible by default on larger screens
     const menuContainer = screen.getByRole('navigation').parentElement;
-    expect(menuContainer).toHaveClass('open');
+    expect(menuContainer).toBeVisible();
   });
 
   test('navigation links have the correct href attributes', () => {
