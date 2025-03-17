@@ -4,8 +4,8 @@
     left: 240px;
     width: calc(100% - 240px);
     height: 100%;
-    background: rgba(0, 0, 0, 0.5); /* Optional: Add a semi-transparent background */
-    z-index: 1000; /* Ensure it is on top of other components */
+    background: rgba(0, 0, 0, 0.5); 
+    z-index: 1000; 
     display: flex;
     justify-content: center;
     align-items: center;
@@ -30,22 +30,22 @@
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    z-index: 1001; /* Ensure it is on top of the map */
+    z-index: 1001; 
   }
 
   /* Adjust for phone mode (menu hidden) */
 @media (max-width: 768px) {
   .mapOverlay {
-    left: 0; /* No left-side menu in phone mode */
-    width: 100%; /* Take up full width */
+    left: 0; 
+    width: 100%; 
   }
 
   .mapContainer {
-    width: 90%; /* Make the map container wider on smaller screens */
-    height: 70%; /* Adjust height for smaller screens */
+    width: 90%; 
+    height: 70%; 
   }
 
   .saveButton {
-    bottom: 20px; /* Adjust button position for better visibility */
+    bottom: 20px; 
   }
 }
