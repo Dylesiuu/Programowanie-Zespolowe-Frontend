@@ -1,7 +1,7 @@
 .container {
   position: absolute;
   top: 0;
-  left: 200px; /* Adjust this based on sidebar width */
+  left: 200px; 
   right: 0;
   bottom: 0;
   display: flex;
@@ -14,8 +14,6 @@
 
 
 .cardWrapper {
-  /* Ensure card is below the menu */
-  z-index: 1; /* Lowered z-index */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -25,14 +23,13 @@
 .locationBarWrapper {
   width: 100%;
   padding: 10px 0;
-  z-index: 10; /* Ensure it stays above other content */
   display: flex;
   justify-content: center;
 }
 
 /* cardModule to group AnimalCard and buttons */
 .cardModule {
-  flex: 1; /* Make it take up remaining space */
+  flex: 1; 
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -41,41 +38,19 @@
 }
 
 
-/* Add media query for mobile mode */
+/*Mobile mode */
 @media (max-width: 768px) {
   .page {
     flex-direction: column;
   }
-
-  .menu {
-    position: fixed; /* Ensure fixed positioning */
-    width: 100%;
-    z-index: 1000;    /* Maintain high z-index */
-    /* Adjust other styles as needed */
-  }
-
   .container {
     position: absolute;
     top: 0;
-    left: 0;  /* Take full width since menu is gone */
+    left: 0;  
     right: 0;
     bottom: 0;
     width: 100%;
     height: 100vh;
 }
 
-  .cardWrapper {
-    z-index: 0; 
-  }
-}
-@media (max-width: 768px) {
-  .container {
-      position: absolute;
-      top: 0;
-      left: 0;  /* Take full width since menu is gone */
-      right: 0;
-      bottom: 0;
-      width: 100%;
-      height: 100vh;
-  }
 }

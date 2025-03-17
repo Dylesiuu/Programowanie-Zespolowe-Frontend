@@ -1,6 +1,8 @@
 import React from 'react';
 import styles from '../src/styles/homePage.module.css'; 
 
+// This page exists for now to have an option to click another page on the menu
+
 const HomePage = () => {
   return (
     <div className={styles.page}>
