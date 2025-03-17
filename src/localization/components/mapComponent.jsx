@@ -4,7 +4,7 @@ import 'leaflet/dist/leaflet.css';
 import styles from '../mapComponent.module.css';
 import axios from 'axios';
 
-// Dynamically import react-leaflet components
+//Dynamically import react-leaflet components
 const MapContainer = dynamic(() => import('react-leaflet').then(mod => mod.MapContainer), { ssr: false });
 const TileLayer = dynamic(() => import('react-leaflet').then(mod => mod.TileLayer), { ssr: false });
 const Marker = dynamic(() => import('react-leaflet').then(mod => mod.Marker), { ssr: false });
@@ -14,6 +14,7 @@ const MapComponent = ({ onLocationSelect, setLocationName }) => {
   const [position, setPosition] = useState(null);
   const [locationName, setLocationNameState] = useState('');
 
+  //Fix for Leaflet's default icon issue
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const L = require('leaflet');
@@ -28,7 +29,7 @@ const MapComponent = ({ onLocationSelect, setLocationName }) => {
 
   const reverseGeocode = async (latlng) => {
     const { lat, lng } = latlng;
-    const apiKey = process.env.NEXT_PUBLIC_MAP_TRANSLATE; // OpenCage API key
+    const apiKey = process.env.NEXT_PUBLIC_MAP_TRANSLATE; //OpenCage API key
     const url = `https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lng}&key=${apiKey}`;
 
     try {

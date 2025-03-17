@@ -1,10 +1,21 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import styles from '../menu.module.css'; 
+import styles from '../menu.module.css';
 
 export default function Menu() {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false); //Track menu open/close
+  const [isLargeScreen, setIsLargeScreen] = useState(false); //Track screen size
+
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsLargeScreen(window.innerWidth >= 768);
+    };
+
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+
+    return () => window.removeEventListener('resize', checkScreenSize); //Cleanup
+  }, []);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -12,10 +23,13 @@ export default function Menu() {
 
   return (
     <div className={`${styles.menuContainer} ${isOpen ? styles.open : ''}`}>
-      <button className={styles.menuButton} onClick={toggleMenu}>
-        ☰
-      </button>
-      <nav className={styles.menu}>
+      {/*Only render the menu button on smaller screens*/}
+      {!isLargeScreen && (
+        <button className={styles.menuButton} onClick={toggleMenu}>
+          ☰
+        </button>
+      )}
+      <nav className={styles.menu} role="navigation">
         <ul>
           <li><Link href="/homePage">Home</Link></li>
           <li><Link href="/swipePage">Swipe</Link></li>
