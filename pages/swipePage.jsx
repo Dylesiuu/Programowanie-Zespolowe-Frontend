@@ -10,31 +10,34 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 const SwipePage = () => {
   const [currentIndex, setCurrentIndex] = useState(0); 
-  const [location, setLocation] = useState(null); //Initialize with empty string to fetch from backend
-  const [range, setRange] = useState(30); 
-  const [pets, setPets] = useState([]); //Empty array to store pets
-  const [isLoading, setIsLoading] = useState(false); // Loading state
-  const [error, setError] = useState(null); // Error state
+  const [location, setLocation] = useState(null); 
+  const [range, setRange] = useState(30000); 
+  const [pets, setPets] = useState([]); 
+  const [isLoading, setIsLoading] = useState(false); 
+  const [error, setError] = useState(null); 
 
   useEffect(() => {
     const fetchPets = async () => {
-      if (!location) return; //Don't fetch if location is empty
+      if (!location) return; 
   
       setIsLoading(true);
       setError(null);
       try {
-        //Send location and range to the backend
-        const response = await fetch(`${API_BASE_URL}/scrolling`, {
+        const requestBody = {
+          userId: "65f4c8e9f0a5a4d3b4a54321", // Replace with actual user ID
+          lat: location.lat,
+          lng: location.lng,
+          range: range,
+        };
+
+        const response = await fetch(`${API_BASE_URL}/scrolling/match`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({
-            lat: location.lat,
-            lng: location.lng,
-            range: range,
-          }),
+          body: JSON.stringify(requestBody),
         });
+
   
         if (!response.ok) {
           setError('Wygląda na to, że mamy problemy z serwerem. Spróbuj ponownie później.');
@@ -42,26 +45,32 @@ const SwipePage = () => {
         }
   
         const petData = await response.json(); 
-        setPets(petData); 
+        const formattedPets = petData.matchedAnimals.map(animal => ({
+          ...animal,
+          
+          image: Array.isArray(animal.image) ? animal.image : [animal.image], 
+          traits: animal.traits.map(t => t.name) 
+        }));
+        setPets(formattedPets); 
         setCurrentIndex(0); 
       } catch (error) {
-        console.error('Error fetching animals:', error);
-        setError('Failed to fetch animals. Please try again.');
+        console.error('Błąd podczas pobierania zwierząt', error);
+        setError('Nie udało się pobrać danych o zwierzętach. Spróbuj ponownie.');
       } finally {
         setIsLoading(false);
       }
     };
   
     fetchPets();
-  }, [location, range]); //Re-fetch when location or range changes
+  }, [location, range]);
 
   const handleSwipe = (decision) => {
-    if (pets.length === 0) return; //Don't swipe if there are no pets
+    if (pets.length === 0) return; 
 
     if (currentIndex < pets.length) {
       setCurrentIndex(currentIndex + 1);
     } else {
-      return //Don't swipe if there are no pets
+      return 
     }
     // obsłuha 'like' i 'dislike' tutaj bnędzie kiedyś :pp
   };
@@ -84,7 +93,6 @@ const SwipePage = () => {
     <div className={styles.page}>
       <div className={styles.container}>
         <div className={styles.locationBarWrapper}>
-          {/*LocationBar component for selecting location and range*/}
           <LocationBar
             defaultLocation={location ? `${location.lat}, ${location.lng}` : ''}
             onLocationChange={(position) => setLocation(position)} 
@@ -92,10 +100,8 @@ const SwipePage = () => {
           />
         </div>
 
-        {/*Display loading state*/}
         {isLoading && <p>Ładowanie zwierzaczków...</p>}
 
-        {/*Display error message*/}
         {error && (
           <div className={styles.error}>
             <p>{error}</p>
@@ -103,7 +109,6 @@ const SwipePage = () => {
           </div>
         )}
 
-        {/*Display pets or a message if no pets are available*/}
         {!isLoading && !error && (
           <>
             {currentIndex < pets.length ? (

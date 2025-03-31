@@ -34,8 +34,7 @@
     padding: 10px;
     border-bottom: 1px solid #ddd;
   }
-  
-  /*View on PC*/
+
   @media (min-width: 768px) {
     .menuContainer {
       flex-direction: row;
@@ -49,7 +48,6 @@
     }
   }
   
-  /*View on mobile*/
   @media (max-width: 768px) {
     .menuButton {
       display: block;

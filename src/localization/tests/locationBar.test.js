@@ -16,12 +16,10 @@ describe('LocationBar Component', () => {
         />
       );
   
-      //Input displays the default location
       expect(screen.getByDisplayValue('Warsaw')).toBeInTheDocument();
   
-      //Displays the default range
       const rangeSelect = screen.getByRole('combobox');
-      expect(rangeSelect.value).toBe('30'); 
+      expect(rangeSelect.value).toBe('30000'); 
   });
 
   test('shows map when location input is clicked', async () => {
@@ -33,12 +31,10 @@ describe('LocationBar Component', () => {
       />
     );
 
-    // Click the location input to show the map
     await act(async () => {
         fireEvent.click(screen.getByDisplayValue('Warsaw'));
       });
 
-    // Verify the map is displayed
     expect(screen.getByRole('button', { name: /save location/i })).toBeInTheDocument();
   });
 
@@ -51,11 +47,9 @@ describe('LocationBar Component', () => {
         />
       );
   
-      //Change the range value
       const rangeSelect = screen.getByRole('combobox');
-      fireEvent.change(rangeSelect, { target: { value: '50' } });
+      fireEvent.change(rangeSelect, { target: { value: '50000' } });
   
-      //onRangeChange is called with the new value
-      expect(mockOnRangeChange).toHaveBeenCalledWith('50');
+      expect(mockOnRangeChange).toHaveBeenCalledWith('50000');
   });
 });

@@ -3,8 +3,8 @@ import Link from 'next/link';
 import styles from '../menu.module.css';
 
 export default function Menu() {
-  const [isOpen, setIsOpen] = useState(false); //Track menu open/close
-  const [isLargeScreen, setIsLargeScreen] = useState(false); //Track screen size
+  const [isOpen, setIsOpen] = useState(false);
+  const [isLargeScreen, setIsLargeScreen] = useState(false);
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -14,7 +14,7 @@ export default function Menu() {
     checkScreenSize();
     window.addEventListener('resize', checkScreenSize);
 
-    return () => window.removeEventListener('resize', checkScreenSize); //Cleanup
+    return () => window.removeEventListener('resize', checkScreenSize); 
   }, []);
 
   const toggleMenu = () => {
@@ -23,7 +23,6 @@ export default function Menu() {
 
   return (
     <div className={`${styles.menuContainer} ${isOpen ? styles.open : ''}`}>
-      {/*Only render the menu button on smaller screens*/}
       {!isLargeScreen && (
         <button className={styles.menuButton} onClick={toggleMenu}>
           ☰

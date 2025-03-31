@@ -1,5 +1,6 @@
 import React from 'react';
-import { render, fireEvent, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import Buttons from '../components/buttons'; 
 
@@ -10,28 +11,25 @@ describe('Buttons Component', () => {
   test('renders Buttons component with like and dislike buttons', () => {
     render(<Buttons onLike={mockOnLike} onDislike={mockOnDislike} />);
 
-    //Like and dislike buttons are rendered
     expect(screen.getByTestId('like-button')).toBeInTheDocument();
     expect(screen.getByTestId('dislike-button')).toBeInTheDocument();
   });
 
-  test('calls onDislike handler when the dislike button is clicked', () => {
+  test('calls onDislike handler when the dislike button is clicked', async () => {
     render(<Buttons onLike={mockOnLike} onDislike={mockOnDislike} />);
-
+    
     const dislikeButton = screen.getByTestId('dislike-button');
 
-    //onDislike handler was called
-    fireEvent.click(dislikeButton);
+    await userEvent.click(dislikeButton);
     expect(mockOnDislike).toHaveBeenCalledTimes(1);
   });
 
-  test('calls onLike handler when the like button is clicked', () => {
+  test('calls onLike handler when the like button is clicked', async () => {
     render(<Buttons onLike={mockOnLike} onDislike={mockOnDislike} />);
-
+    
     const likeButton = screen.getByTestId('like-button');
 
-    //onLike handler was called
-    fireEvent.click(likeButton);
+    await userEvent.click(likeButton);
     expect(mockOnLike).toHaveBeenCalledTimes(1);
   });
 });
