@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 import styles from '../animalCard.module.css';
 
-const AnimalCard = ({ image = [], name, gender, age, location, traits = [], shelter }) => {
+const AnimalCard = ({ images = [], name, gender, age, location, traits = [], shelter }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isFullImage, setIsFullImage] = useState(false);
 
   const handleNextImage = (event) => {
     event.stopPropagation();
-    setCurrentImageIndex((currentImageIndex + 1) % image.length);
+    setCurrentImageIndex((currentImageIndex + 1) % images.length);
   };
 
   const handlePrevImage = (event) => {
     event.stopPropagation();
-    setCurrentImageIndex((currentImageIndex - 1 + image.length) % image.length);
+    setCurrentImageIndex((currentImageIndex - 1 + images.length) % images.length);
   };
 
   const toggleFullImage = () => {
@@ -24,16 +24,16 @@ const AnimalCard = ({ image = [], name, gender, age, location, traits = [], shel
 
       <div className={styles.imageContainer} onClick={toggleFullImage}>
 
-        {image.length > 0 ?(
+        {images.length > 0 ?(
           <>
             <img
-              src={image[currentImageIndex]}
+              src={images[currentImageIndex]}
               alt={name}
               className={`${styles.image} ${isFullImage ? styles.fullImage : ''}`}
             />
 
             {/*For multiple images */}
-            {image.length > 1 && (
+            {images.length > 1 && (
               <>
                 <button
                   onClick={handlePrevImage}
