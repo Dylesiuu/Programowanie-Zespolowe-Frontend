@@ -1,12 +1,12 @@
 import React from 'react';
-import { render, fireEvent, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import Menu from '../components/menu';
 import Link from 'next/link'; 
 
 //Menu component isnt done yet so this test will be updated later
 
-// Mock Next.js Link component
 jest.mock('next/link', () => {
   return ({ children, href }) => {
     return <a href={href}>{children}</a>; // Mock Link as a simple anchor tag
@@ -14,26 +14,28 @@ jest.mock('next/link', () => {
 });
 
 describe('Menu Component', () => {
-  test('renders the menu on smaller screens', () => {
+  test('renders the menu on smaller screens', async () => {
     global.innerWidth = 500; 
     global.dispatchEvent(new Event('resize')); 
 
     render(<Menu />);
 
-    //Menu button is rendered on smaller screens
     expect(screen.getByRole('button', { name: '☰' })).toBeInTheDocument();
 
-    //Navigation links are not visible by default on smaller screens
     const menuContainer = screen.getByRole('navigation').parentElement;
     expect(menuContainer).not.toHaveClass('open'); 
 
-    //Click the menu button to open the menu
-    fireEvent.click(screen.getByRole('button', { name: '☰' }));
-    expect(menuContainer).toHaveClass('open');
+    userEvent.click(screen.getByRole('button', { name: '☰' }));
 
-    // Click the menu button again to close the menu
-    fireEvent.click(screen.getByRole('button', { name: '☰' }));
-    expect(menuContainer).not.toHaveClass('open');
+    await waitFor(() => {
+      expect(menuContainer).toHaveClass('open');
+    });
+
+    userEvent.click(screen.getByRole('button', { name: '☰' }));
+
+    await waitFor(() => {
+      expect(menuContainer).not.toHaveClass('open');
+    });
   });
 
   test('renders the menu on larger screens', () => {
@@ -42,11 +44,8 @@ describe('Menu Component', () => {
 
     render(<Menu />);
 
-    //Menu button is not rendered on larger screens
     expect(screen.queryByRole('button', { name: '☰' })).not.toBeInTheDocument();
 
-
-    //Navigation links are visible by default on larger screens
     const menuContainer = screen.getByRole('navigation').parentElement;
     expect(menuContainer).toBeVisible();
   });
@@ -54,7 +53,6 @@ describe('Menu Component', () => {
   test('navigation links have the correct href attributes', () => {
     render(<Menu />);
 
-    //Check href attributes of the links
     expect(screen.getByRole('link', { name: /home/i })).toHaveAttribute('href', '/homePage');
     expect(screen.getByRole('link', { name: /swipe/i })).toHaveAttribute('href', '/swipePage');
   });

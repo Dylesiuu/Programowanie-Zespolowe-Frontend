@@ -11,8 +11,6 @@
   background: #f5f5f5;
 }
 
-
-
 .cardWrapper {
   display: flex;
   justify-content: center;
@@ -27,7 +25,6 @@
   justify-content: center;
 }
 
-/* cardModule to group AnimalCard and buttons */
 .cardModule {
   flex: 1; 
   display: flex;
@@ -57,8 +54,6 @@
   background-color: #0056b3;
 }
 
-
-/*Mobile mode */
 @media (max-width: 768px) {
   .page {
     flex-direction: column;

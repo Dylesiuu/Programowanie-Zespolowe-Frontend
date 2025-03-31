@@ -52,7 +52,6 @@ const AnimalCard = ({ image = [], name, gender, age, location, traits = [], shel
             )}
           </>
         ) : (
-          //When there are no images show message
           <div className={styles.noImageMessage}>
             No Image
           </div>
