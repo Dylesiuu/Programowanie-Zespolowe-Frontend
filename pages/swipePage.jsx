@@ -47,8 +47,6 @@ const SwipePage = () => {
         const petData = await response.json(); 
         const formattedPets = petData.matchedAnimals.map(animal => ({
           ...animal,
-          
-          image: Array.isArray(animal.image) ? animal.image : [animal.image], 
           traits: animal.traits.map(t => t.name) 
         }));
         setPets(formattedPets); 
