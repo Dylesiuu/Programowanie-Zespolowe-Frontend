@@ -6,7 +6,7 @@ import 'normalize.css/normalize.css';
 function MyApp({ Component, pageProps }) {
   return (
     <div className="page">
-      <Menu /> {}
+      {/* <Menu /> {} */}
       <Component {...pageProps} /> {}
     </div>
   );
