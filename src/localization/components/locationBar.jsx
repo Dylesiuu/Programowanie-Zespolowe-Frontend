@@ -3,7 +3,7 @@ import styles from "../locationBar.module.css";
 import MapComponent from './mapComponent';
 
 const LocationBar = ({ defaultLocation, onLocationChange, onRangeChange }) => {
-  const [range, setRange] = useState(30);
+  const [range, setRange] = useState(30000);
   const [showMap, setShowMap] = useState(false);
   const [locationName, setLocationName] = useState(defaultLocation);
 
@@ -11,7 +11,7 @@ const LocationBar = ({ defaultLocation, onLocationChange, onRangeChange }) => {
     setShowMap(true);
   };
 
-  const handleLocationSelect = (position, locationName ) => {
+  const handleLocationSelect = (position, locationName) => {
     onLocationChange(position);
     setLocationName(locationName);
     setShowMap(false);
@@ -32,17 +32,16 @@ const LocationBar = ({ defaultLocation, onLocationChange, onRangeChange }) => {
         onClick={handleLocationClick}
         readOnly
       />
-      {/* Render the map component if showMap is true */}
       {showMap && <MapComponent onLocationSelect={handleLocationSelect} setLocationName={setLocationName}/>}
       </div>
 
       <select value={range} onChange={handleRangeChange} className={styles.select}>
-        <option value={10}>+10 km</option>
-        <option value={30}>+30 km</option>
-        <option value={50}>+50 km</option>
-        <option value={100}>+100 km</option>
-        <option value={250}>+250 km</option>
-        <option value={500}>+500 km</option>
+        <option value={10000}>+10 km</option>
+        <option value={30000}>+30 km</option>
+        <option value={50000}>+50 km</option>
+        <option value={100000}>+100 km</option>
+        <option value={250000}>+250 km</option>
+        <option value={500000}>+500 km</option>
       </select>
     </div>
   );

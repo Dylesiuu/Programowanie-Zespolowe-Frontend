@@ -1,5 +1,6 @@
 import React from 'react';
-import { render, fireEvent, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import AnimalCard from '../components/animalCard';
 
@@ -20,7 +21,6 @@ describe('AnimalCard Component', () => {
   test('renders AnimalCard with props', () => {
     render(<AnimalCard {...mockProps} />);
 
-    //All the props are rendered correctly
     expect(screen.getByText('Mike')).toBeInTheDocument();
     expect(screen.getByText('Male, 3 years old')).toBeInTheDocument();
     expect(screen.getByText('Gdańsk')).toBeInTheDocument();
@@ -31,48 +31,40 @@ describe('AnimalCard Component', () => {
     expect(screen.getByAltText('Mike')).toHaveAttribute('src', mockProps.image[0]);
   });
 
-  test('switches images on button click', () => {
+  test('switches images on button click', async () => {
     render(<AnimalCard {...mockProps} />);
 
     const nextButton = screen.getByText('›');
     const prevButton = screen.getByText('‹');
     const image = screen.getByAltText('Mike');
 
-    //Image is displayed
     expect(image).toHaveAttribute('src', mockProps.image[0]);
 
-    //Verify that the image changes
-    fireEvent.click(nextButton);
+    await userEvent.click(nextButton);
     expect(image).toHaveAttribute('src', mockProps.image[1]);
 
-    //Same here - verify that the image changes
-    fireEvent.click(prevButton);
+    await userEvent.click(prevButton);
     expect(image).toHaveAttribute('src', mockProps.image[0]);
   });
 
-  test('toggles full image view on click', () => {
+  test('toggles full image view on click', async () => {
     render(<AnimalCard {...mockProps} />);
 
     const imageContainer = screen.getByAltText('Mike').parentElement;
     const image = screen.getByAltText('Mike');
 
-    //Check if its not in fullscreen
     expect(image).not.toHaveClass('fullImage');
 
-    //Check if its in fullscreen
-    fireEvent.click(imageContainer);
+    await userEvent.click(imageContainer);
     expect(image).toHaveClass('fullImage');
 
-    //Check if it goes back to normal
-    fireEvent.click(imageContainer);
+    await userEvent.click(imageContainer);
     expect(image).not.toHaveClass('fullImage');
   });
-
   test('renders without traits', () => {
     const propsWithoutTraits = { ...mockProps, traits: [] };
     render(<AnimalCard {...propsWithoutTraits} />);
 
-    //No traits are displayed
     expect(screen.queryByText('Friendly')).not.toBeInTheDocument();
   });
 
@@ -80,10 +72,8 @@ describe('AnimalCard Component', () => {
     const propsWithoutImage = { ...mockProps, image: [] };
     render(<AnimalCard {...propsWithoutImage} />);
   
-    //"No Image" message is displayed
     expect(screen.getByText('No Image')).toBeInTheDocument();
   
-    //Image is not rendered
     expect(screen.queryByAltText('Mike')).not.toBeInTheDocument();
   });
 });
