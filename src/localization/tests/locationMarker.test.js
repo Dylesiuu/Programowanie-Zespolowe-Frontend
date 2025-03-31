@@ -1,6 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import LocationMarker from '../components/locationMarker'; 
+import { useMapEvents } from 'react-leaflet';
 
 jest.mock('react-leaflet', () => ({
     useMapEvents: jest.fn(),
@@ -13,9 +14,7 @@ describe('LocationMarker', () => {
     mockSetPosition = jest.fn();
     mockReverseGeocode = jest.fn();
 
-    //Mocking useMapEvents to simulate the map click
-    require('react-leaflet').useMapEvents.mockImplementation((eventHandlers) => {
-      //Store the click handler
+    useMapEvents.mockImplementation((eventHandlers) => {
       if (eventHandlers.click) {
         const fakeEvent = { latlng: { lat: 52.52, lng: 13.405 } };
         eventHandlers.click(fakeEvent);
@@ -33,7 +32,6 @@ describe('LocationMarker', () => {
       />
     );
 
-    //After click setPosition and reverseGeocode should be called
     expect(mockSetPosition).toHaveBeenCalledWith({ lat: 52.52, lng: 13.405 });
     expect(mockReverseGeocode).toHaveBeenCalledWith({ lat: 52.52, lng: 13.405 });
   });
