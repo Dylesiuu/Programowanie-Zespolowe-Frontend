@@ -1,9 +1,11 @@
 import dynamic from 'next/dynamic';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import Image from 'next/image';
 import AnimalCard from '../src/swiping/components/animalCard'; 
 import Buttons from '../src/swiping/components/buttons';
 import styles from '../src/styles/swipePage.module.css';         
 import LocationBar from '../src/localization/components/locationBar';
+
 
 const MapComponent = dynamic(() => import('../src/localization/components/mapComponent'), { ssr: false });
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL; 
@@ -62,16 +64,13 @@ const SwipePage = () => {
     fetchPets();
   }, [location, range]);
 
-  const handleSwipe = (decision) => {
-    if (pets.length === 0) return; 
+  const handleSwipe = useCallback((decision) => {
+    if (pets.length === 0) return;
 
     if (currentIndex < pets.length) {
-      setCurrentIndex(currentIndex + 1);
-    } else {
-      return 
+      setCurrentIndex(prev => prev + 1);
     }
-    // obsłuha 'like' i 'dislike' tutaj bnędzie kiedyś :pp
-  };
+  }, [currentIndex, pets]);
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -85,7 +84,7 @@ const SwipePage = () => {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [currentIndex, pets]);
+  }, [handleSwipe]);
 
   return (
     <div className={styles.page}>
@@ -123,7 +122,13 @@ const SwipePage = () => {
               <div className={styles.cardModule}>
               <p>Koniec piesków i kotków :c</p>
               <p>Zmień lokalizację lub zasięg, aby zobaczyć więcej!</p>
-              <img src="https://media1.tenor.com/m/t7_iTN0iYekAAAAd/sad-sad-cat.gif" alt="Koniec pjesków i kotków" />
+              <Image
+                src="https://media1.tenor.com/m/t7_iTN0iYekAAAAd/sad-sad-cat.gif"
+                alt="Koniec pjesków i kotków"
+                width={400} 
+                height={400}
+                unoptimized 
+              />
             </div>
             )}
           </>
