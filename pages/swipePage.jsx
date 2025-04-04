@@ -138,4 +138,7 @@ const SwipePage = () => {
   );
 };
 
+
+
+
 export default SwipePage;
