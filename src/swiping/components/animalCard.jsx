@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Image from 'next/image';
 import styles from '../animalCard.module.css';
 
 const AnimalCard = ({ images = [], name, gender, age, location, traits = [], shelter }) => {
@@ -26,13 +27,18 @@ const AnimalCard = ({ images = [], name, gender, age, location, traits = [], she
 
         {images.length > 0 ?(
           <>
-            <img
+            <Image
               src={images[currentImageIndex]}
               alt={name}
               className={`${styles.image} ${isFullImage ? styles.fullImage : ''}`}
+              width={400}
+              height={400}
+              unoptimized
             />
+            <div className={styles.imageCounter}>
+              {currentImageIndex + 1} / {images.length}
+            </div>
 
-            {/*For multiple images */}
             {images.length > 1 && (
               <>
                 <button

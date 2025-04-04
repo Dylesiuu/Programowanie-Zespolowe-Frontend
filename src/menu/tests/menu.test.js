@@ -8,9 +8,9 @@ import Link from 'next/link';
 //Menu component isnt done yet so this test will be updated later
 
 jest.mock('next/link', () => {
-  return ({ children, href }) => {
-    return <a href={href}>{children}</a>; // Mock Link as a simple anchor tag
-  };
+  const MockLink = ({ children, href }) => <a href={href}>{children}</a>;
+  MockLink.displayName = 'Link';
+  return MockLink;
 });
 
 describe('Menu Component', () => {
