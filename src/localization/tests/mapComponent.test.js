@@ -8,7 +8,7 @@ jest.mock('react-leaflet', () => ({
   Marker: jest.fn(() => null),
 }));
 
-const mockLocationMarker = ({ setPosition }) => {
+const MockLocationMarker = ({ setPosition }) => {
   React.useEffect(() => {
     setPosition({ lat: 52.52, lng: 13.405 });
   }, [setPosition]);
@@ -16,7 +16,7 @@ const mockLocationMarker = ({ setPosition }) => {
   return null;
 };
 
-jest.mock('../components/locationMarker', () => mockLocationMarker);
+jest.mock('../components/locationMarker', () => MockLocationMarker);
 
 describe('MapComponent Component', () => {
   let mockOnLocationSelect;
