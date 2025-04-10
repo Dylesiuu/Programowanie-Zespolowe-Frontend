@@ -1,0 +1,13 @@
+.navbar{
+    background: linear-gradient(to bottom, #FF85A1, #FFD1DC); 
+    height: 100vh;
+    width: 15vw;
+    min-width: 200px;
+    z-index: 1001;
+    position: fixed;
+    justify-content: space-between;
+    align-items: top;
+    font-family: "Coiny", cursive;
+    color: #e9436c;
+    font-size: 1.5rem;
+}
