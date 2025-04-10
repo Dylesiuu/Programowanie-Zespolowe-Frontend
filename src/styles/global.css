@@ -1,6 +1,7 @@
+@import "tailwindcss";
 @font-face {
   font-family: 'MyFont';
-  src: url('/fonts/Parkinsans-Light.ttf') format('truetype');
+  src: url('../../public/fonts/Parkinsans-Light.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
