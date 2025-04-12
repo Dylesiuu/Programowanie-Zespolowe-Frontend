@@ -122,11 +122,11 @@ const Navbar = () => {
 
   return (
     <div className="fixed h-15 px-3 w-screen bg-[#CE8455] z-[1001]">
-      <div className="flex h-full w-full justify-between items-center text-white text-[15px] space-x-[10px] sm:space-x-[20px]">
+      <div className="flex h-full w-full justify-between items-center text-white text-[0.9375rem] space-x-[0.625rem] sm:space-x-[1.25rem]">
         <div>Logo</div>
         {/* Search bar with dropdown */}
         <div
-          className="relative w-full items-center max-w-[400px]"
+          className="relative w-full items-center max-w-[25rem]"
           ref={searchDropdownRef}
         >
           <input
@@ -167,7 +167,7 @@ const Navbar = () => {
           )}
         </div>
         {/* Buttons for navigation */}
-        <div className="flex flex-shrink-0 items-center justify-end space-x-[10px] sm:space-x-[30px]">
+        <div className="flex flex-shrink-0 items-center justify-end space-x-[0.625rem] sm:space-x-[1.875rem]">
           {/* Admin control panel button */}
           <div>
             <button
@@ -175,7 +175,7 @@ const Navbar = () => {
               onClick={() => alert('Panel')}
             >
               <span className="flex items-center">
-                <BiDesktop className="text-[25px]" />
+                <BiDesktop className="text-[1.5625rem]" />
               </span>
               <span className="hidden md:block">Panel Kontrolny</span>
             </button>
@@ -187,7 +187,7 @@ const Navbar = () => {
               onClick={() => alert('schronisko')}
             >
               <span className="flex items-center">
-                <BiClipboard className="text-[25px]" />
+                <BiClipboard className="text-[1.5625rem]" />
               </span>
               <span className="hidden md:block">Schronisko</span>
             </button>
@@ -199,7 +199,7 @@ const Navbar = () => {
               onClick={() => router.push('/swipePage')}
             >
               <span className="flex items-center">
-                <BiHome className="text-[25px]" />
+                <BiHome className="text-[1.5625rem]" />
               </span>
               <span className="hidden md:block">Strona Główna</span>
             </button>
@@ -212,7 +212,7 @@ const Navbar = () => {
                 alt="User Profile"
                 width={50}
                 height={50}
-                className="w-[40px] h-[40px] rounded-full object-cover"
+                className="w-[2.5rem] h-[2.5rem] rounded-full object-cover"
               />
             </button>
           </div>
@@ -221,7 +221,7 @@ const Navbar = () => {
       {/* Dropdown list */}
       <div ref={dropdownRef}>
         {isDropdownOpen && (
-          <div className="absolute right-0 w-48 bg-[#CE8455] text-white text-10px sm:text-[15px] text rounded-b-lg shadow-lg">
+          <div className="absolute right-0 w-48 bg-[#CE8455] text-white text-[0.625rem] sm:text-[0.9375rem] text rounded-b-lg shadow-lg">
             <ul>
               <li
                 className="px-4 py-2 hover:bg-[#AA673C] cursor-pointer"

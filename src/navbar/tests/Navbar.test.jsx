@@ -2,7 +2,6 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import Navbar from '../components/Navbar';
 import { useRouter } from 'next/router';
 import '@testing-library/jest-dom';
-import Image from 'next/image';
 import userEvents from '@testing-library/user-event';
 
 jest.mock('next/router', () => ({
