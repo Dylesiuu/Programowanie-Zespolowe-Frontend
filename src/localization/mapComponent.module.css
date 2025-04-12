@@ -1,51 +1,51 @@
 .mapOverlay {
-    position: fixed;
-    top: 0;
-    left: 240px;
-    width: calc(100% - 240px);
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5); 
-    z-index: 1000; 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .mapContainer {
-    width: 50%;
-    height: 80%;
-    background: white;
-    border-radius: 10px;
-    overflow: hidden;
-  }
+  position: fixed;
+  top: 0;
+  left: 240px;
+  width: calc(100% - 240px);
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-  .saveButton {
-    position: absolute;
-    bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    z-index: 1001; 
-  }
+.mapContainer {
+  width: 50%;
+  height: 80%;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+}
 
-  /*Adjust for phone mode (menu hidden)*/
+.saveButton {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  z-index: 1001;
+}
+
+/*Adjust for phone mode (menu hidden)*/
 @media (max-width: 768px) {
   .mapOverlay {
-    left: 0; 
-    width: 100%; 
+    left: 0;
+    width: 100%;
   }
 
   .mapContainer {
-    width: 90%; 
-    height: 70%; 
+    width: 90%;
+    height: 70%;
   }
 
   .saveButton {
-    bottom: 20px; 
+    bottom: 20px;
   }
 }

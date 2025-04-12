@@ -15,12 +15,12 @@
 
 .title {
   font-size: 2rem;
-  font-family: "Coiny", cursive;
+  font-family: 'Coiny', cursive;
   color: #e9436c;
   margin: 1rem 0;
   text-shadow:
-    1px 1px 0px #FF85A1,
-    -1px -1px 0px #FFD1DC,
+    1px 1px 0px #ff85a1,
+    -1px -1px 0px #ffd1dc,
     2px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
@@ -50,7 +50,7 @@
 
 .userNamesInput,
 .userInput {
-  width: calc(100% - 2rem); 
+  width: calc(100% - 2rem);
   padding: 0.6rem;
   font-size: 0.9rem;
   border: 1px solid #ddd;
@@ -67,7 +67,7 @@
   width: 100%;
   padding: 0.8rem;
   font-size: 1rem;
-  background-color: #FF859B;
+  background-color: #ff859b;
   color: white;
   border: none;
   border-radius: 0.8rem;
@@ -82,7 +82,6 @@
   margin-top: 0.3rem;
   text-align: center;
 }
-
 
 .registerform input:focus {
   outline: 2px solid #fc7089;
@@ -99,12 +98,11 @@
   transform: scale(0.98);
 }
 
-
 @media (min-width: 768px) {
   .registerform {
     padding: 2rem;
   }
-  
+
   .title {
     font-size: 2.5rem;
     margin-bottom: 1.5rem;
@@ -116,7 +114,6 @@
     font-size: 1rem;
   }
 }
-
 
 .registerform input::placeholder {
   font-family: 'Parkinsans', sans-serif;

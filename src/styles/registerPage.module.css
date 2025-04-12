@@ -1,18 +1,17 @@
 @font-face {
-    font-family: 'Parkinsans';
-    src: url(/fonts/Parkinsans-Regular.ttf) format('truetype');
-    font-weight: normal;
-    font-size: normal;
-  }
+  font-family: 'Parkinsans';
+  src: url(/fonts/Parkinsans-Regular.ttf) format('truetype');
+  font-weight: normal;
+  font-size: normal;
+}
 
-  .registerPageContainer{
-
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-image: linear-gradient(#ffa7b7, #fcdcdc);
-    padding: 0;
-    margin-top: 0;
-    font-family: 'Parkinsans', sans-serif;
+.registerPageContainer {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-image: linear-gradient(#ffa7b7, #fcdcdc);
+  padding: 0;
+  margin-top: 0;
+  font-family: 'Parkinsans', sans-serif;
 }

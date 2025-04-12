@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @font-face {
   font-family: 'MyFont';
@@ -17,10 +17,8 @@
 }
 
 .menu {
-position: fixed;
-top: 0;
-width: 100%;
-z-index: 10000; /*Menu is on top */
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 10000; /*Menu is on top */
 }
-
-

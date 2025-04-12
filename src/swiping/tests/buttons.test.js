@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
-import Buttons from '../components/buttons'; 
+import Buttons from '../components/buttons';
 
 describe('Buttons Component', () => {
   const mockOnLike = jest.fn();
@@ -17,7 +17,7 @@ describe('Buttons Component', () => {
 
   test('calls onDislike handler when the dislike button is clicked', async () => {
     render(<Buttons onLike={mockOnLike} onDislike={mockOnDislike} />);
-    
+
     const dislikeButton = screen.getByTestId('dislike-button');
 
     await userEvent.click(dislikeButton);
@@ -26,7 +26,7 @@ describe('Buttons Component', () => {
 
   test('calls onLike handler when the like button is clicked', async () => {
     render(<Buttons onLike={mockOnLike} onDislike={mockOnDislike} />);
-    
+
     const likeButton = screen.getByTestId('like-button');
 
     await userEvent.click(likeButton);

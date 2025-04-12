@@ -5,7 +5,6 @@ import '@testing-library/jest-dom';
 import Image from 'next/image';
 import userEvents from '@testing-library/user-event';
 
-
 jest.mock('next/router', () => ({
   useRouter: jest.fn(),
 }));
@@ -28,15 +27,21 @@ describe('Navbar Component', () => {
   });
 
   it('display navigation buttons', () => {
-    expect(screen.getByRole('button', { name: /Panel Kontrolny/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /Schronisko/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /Strona Główna/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: /Panel Kontrolny/i })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: /Schronisko/i })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: /Strona Główna/i })
+    ).toBeInTheDocument();
   });
 
   it('show profile dropdown when profile image is clicked', async () => {
     const profileButton = screen.getByAltText('User Profile').closest('button');
     await userEvents.click(profileButton);
-    
+
     expect(screen.getByText('Profile')).toBeInTheDocument();
     expect(screen.getByText('Settings')).toBeInTheDocument();
     expect(screen.getByText('Logout')).toBeInTheDocument();
@@ -45,9 +50,9 @@ describe('Navbar Component', () => {
   it('close profile dropdown when clicking outside', async () => {
     const profileButton = screen.getByAltText('User Profile').closest('button');
     await userEvents.click(profileButton);
-    
+
     expect(screen.getByText('Profile')).toBeInTheDocument();
-    
+
     await userEvents.click(screen.getByText('Logo'));
     expect(screen.queryByText('Profile')).not.toBeInTheDocument();
   });
@@ -60,24 +65,30 @@ describe('Navbar Component', () => {
 
   describe('Search functionality', () => {
     it('show search input', () => {
-      expect(screen.getByPlaceholderText(/Wpisz imię lub nazwisko użytkownika.../i)).toBeInTheDocument();
+      expect(
+        screen.getByPlaceholderText(/Wpisz imię lub nazwisko użytkownika.../i)
+      ).toBeInTheDocument();
     });
 
     it('display loading state when searching', async () => {
-      const searchInput = screen.getByPlaceholderText(/Wpisz imię lub nazwisko użytkownika.../i);
-      
+      const searchInput = screen.getByPlaceholderText(
+        /Wpisz imię lub nazwisko użytkownika.../i
+      );
+
       await userEvents.type(searchInput, 'Jan');
-      
+
       await waitFor(() => {
         expect(screen.getByText('Wyszukiwanie...')).toBeInTheDocument();
       });
     });
 
     it('display search results after typing', async () => {
-      const searchInput = screen.getByPlaceholderText(/Wpisz imię lub nazwisko użytkownika.../i);
-      
-      await userEvents.type(searchInput,'Jan');
-      
+      const searchInput = screen.getByPlaceholderText(
+        /Wpisz imię lub nazwisko użytkownika.../i
+      );
+
+      await userEvents.type(searchInput, 'Jan');
+
       await waitFor(() => {
         expect(screen.getByText('Jan Kowalski')).toBeInTheDocument();
         expect(screen.getByText('Janek Wiśniewski')).toBeInTheDocument();
@@ -85,7 +96,9 @@ describe('Navbar Component', () => {
     });
 
     it('navigate to profile when search result is clicked', async () => {
-      const searchInput = screen.getByPlaceholderText(/Wpisz imię lub nazwisko użytkownika.../i);
+      const searchInput = screen.getByPlaceholderText(
+        /Wpisz imię lub nazwisko użytkownika.../i
+      );
 
       await userEvents.type(searchInput, 'Jan');
 
@@ -97,23 +110,27 @@ describe('Navbar Component', () => {
     });
 
     it('close search dropdown when clicking outside', async () => {
-      const searchInput = screen.getByPlaceholderText(/Wpisz imię lub nazwisko użytkownika.../i);
-      
+      const searchInput = screen.getByPlaceholderText(
+        /Wpisz imię lub nazwisko użytkownika.../i
+      );
+
       await userEvents.type(searchInput, 'Jan');
-      
+
       await waitFor(() => {
         expect(screen.getByText('Jan Kowalski')).toBeInTheDocument();
       });
-      
+
       await userEvents.click(screen.getByText('Logo'));
       expect(screen.queryByText('Jan Kowalski')).not.toBeInTheDocument();
     });
 
     it('do not show dropdown for queries shorter than 2 characters', async () => {
-      const searchInput = screen.getByPlaceholderText(/Wpisz imię lub nazwisko użytkownika.../i);
-      
+      const searchInput = screen.getByPlaceholderText(
+        /Wpisz imię lub nazwisko użytkownika.../i
+      );
+
       await userEvents.type(searchInput, 'J');
-      
+
       await waitFor(() => {
         expect(screen.queryByText('Jan Kowalski')).not.toBeInTheDocument();
       });
@@ -122,11 +139,13 @@ describe('Navbar Component', () => {
 
   it('trigger alerts for admin panel and shelter buttons', async () => {
     window.alert = jest.fn();
-    
-    const adminButton = screen.getByRole('button', { name: /Panel Kontrolny/i });
+
+    const adminButton = screen.getByRole('button', {
+      name: /Panel Kontrolny/i,
+    });
     await userEvents.click(adminButton);
     expect(window.alert).toHaveBeenCalledWith('Panel');
-    
+
     const shelterButton = screen.getByRole('button', { name: /Schronisko/i });
     await userEvents.click(shelterButton);
     expect(window.alert).toHaveBeenCalledWith('schronisko');

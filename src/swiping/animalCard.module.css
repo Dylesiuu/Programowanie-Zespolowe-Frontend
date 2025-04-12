@@ -2,14 +2,14 @@
   width: 90%;
   max-width: 350px;
   border-radius: 22px;
-  border: 3px solid #AF6B6B;
+  border: 3px solid #af6b6b;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   overflow: visible;
-  background-color: #FEFEFE;
+  background-color: #fefefe;
   padding: 15px 22px 30px 22px;
   margin: 0 auto 20px;
   z-index: 1;
-  position: relative; 
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -18,10 +18,10 @@
 .imageContainer {
   width: 100%;
   width: 315px;
-  height: 350px; 
+  height: 350px;
   border-radius: 22px;
-  border: 1px groove #AF6B6B;
-  overflow: hidden; 
+  border: 1px groove #af6b6b;
+  overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -36,7 +36,9 @@
   height: 100%;
   object-fit: cover;
   border-radius: 22px;
-  transition: transform 0.3s ease, z-index 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    z-index 0.3s ease;
 }
 
 .image.fullImage {
@@ -44,8 +46,8 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  max-width: 60vw; 
-  max-height: 60vh; 
+  max-width: 60vw;
+  max-height: 60vh;
   z-index: 1000;
   object-fit: contain;
   border-radius: 12px;
@@ -66,17 +68,15 @@
   pointer-events: none;
 }
 
-
-
 @media (min-width: 768px) {
   .image.fullImage {
-    left: calc(50% + 100px); 
+    left: calc(50% + 100px);
   }
 }
 
 @media (max-width: 768px) {
   .image.fullImage {
-    left: 50%; 
+    left: 50%;
   }
 }
 
@@ -86,12 +86,13 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.8); 
-  z-index: 999; 
-  cursor: pointer; 
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 999;
+  cursor: pointer;
 }
 
-.prevButton, .nextButton {
+.prevButton,
+.nextButton {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -102,10 +103,11 @@
   cursor: pointer;
   opacity: 0.7;
   transition: opacity 0.3s;
-  z-index: 1001; 
+  z-index: 1001;
 }
 
-.prevButton:hover, .nextButton:hover {
+.prevButton:hover,
+.nextButton:hover {
   opacity: 1;
 }
 
@@ -117,10 +119,10 @@
   right: 10px;
 }
 
-.prevButton.fullScreenButton, .nextButton.fullScreenButton {
-  position: fixed; 
+.prevButton.fullScreenButton,
+.nextButton.fullScreenButton {
+  position: fixed;
   padding: 30px 10px;
-
 }
 
 .prevButton.fullScreenButton {
@@ -128,16 +130,16 @@
 }
 
 .nextButton.fullScreenButton {
-  right: calc(50% - 200px - 20%); 
+  right: calc(50% - 200px - 20%);
 }
 
 @media (max-width: 768px) {
   .prevButton.fullScreenButton {
-    left: calc(50% - 150px - 20px); 
+    left: calc(50% - 150px - 20px);
   }
 
   .nextButton.fullScreenButton {
-    right: calc(50% - 150px - 20px); 
+    right: calc(50% - 150px - 20px);
   }
 }
 
@@ -157,7 +159,7 @@
 }
 
 .trait {
-  background-color: #A0D1C8;
+  background-color: #a0d1c8;
   color: #345049;
   padding: 7px 12px;
   border-radius: 46px;

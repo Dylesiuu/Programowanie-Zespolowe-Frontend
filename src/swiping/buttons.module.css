@@ -1,39 +1,42 @@
 .buttons {
-    display: flex;
-    justify-content: center;
-    gap: 100px;
-    margin-top: 20px;
-  }
-  
-  .dislike, .like {
-    border: none;
-    border-radius: 50%;
-    width: 60px;
-    height: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 24px;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-  }
-  
-  .dislike {
-    background-color: #ff6b6b;
-    color: white;
-  }
-  
-  .like {
-    background-color: #4caf50;
-    color: white;
-  }
-  
-  .dislike:hover {
-    background-color: #ff4c4c;
-    transform: scale(1.1);
-  }
-  
-  .like:hover {
-    background-color: #45a049;
-    transform: scale(1.1);
-  }
+  display: flex;
+  justify-content: center;
+  gap: 100px;
+  margin-top: 20px;
+}
+
+.dislike,
+.like {
+  border: none;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 24px;
+  transition:
+    background-color 0.3s ease,
+    transform 0.3s ease;
+}
+
+.dislike {
+  background-color: #ff6b6b;
+  color: white;
+}
+
+.like {
+  background-color: #4caf50;
+  color: white;
+}
+
+.dislike:hover {
+  background-color: #ff4c4c;
+  transform: scale(1.1);
+}
+
+.like:hover {
+  background-color: #45a049;
+  transform: scale(1.1);
+}
