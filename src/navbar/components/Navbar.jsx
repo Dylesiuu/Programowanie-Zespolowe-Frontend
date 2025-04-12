@@ -121,7 +121,7 @@ const Navbar = () => {
   }, []);
 
   return (
-    <div className="fixed h-15 px-3 w-screen bg-gradient-to-b from-[#FF85A1] to-[#FFD1DC] z-[1001]">
+    <div className="fixed h-15 px-3 w-screen bg-[#CE8455] z-[1001]">
       <div className="flex h-full w-full justify-between items-center text-white text-[15px] space-x-[10px] sm:space-x-[20px]">
         <div>Logo</div>
         {/* Search bar with dropdown */}
@@ -137,17 +137,17 @@ const Navbar = () => {
               searchQuery.length >= 2 && setIsSearchDropdownOpen(true)
             }
             placeholder="Wpisz imię lub nazwisko użytkownika..."
-            className="px-2 py-2 w-full h-full rounded-lg border border-[#FFD1DC] text-black focus:outline-none focus:ring-2 focus:ring-pink-400"
+            className="px-2 py-2 w-full h-full rounded-lg border bg-[#fefaf7] border-[#FFD1DC] text-black focus:outline-none focus:ring-2 focus:ring-[#AA673C]"
           />
 
           {/* Search results dropdown */}
           {isSearchDropdownOpen && !isSearching && searchResults.length > 0 && (
-            <div className="absolute top-full left-0 right-0 mt-1 bg-white rounded-lg shadow-lg z-50 max-h-60 overflow-y-auto">
+            <div className="absolute top-full left-0 right-0 mt-1 rounded-lg shadow-lg z-50 max-h-60 overflow-y-auto">
               <ul>
                 {searchResults.map((user) => (
                   <li
                     key={user.id}
-                    className="px-4 py-2 hover:bg-[#FFD1DC] cursor-pointer text-black"
+                    className="px-4 py-2 bg-[#CE8455] hover:bg-[#AA673C] cursor-pointer text-white"
                     onClick={() => {
                       router.push(`/profile/${user.id}`);
                       setIsSearchDropdownOpen(false);
@@ -161,7 +161,7 @@ const Navbar = () => {
           )}
 
           {isSearching && (
-            <div className="absolute top-full left-0 right-0 mt-1 bg-white rounded-lg shadow-lg z-50 p-2 text-black">
+            <div className="absolute top-full left-0 right-0 mt-1 rounded-lg shadow-lg z-50 p-2 bg-[#CE8455] text-white">
               Wyszukiwanie...
             </div>
           )}
@@ -221,22 +221,22 @@ const Navbar = () => {
       {/* Dropdown list */}
       <div ref={dropdownRef}>
         {isDropdownOpen && (
-          <div className="absolute right-0 w-48 bg-gradient-to-t from-[#FF85A1] to-[#FFD1DC] text-white text-10px sm:text-[15px] text rounded-b-lg shadow-lg">
+          <div className="absolute right-0 w-48 bg-[#CE8455] text-white text-10px sm:text-[15px] text rounded-b-lg shadow-lg">
             <ul>
               <li
-                className="px-4 py-2 hover:bg-[#FFD1DC] cursor-pointer"
+                className="px-4 py-2 hover:bg-[#AA673C] cursor-pointer"
                 onClick={() => alert('/profile')}
               >
                 Profile
               </li>
               <li
-                className="px-4 py-2 hover:bg-[#FFD1DC] cursor-pointer"
+                className="px-4 py-2 hover:bg-[#AA673C] cursor-pointer"
                 onClick={() => alert('/settings')}
               >
                 Settings
               </li>
               <li
-                className="px-4 py-2 hover:bg-[#FFD1DC] cursor-pointer"
+                className="px-4 py-2 hover:bg-[#AA673C] hover:rounded-b-lg cursor-pointer"
                 onClick={() => alert('Logged out!')}
               >
                 Logout
