@@ -1,11 +1,11 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import LocationMarker from '../components/locationMarker'; 
+import LocationMarker from '../components/locationMarker';
 import { useMapEvents } from 'react-leaflet';
 
 jest.mock('react-leaflet', () => ({
-    useMapEvents: jest.fn(),
-  }));
+  useMapEvents: jest.fn(),
+}));
 
 describe('LocationMarker', () => {
   let mockSetPosition, mockReverseGeocode;
@@ -33,6 +33,9 @@ describe('LocationMarker', () => {
     );
 
     expect(mockSetPosition).toHaveBeenCalledWith({ lat: 52.52, lng: 13.405 });
-    expect(mockReverseGeocode).toHaveBeenCalledWith({ lat: 52.52, lng: 13.405 });
+    expect(mockReverseGeocode).toHaveBeenCalledWith({
+      lat: 52.52,
+      lng: 13.405,
+    });
   });
 });

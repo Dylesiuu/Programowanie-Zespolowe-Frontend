@@ -2,7 +2,15 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import styles from '../animalCard.module.css';
 
-const AnimalCard = ({ images = [], name, gender, age, location, traits = [], shelter }) => {
+const AnimalCard = ({
+  images = [],
+  name,
+  gender,
+  age,
+  location,
+  traits = [],
+  shelter,
+}) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isFullImage, setIsFullImage] = useState(false);
 
@@ -13,7 +21,9 @@ const AnimalCard = ({ images = [], name, gender, age, location, traits = [], she
 
   const handlePrevImage = (event) => {
     event.stopPropagation();
-    setCurrentImageIndex((currentImageIndex - 1 + images.length) % images.length);
+    setCurrentImageIndex(
+      (currentImageIndex - 1 + images.length) % images.length
+    );
   };
 
   const toggleFullImage = () => {
@@ -22,10 +32,8 @@ const AnimalCard = ({ images = [], name, gender, age, location, traits = [], she
 
   return (
     <div className={styles.card}>
-
       <div className={styles.imageContainer} onClick={toggleFullImage}>
-
-        {images.length > 0 ?(
+        {images.length > 0 ? (
           <>
             <Image
               src={images[currentImageIndex]}
@@ -58,13 +66,13 @@ const AnimalCard = ({ images = [], name, gender, age, location, traits = [], she
             )}
           </>
         ) : (
-          <div className={styles.noImageMessage}>
-            No Image
-          </div>
+          <div className={styles.noImageMessage}>No Image</div>
         )}
       </div>
 
-      {isFullImage && <div className={styles.overlay} onClick={toggleFullImage} />}
+      {isFullImage && (
+        <div className={styles.overlay} onClick={toggleFullImage} />
+      )}
 
       <div className={styles.info}>
         <h2>{name}</h2>
@@ -79,7 +87,7 @@ const AnimalCard = ({ images = [], name, gender, age, location, traits = [], she
           </span>
         ))}
       </div>
-      
+
       <div className={styles.shelterInfo}>
         <p>{shelter}</p>
       </div>

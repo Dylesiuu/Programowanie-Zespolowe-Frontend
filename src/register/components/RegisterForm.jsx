@@ -1,17 +1,16 @@
-import React, { useState } from "react";
-import styles from "../Register.module.css";
-import { useRouter } from "next/router";
+import React, { useState } from 'react';
+import styles from '../Register.module.css';
+import { useRouter } from 'next/router';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-
 const RegisterForm = () => {
   const router = useRouter();
-  const [name, setName] = useState("");
-  const [lastname, setLastname] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [name, setName] = useState('');
+  const [lastname, setLastname] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [errors, setErrors] = useState({});
 
   const passwordRequirements =
@@ -21,48 +20,45 @@ const RegisterForm = () => {
     e.preventDefault();
     const newErrors = {};
 
-    if (!name) newErrors.name = "Imię jest wymagane.";
-    if (!lastname) newErrors.lastname = "Nazwisko jest wymagane.";
-    if (!email) newErrors.email = "Email jest wymagany.";
-    else if (!/\S+@\S+\.\S+/.test(email)) newErrors.email = "Nieprawidłowy format adresu e-mail.";
-    if (!password) newErrors.password = "Hasło jest wymagane.";
-    if (!confirmPassword) newErrors.confirmPassword = "Powtórz hasło.";
-
+    if (!name) newErrors.name = 'Imię jest wymagane.';
+    if (!lastname) newErrors.lastname = 'Nazwisko jest wymagane.';
+    if (!email) newErrors.email = 'Email jest wymagany.';
+    else if (!/\S+@\S+\.\S+/.test(email))
+      newErrors.email = 'Nieprawidłowy format adresu e-mail.';
+    if (!password) newErrors.password = 'Hasło jest wymagane.';
+    if (!confirmPassword) newErrors.confirmPassword = 'Powtórz hasło.';
 
     if (password && !passwordRequirements.test(password)) {
       newErrors.password =
-        "Hasło musi mieć co najmniej 12 znaków, zawierać dużą literę, cyfrę i znak specjalny.";
+        'Hasło musi mieć co najmniej 12 znaków, zawierać dużą literę, cyfrę i znak specjalny.';
     }
 
     if (password && confirmPassword && password !== confirmPassword) {
-      newErrors.confirmPassword = "Hasła muszą być takie same!";
+      newErrors.confirmPassword = 'Hasła muszą być takie same!';
     }
     setErrors(newErrors);
     if (Object.keys(newErrors).length > 0) return;
 
-
     try {
       const response = await fetch(`${API_BASE_URL}/auth/register`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, lastname, email, password }),
       });
       if (response.ok) {
-        await router.replace("/loginPage");
+        await router.replace('/loginPage');
       } else if (response.status === 409) {
-          setErrors({
-            global: "Dany email jest już zajęty.",
-          });
-        }
-        else {
-          setErrors({
-            global: "Wystąpił problem podczas rejestracji.",
-          });
-        }
-
+        setErrors({
+          global: 'Dany email jest już zajęty.',
+        });
+      } else {
+        setErrors({
+          global: 'Wystąpił problem podczas rejestracji.',
+        });
+      }
     } catch (error) {
       setErrors({
-        global: "Wystąpił problem z połączeniem. Spróbuj ponownie później.",
+        global: 'Wystąpił problem z połączeniem. Spróbuj ponownie później.',
       });
     }
   };
@@ -143,7 +139,7 @@ const RegisterForm = () => {
           Zarejestruj
         </button>
         {errors.global && (
-            <p className={styles.errorMessage}>{errors.global}</p>
+          <p className={styles.errorMessage}>{errors.global}</p>
         )}
       </form>
     </div>

@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import styles from "../locationBar.module.css"; 
+import React, { useState } from 'react';
+import styles from '../locationBar.module.css';
 import MapComponent from './mapComponent';
 
 const LocationBar = ({ defaultLocation, onLocationChange, onRangeChange }) => {
@@ -25,17 +25,25 @@ const LocationBar = ({ defaultLocation, onLocationChange, onRangeChange }) => {
   return (
     <div className={styles.container}>
       <div className={styles.locationWrapper}>
-      
-      <input
-        type="text"
-        value={locationName}
-        onClick={handleLocationClick}
-        readOnly
-      />
-      {showMap && <MapComponent onLocationSelect={handleLocationSelect} setLocationName={setLocationName}/>}
+        <input
+          type="text"
+          value={locationName}
+          onClick={handleLocationClick}
+          readOnly
+        />
+        {showMap && (
+          <MapComponent
+            onLocationSelect={handleLocationSelect}
+            setLocationName={setLocationName}
+          />
+        )}
       </div>
 
-      <select value={range} onChange={handleRangeChange} className={styles.select}>
+      <select
+        value={range}
+        onChange={handleRangeChange}
+        className={styles.select}
+      >
         <option value={10000}>+10 km</option>
         <option value={30000}>+30 km</option>
         <option value={50000}>+50 km</option>
