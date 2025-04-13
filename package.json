@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "jest"
+    "lint:fix": "npm run lint -- --fix",
+    "test": "jest",
+    "test:cov": "npm run test -- --coverage"
   },
   "dependencies": {
     "@tailwindcss/postcss": "^4.1.3",
