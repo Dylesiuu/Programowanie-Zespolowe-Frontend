@@ -9,9 +9,7 @@ const LocationMarker = ({ position, setPosition, reverseGeocode }) => {
     },
   });
 
-  return position === null ? null : (
-    <Marker position={position}></Marker>
-  );
+  return position === null ? null : <Marker position={position}></Marker>;
 };
 
 export default LocationMarker;

@@ -8,14 +8,14 @@ describe('AnimalCard Component', () => {
   const mockProps = {
     images: [
       'https://pettownsendvet.com/wp-content/uploads/2023/01/iStock-1052880600-1024x683.jpg',
-      'https://upload.wikimedia.org/wikipedia/commons/1/1e/Dog_in_animal_shelter_in_Washington%2C_Iowa.jpg'
+      'https://upload.wikimedia.org/wikipedia/commons/1/1e/Dog_in_animal_shelter_in_Washington%2C_Iowa.jpg',
     ],
     name: 'Mike',
     gender: 'Male',
     age: '3 years old',
     location: 'Gdańsk',
     traits: ['Friendly', 'Playful', 'Energetic'],
-    shelter: 'Happy Tails Shelter'
+    shelter: 'Happy Tails Shelter',
   };
 
   test('renders AnimalCard with props', () => {
@@ -28,7 +28,10 @@ describe('AnimalCard Component', () => {
     expect(screen.getByText('Playful')).toBeInTheDocument();
     expect(screen.getByText('Energetic')).toBeInTheDocument();
     expect(screen.getByText('Happy Tails Shelter')).toBeInTheDocument();
-    expect(screen.getByAltText('Mike')).toHaveAttribute('src', mockProps.images[0]);
+    expect(screen.getByAltText('Mike')).toHaveAttribute(
+      'src',
+      mockProps.images[0]
+    );
   });
 
   test('switches images on button click', async () => {
@@ -71,9 +74,9 @@ describe('AnimalCard Component', () => {
   test('renders without image', () => {
     const propsWithoutImage = { ...mockProps, images: [] };
     render(<AnimalCard {...propsWithoutImage} />);
-  
+
     expect(screen.getByText('No Image')).toBeInTheDocument();
-  
+
     expect(screen.queryByAltText('Mike')).not.toBeInTheDocument();
   });
 });

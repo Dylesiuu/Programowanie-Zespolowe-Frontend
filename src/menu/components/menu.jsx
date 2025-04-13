@@ -14,7 +14,7 @@ export default function Menu() {
     checkScreenSize();
     window.addEventListener('resize', checkScreenSize);
 
-    return () => window.removeEventListener('resize', checkScreenSize); 
+    return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
 
   const toggleMenu = () => {
@@ -30,8 +30,12 @@ export default function Menu() {
       )}
       <nav className={styles.menu} role="navigation">
         <ul>
-          <li><Link href="/homePage">Home</Link></li>
-          <li><Link href="/swipePage">Swipe</Link></li>
+          <li>
+            <Link href="/homePage">Home</Link>
+          </li>
+          <li>
+            <Link href="/swipePage">Swipe</Link>
+          </li>
           <li>Favourite</li>
           <li>Profile</li>
           <li>Settings</li>

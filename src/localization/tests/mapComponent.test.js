@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent, screen, act } from '@testing-library/react'; 
+import { render, fireEvent, screen, act } from '@testing-library/react';
 import MapComponent from '../components/mapComponent';
 
 jest.mock('react-leaflet', () => ({
@@ -30,7 +30,9 @@ describe('MapComponent Component', () => {
   test('renders map component', () => {
     render(<MapComponent onLocationSelect={mockOnLocationSelect} />);
 
-    expect(screen.getByRole('button', { name: /save location/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: /save location/i })
+    ).toBeInTheDocument();
   });
 
   test('calls onLocationSelect when save button is clicked and position is set', () => {
