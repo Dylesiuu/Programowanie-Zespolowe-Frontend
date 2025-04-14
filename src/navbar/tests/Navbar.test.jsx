@@ -10,6 +10,7 @@ jest.mock('next/router', () => ({
 
 describe('Navbar Component', () => {
   const mockPush = jest.fn();
+  window.alert = jest.fn();
   beforeEach(() => {
     useRouter.mockImplementation(() => ({
       push: mockPush,
@@ -21,8 +22,8 @@ describe('Navbar Component', () => {
     jest.clearAllMocks();
   });
 
-  it('render without crashing', () => {
-    expect(screen.getByText('Logo')).toBeInTheDocument();
+  it('render without crashing', async () => {
+    expect(await screen.findByText('Logo')).toBeInTheDocument();
   });
 
   it('display navigation buttons', () => {
@@ -41,18 +42,18 @@ describe('Navbar Component', () => {
     const profileButton = screen.getByAltText('User Profile').closest('button');
     await userEvents.click(profileButton);
 
-    expect(screen.getByText('Profile')).toBeInTheDocument();
-    expect(screen.getByText('Settings')).toBeInTheDocument();
-    expect(screen.getByText('Logout')).toBeInTheDocument();
+    expect(await screen.findByText('Profile')).toBeInTheDocument();
+    expect(await screen.findByText('Settings')).toBeInTheDocument();
+    expect(await screen.findByText('Logout')).toBeInTheDocument();
   });
 
   it('close profile dropdown when clicking outside', async () => {
     const profileButton = screen.getByAltText('User Profile').closest('button');
     await userEvents.click(profileButton);
 
-    expect(screen.getByText('Profile')).toBeInTheDocument();
+    expect(await screen.findByText('Profile')).toBeInTheDocument();
 
-    await userEvents.click(screen.getByText('Logo'));
+    await userEvents.click(await screen.findByText('Logo'));
     expect(screen.queryByText('Profile')).not.toBeInTheDocument();
   });
 
@@ -76,9 +77,7 @@ describe('Navbar Component', () => {
 
       await userEvents.type(searchInput, 'Jan');
 
-      await waitFor(() => {
-        expect(screen.getByText('Wyszukiwanie...')).toBeInTheDocument();
-      });
+      expect(await screen.findByText('Wyszukiwanie...')).toBeInTheDocument();
     });
 
     it('display search results after typing', async () => {
@@ -88,10 +87,8 @@ describe('Navbar Component', () => {
 
       await userEvents.type(searchInput, 'Jan');
 
-      await waitFor(() => {
-        expect(screen.getByText('Jan Kowalski')).toBeInTheDocument();
-        expect(screen.getByText('Janek Wiśniewski')).toBeInTheDocument();
-      });
+      expect(await screen.findByText('Jan Kowalski')).toBeInTheDocument();
+      expect(await screen.findByText('Janek Wiśniewski')).toBeInTheDocument();
     });
 
     it('navigate to profile when search result is clicked', async () => {
@@ -101,11 +98,9 @@ describe('Navbar Component', () => {
 
       await userEvents.type(searchInput, 'Jan');
 
-      await waitFor(async () => {
-        const result = screen.getByText('Jan Kowalski');
-        await userEvents.click(result);
-        expect(mockPush).toHaveBeenCalledWith('/profile/1');
-      });
+      const result = await screen.findByText('Jan Kowalski');
+      await userEvents.click(result);
+      expect(mockPush).toHaveBeenCalledWith('/profile/1');
     });
 
     it('close search dropdown when clicking outside', async () => {
@@ -115,11 +110,9 @@ describe('Navbar Component', () => {
 
       await userEvents.type(searchInput, 'Jan');
 
-      await waitFor(() => {
-        expect(screen.getByText('Jan Kowalski')).toBeInTheDocument();
-      });
+      expect(await screen.findByText('Jan Kowalski')).toBeInTheDocument();
 
-      await userEvents.click(screen.getByText('Logo'));
+      await userEvents.click(await screen.findByText('Logo'));
       expect(screen.queryByText('Jan Kowalski')).not.toBeInTheDocument();
     });
 
@@ -130,15 +123,11 @@ describe('Navbar Component', () => {
 
       await userEvents.type(searchInput, 'J');
 
-      await waitFor(() => {
-        expect(screen.queryByText('Jan Kowalski')).not.toBeInTheDocument();
-      });
+      expect(await screen.queryByText('Jan Kowalski')).not.toBeInTheDocument();
     });
   });
 
   it('trigger alerts for admin panel and shelter buttons', async () => {
-    window.alert = jest.fn();
-
     const adminButton = screen.getByRole('button', {
       name: /Panel Kontrolny/i,
     });
