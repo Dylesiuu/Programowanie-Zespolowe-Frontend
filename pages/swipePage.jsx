@@ -1,10 +1,12 @@
 import dynamic from 'next/dynamic';
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
 import Image from 'next/image';
 import AnimalCard from '../src/swiping/components/animalCard';
 import Buttons from '../src/swiping/components/buttons';
 import styles from '../src/styles/swipePage.module.css';
 import LocationBar from '../src/localization/components/locationBar';
+import { UserContext } from '@/context/userContext';
+import { useRouter } from 'next/navigation';
 
 const MapComponent = dynamic(
   () => import('../src/localization/components/mapComponent'),
@@ -19,8 +21,16 @@ const SwipePage = () => {
   const [pets, setPets] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const userContext = useContext(UserContext);
+  const router = useRouter();
 
   useEffect(() => {
+    if (!userContext.isLoggedIn()) {
+      router.replace('/loginPage');
+
+      return;
+    }
+
     const fetchPets = async () => {
       if (!location) return;
 
@@ -38,6 +48,7 @@ const SwipePage = () => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${userContext.token}`,
           },
           body: JSON.stringify(requestBody),
         });
