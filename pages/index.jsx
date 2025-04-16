@@ -1,11 +1,16 @@
+'use client';
+
 import React from "react";
 import styles from "../src/styles/index.module.css";
 import Link from "next/link";
 import Image from "next/image";
 import img from "../public/img/mainPagePic.png";
 import googleLogo from "../public/img/google.png";
+import { useRouter } from "next/router";
 
 const MainPage = () => {
+  const Router = useRouter();
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
   return (
     <div className={styles.mainPageContainer}>
       <div className={styles.navbar}>
@@ -22,7 +27,7 @@ const MainPage = () => {
           <p className={styles.description}>
           Dzięki Petfinity łatwiej odnajdziesz futrzastego przyjaciela idealnie dopasowanego do Twoich preferencji.
           </p>
-          <button className={styles.googleButton}>
+          <button onClick={() => Router.replace(`${API_BASE_URL}/auth/google`)} className={styles.googleButton}>
             <Image src={googleLogo} alt="Google icon" className={styles.googleIcon} />
             Zaloguj się z Google
           </button>
