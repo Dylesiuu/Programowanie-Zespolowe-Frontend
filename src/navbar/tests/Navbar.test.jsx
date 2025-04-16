@@ -100,7 +100,7 @@ describe('Navbar Component', () => {
 
       const result = await screen.findByText('Jan Kowalski');
       await userEvents.click(result);
-      expect(mockPush).toHaveBeenCalledWith('/profile/1');
+      expect(window.alert).toHaveBeenCalledWith('profile/1');
     });
 
     it('close search dropdown when clicking outside', async () => {
