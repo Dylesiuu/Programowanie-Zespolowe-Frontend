@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import styles from '../../register/Register.module.css';
 import { useRouter } from 'next/router';
+import { UserContext } from '@/context/userContext';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -9,6 +10,7 @@ const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({});
+  const userContext = useContext(UserContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,7 +32,10 @@ const LoginForm = () => {
       });
 
       if (response.ok) {
-        await router.replace('/swipePage');
+        const parsedResponse = await response.json();
+
+        userContext.setToken(parsedResponse.token);
+        userContext.setUserId(parsedResponse.userId);
       } else {
         if (response.status === 401 || response.status === 409) {
           setErrors({
