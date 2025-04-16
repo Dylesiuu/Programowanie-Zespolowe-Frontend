@@ -149,7 +149,7 @@ const Navbar = () => {
                     key={user.id}
                     className="px-4 py-2 bg-[#CE8455] hover:bg-[#AA673C] cursor-pointer text-white"
                     onClick={() => {
-                      router.push(`/profile/${user.id}`);
+                      alert('/profile');
                       setIsSearchDropdownOpen(false);
                     }}
                   >
