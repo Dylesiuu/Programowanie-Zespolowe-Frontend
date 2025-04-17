@@ -1,0 +1,21 @@
+# Katalogi
+.next/            # Katalog buildowy Next.js
+node_modules/     # Zależności projektu
+dist/             # Ewentualny katalog outputu (np. przy `next export`)
+out/              # Domyślny katalog outputu w Next.js (alternatywa dla `dist`)
+public/           # Statyczne pliki (obrazy, fonts, itp.)
+coverage/         # Wyniki testów (np. z Jest/Istanbul)
+.vscode/          # Konfiguracja VS Code (opcjonalnie)
+.idea/            # Konfiguracja JetBrains IDE (opcjonalnie)
+
+# Pliki konfiguracyjne i systemowe
+package-lock.json # Lockfile npm
+yarn.lock         # Lockfile Yarn
+pnpm-lock.yaml    # Lockfile PNPM
+.env*             # Zmienne środowiskowe (np. `.env.local`, `.env.development`)
+*.log             # Logi
+*.min.*           # Zminimalizowane pliki (CSS, JS)
+.DS_Store         # Plik konfiguracyjny macOS (opcjonalnie)
+
+# Inne
+.next-env.d.ts    # Automatycznie generowany plik typów Next.js
