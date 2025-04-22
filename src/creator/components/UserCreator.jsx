@@ -18,9 +18,9 @@ const UserCreator = () => {
     setShowSkipWarning(true);
   };
 
-  const confirmSkip = () => {
+  const confirmSkip = async () => {
     setShowSkipWarning(false);
-    router.push('/swipePage');
+    await router.push('/swipePage');
   };
 
   const cancelSkip = () => {

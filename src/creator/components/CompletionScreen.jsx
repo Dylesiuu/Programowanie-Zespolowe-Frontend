@@ -5,8 +5,8 @@ import { useRouter } from 'next/router';
 const CompletionScreen = ({ selectedTags }) => {
   const router = useRouter();
 
-  const handleContinue = () => {
-    router.push('/swipePage');
+  const handleContinue = async () => {
+    await router.push('/swipePage');
   };
 
   return (
