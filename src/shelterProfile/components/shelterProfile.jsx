@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import InfoCard from './infoCard';
 import AnimalsCard from './animalsCard';
+import AnimalCard from './animalCard';
 
 const ShelterProfile = () => {
+  const [selectedAnimal, setSelectedAnimal] = useState(null);
+  const [showModal, setShowModal] = useState(false); // State to control modal animation
+
   const shelter = {
     name: 'Happy Paws Shelter',
     location: '123 Main Street, Springfield',
@@ -14,20 +18,156 @@ const ShelterProfile = () => {
     {
       id: 1,
       name: 'Buddy',
-      breed: 'Golden Retriever',
-      image: '/img/dog.jpg',
+      age: 3,
+      description: 'Przyjazny i energiczny golden retriever.',
+      gender: 'Samiec',
+      type: 'Pies',
+      shelterId: 101,
+      traits: ['Playful', 'Loyal', 'Good with kids'],
+      images: ['/img/dog.jpg', '/img/dog2.jpeg'],
     },
     {
       id: 2,
       name: 'Mittens',
-      breed: 'Tabby Cat',
-      image: '/img/cat.jpg',
+      age: 2,
+      description: 'Ciekawski i czuły kot rasy tabby.',
+      gender: 'FeSamiec',
+      type: 'Kot',
+      shelterId: 102,
+      traits: ['Independent', 'Loves to cuddle', 'Quiet'],
+      images: ['/img/cat.jpg'],
     },
     {
       id: 3,
       name: 'Charlie',
-      breed: 'Beagle',
-      image: '/img/dog2.jpeg',
+      age: 4,
+      description: 'Zabawny i przygodowy beagle.',
+      gender: 'Samiec',
+      type: 'Pies',
+      shelterId: 101,
+      traits: ['Energetic', 'Friendly', 'Good with other dogs'],
+      images: ['/img/dog2.jpeg', '/img/dog.jpg'],
+    },
+    {
+      id: 4,
+      name: 'Buddy',
+      age: 3,
+      description: 'Lojalny i kochający golden retriever.',
+      gender: 'Samiec',
+      type: 'Pies',
+      shelterId: 101,
+      traits: ['Loyal', 'Friendly', 'Good with kids'],
+      images: ['/img/dog.jpg', '/img/dog2.jpeg'],
+    },
+    {
+      id: 5,
+      name: 'Mittens',
+      age: 2,
+      description: 'Zabawny i ciekawski kot rasy tabby.',
+      gender: 'FeSamiec',
+      type: 'Kot',
+      shelterId: 102,
+      traits: ['Playful', 'Quiet', 'Loves attention'],
+      images: ['/img/cat.jpg'],
+    },
+    {
+      id: 6,
+      name: 'Charlie',
+      age: 4,
+      description: 'Ciekawski i energiczny beagle.',
+      gender: 'Samiec',
+      type: 'Pies',
+      shelterId: 101,
+      traits: ['Adventurous', 'Friendly', 'Good with other pets'],
+      images: ['/img/dog2.jpeg'],
+    },
+    {
+      id: 7,
+      name: 'Buddy',
+      age: 3,
+      description: 'Lojalny i kochający golden retriever.',
+      gender: 'Samiec',
+      type: 'Pies',
+      shelterId: 101,
+      traits: ['Loyal', 'Friendly', 'Good with kids'],
+      images: ['/img/dog.jpg', '/img/dog2.jpeg'],
+    },
+    {
+      id: 8,
+      name: 'Mittens',
+      age: 2,
+      description: 'Zabawny i ciekawski kot rasy tabby.',
+      gender: 'FeSamiec',
+      type: 'Kot',
+      shelterId: 102,
+      traits: ['Playful', 'Quiet', 'Loves attention'],
+      images: ['/img/cat.jpg'],
+    },
+    {
+      id: 9,
+      name: 'Charlie',
+      age: 4,
+      description: 'Ciekawski i energiczny beagle.',
+      gender: 'Samiec',
+      type: 'Pies',
+      shelterId: 101,
+      traits: ['Adventurous', 'Friendly', 'Good with other pets'],
+      images: ['/img/dog2.jpeg'],
+    },
+    {
+      id: 10,
+      name: 'Charlie',
+      age: 4,
+      description: 'Ciekawski i energiczny beagle.',
+      gender: 'Samiec',
+      type: 'Pies',
+      shelterId: 101,
+      traits: ['Adventurous', 'Friendly', 'Good with other pets'],
+      images: ['/img/dog2.jpeg'],
+    },
+    {
+      id: 11,
+      name: 'Buddy',
+      age: 3,
+      description: 'Lojalny i kochający golden retriever.',
+      gender: 'Samiec',
+      type: 'Pies',
+      shelterId: 101,
+      traits: ['Loyal', 'Friendly', 'Good with kids'],
+      images: ['/img/dog.jpg', '/img/dog2.jpeg'],
+    },
+    {
+      id: 12,
+      name: 'Mittens',
+      age: 2,
+      description: 'Zabawny i ciekawski kot rasy tabby.',
+      gender: 'Samica',
+      type: 'Kot',
+      shelterId: 102,
+      traits: ['Playful', 'Quiet', 'Loves attention'],
+      images: ['/img/cat.jpg'],
+    },
+    {
+      id: 13,
+      name: 'Charlie',
+      age: 4,
+      description: 'Ciekawski i energiczny beagle.',
+      gender: 'Samiec',
+      type: 'Pies',
+      shelterId: 101,
+      traits: ['Adventurous', 'Friendly', 'Good with other pets'],
+      images: ['/img/dog2.jpeg'],
+    },
+    {
+      id: 14,
+      name: 'Charlie',
+      age: 4,
+      description: 'Ciekawski i energiczny beagle.',
+      gender: 'Samiec',
+      type: 'Pies',
+      shelterId: 101,
+      traits: ['Adventurous', 'Friendly', 'Good with other pets'],
+      images: ['/img/dog2.jpeg'],
     },
   ];
 
@@ -36,18 +176,52 @@ const ShelterProfile = () => {
   };
 
   const handleAnimalClick = (animal) => {
-    alert(`You clicked on ${animal.name}`);
+    setSelectedAnimal(animal);
+    setTimeout(() => setShowModal(true), 50);
+  };
+
+  const closeAnimalCard = () => {
+    setShowModal(false);
+    setTimeout(() => setSelectedAnimal(null), 300);
   };
 
   return (
-    <div className="flex h-screen w-screen items-center justify-between pt-15 px-4 space-x-2">
-      {/* Info Card */}
-      <div className="flex w-full h-full max-w-md items-center justify-center py-5">
-        <InfoCard shelter={shelter} onEdit={handleEdit} />
+    <div className="flex h-[100vh] w-[100vw] bg-[#fefaf7]">
+      <div className="flex h-full w-full items-center justify-between pt-15 px-7 space-x-7">
+        {/* Info Card */}
+        <div className="flex w-full h-full max-w-md items-center justify-center py-5">
+          <InfoCard shelter={shelter} />
+        </div>
+        <div className="flex w-full h-full items-center justify-center py-5">
+          <AnimalsCard animals={animals} onAnimalClick={handleAnimalClick} />
+        </div>
       </div>
-      <div className="flex w-full h-full items-center justify-center py-5">
-        <AnimalsCard animals={animals} onAnimalClick={handleAnimalClick} />
-      </div>
+
+      {/* Animal Card Modal */}
+      {selectedAnimal && (
+        <div
+          className={`fixed inset-0 flex items-center justify-center z-50 transition-all duration-500 ease-in-out ${
+            showModal ? 'backdrop-blur-sm opacity-100' : 'opacity-0'
+          }`}
+        >
+          <div
+            className={`relative bg-white p-6 rounded-3xl shadow-2xl transform transition-all duration-300 ease-in-out ${
+              showModal ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
+            }`}
+          >
+            <button
+              className="absolute top-2 right-2 bg-[#CE8455] hover:bg-[#AA673C] text-[#fefaf7] w-8 h-8 flex items-center justify-center rounded-full shadow-md cursor-pointer"
+              onClick={closeAnimalCard}
+            >
+              ✕
+            </button>
+            <AnimalCard
+              animal={selectedAnimal}
+              onEdit={() => alert(`Edytujesz zwierzę: ${selectedAnimal.name}`)}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

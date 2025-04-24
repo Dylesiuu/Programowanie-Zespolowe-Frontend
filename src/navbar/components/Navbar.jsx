@@ -184,7 +184,10 @@ const Navbar = () => {
           <div>
             <button
               className="flex cursor-pointer items-center space-x-1 "
-              onClick={() => alert('schronisko')}
+              onClick={() => {
+                alert('schronisko');
+                router.push('/shelterProfilePage');
+              }}
             >
               <span className="flex items-center">
                 <BiClipboard className="text-[1.5625rem]" />
