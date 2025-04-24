@@ -30,7 +30,7 @@ const GoogleSuccess = () => {
       const firstLogin = isFirstLogin === 'true';
 
       if (firstLogin) {
-        router.replace('/registerPage'); // change redirect to userCreator
+        router.replace('/userCreatorPage'); 
       } else {
         router.replace('/swipePage');
       }
