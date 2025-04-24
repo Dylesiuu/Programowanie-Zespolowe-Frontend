@@ -9,7 +9,7 @@ const GoogleSuccess = () => {
 
   useEffect(() => {
     if (!router.isReady) {
-      return; 
+      return;
     }
 
     if (error && error !== 'null') {
@@ -18,8 +18,12 @@ const GoogleSuccess = () => {
     }
 
     if (token && userId) {
-      console.log('[GoogleSuccess] Received token and userId:', { token, userId, isFirstLogin });
-      
+      console.log('[GoogleSuccess] Received token and userId:', {
+        token,
+        userId,
+        isFirstLogin,
+      });
+
       localStorage.setItem('token', token);
       localStorage.setItem('userId', userId);
 
@@ -27,12 +31,10 @@ const GoogleSuccess = () => {
 
       if (firstLogin) {
         router.replace('/registerPage'); // change redirect to userCreator
-      } 
-      else {
+      } else {
         router.replace('/swipePage');
       }
-    } 
-    else {
+    } else {
       console.log('[GoogleSuccess] Missing token or userId, cannot proceed');
     }
   }, [router.isReady, token, userId, isFirstLogin, error]);

@@ -7,7 +7,6 @@ import img from '../public/img/mainPagePic.png';
 import googleLogo from '../public/img/google.png';
 import { useRouter } from 'next/router';
 
-
 const MainPage = () => {
   const Router = useRouter();
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -39,18 +38,18 @@ const MainPage = () => {
             idealnie dopasowanego do Twoich preferencji.
           </p>
           <div className="flex justify-center">
-          <button
+            <button
               onClick={() => Router.replace(`${API_BASE_URL}/auth/google`)}
               className="bg-white text-[#333] border border-[#ccc] rounded-lg px-4 py-2 text-base flex items-center gap-2 hover:bg-[#f0f0f0]"
-          >
-            <Image
-              src={googleLogo}
-              alt="Google icon"
-              width={20}
-              height={20}
-            />
-            Zaloguj się z Google
-          </button>
+            >
+              <Image
+                src={googleLogo}
+                alt="Google icon"
+                width={20}
+                height={20}
+              />
+              Zaloguj się z Google
+            </button>
           </div>
         </div>
 
