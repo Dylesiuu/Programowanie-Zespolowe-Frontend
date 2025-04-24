@@ -17,7 +17,7 @@ const AnimalCard = ({ animal, onEdit }) => {
   };
 
   return (
-    <div className="flex flex-col w-full max-w-md p-6 rounded-3xl shadow-2xl bg-white">
+    <div className="flex flex-col w-full h-full p-6 rounded-3xl shadow-2xl bg-white">
       {/* Animal Image Carousel */}
       <div className="w-full h-64 relative mb-4">
         <Image
@@ -46,7 +46,7 @@ const AnimalCard = ({ animal, onEdit }) => {
         )}
         {/* Image Counter - Show only if more than one image */}
         {animal.images.length > 1 && (
-          <div className="absolute bottom-2 right-2 bg-[#AA673C] text-[#fefaf7] text-sm px-3 py-1 rounded-full shadow-lg">
+          <div className="absolute bottom-2 right-2 bg-[#CE8455] text-[#fefaf7] text-sm px-3 py-1 rounded-full shadow-lg">
             {currentImageIndex + 1}/{animal.images.length}
           </div>
         )}
@@ -67,7 +67,16 @@ const AnimalCard = ({ animal, onEdit }) => {
         <strong>Typ:</strong> {animal.type}
       </p>
       <p className="text-gray-600 mb-2">
-        <strong>Cechy:</strong> {animal.traits.join(', ')}
+        <div className="flex flex-wrap gap-2 mb-4">
+          {animal.traits.map((trait, index) => (
+            <span
+              key={index}
+              className="bg-[#eca071] text-[#fefaf7] text-sm px-3 py-1 rounded-full shadow-lg"
+            >
+              {trait}
+            </span>
+          ))}
+        </div>
       </p>
 
       {/* Edit Button */}

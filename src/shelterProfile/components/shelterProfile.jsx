@@ -200,12 +200,12 @@ const ShelterProfile = () => {
       {/* Animal Card Modal */}
       {selectedAnimal && (
         <div
-          className={`fixed inset-0 flex items-center justify-center z-50 transition-all duration-500 ease-in-out ${
+          className={`fixed flex inset-0 items-center justify-center z-50 transition-all duration-500 ease-in-out ${
             showModal ? 'backdrop-blur-sm opacity-100' : 'opacity-0'
           }`}
         >
           <div
-            className={`relative bg-white p-6 rounded-3xl shadow-2xl transform transition-all duration-300 ease-in-out ${
+            className={`relative w-[30%] h-[85%] min-w-[20rem] top-7 bg-white p-6 rounded-3xl shadow-2xl transform transition-all duration-300 ease-in-out ${
               showModal ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
             }`}
           >
