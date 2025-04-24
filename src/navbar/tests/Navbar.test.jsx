@@ -136,6 +136,6 @@ describe('Navbar Component', () => {
 
     const shelterButton = screen.getByRole('button', { name: /Schronisko/i });
     await userEvents.click(shelterButton);
-    expect(window.alert).toHaveBeenCalledWith('schronisko');
+    expect(mockPush).toHaveBeenCalledWith('/shelterProfilePage');
   });
 });
