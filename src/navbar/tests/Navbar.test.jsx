@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import Navbar from '../components/Navbar';
+import Navbar from '../components/navbar';
 import { useRouter } from 'next/router';
 import '@testing-library/jest-dom';
 import userEvents from '@testing-library/user-event';

@@ -1,7 +1,7 @@
 import React from 'react';
 import '../src/styles/global.css';
 import 'normalize.css/normalize.css';
-import Navbar from '../src/navbar/components/Navbar';
+import Navbar from '../src/navbar/components/navbar';
 import { useRouter } from 'next/router';
 
 function MyApp({ Component, pageProps }) {
