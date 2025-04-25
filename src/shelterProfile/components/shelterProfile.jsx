@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import InfoCard from './infoCard';
-import AnimalsCard from './animalsField';
+import AnimalsField from './animalsField';
 import AnimalCard from './animalCard';
 
 const ShelterProfile = () => {
@@ -209,7 +209,7 @@ const ShelterProfile = () => {
           <InfoCard shelter={shelter} />
         </div>
         <div className="flex w-full h-full items-center justify-center py-5">
-          <AnimalsCard animals={animals} onAnimalClick={handleAnimalClick} />
+          <AnimalsField animals={animals} onAnimalClick={handleAnimalClick} />
         </div>
       </div>
 

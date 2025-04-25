@@ -47,10 +47,8 @@ describe('AnimalCard Component', () => {
   it('calls the onEdit function when the "Edytuj" button is clicked', async () => {
     render(<AnimalCard animal={mockAnimal} onEdit={mockOnEdit} />);
 
-    // Click the "Edytuj" button
     await userEvent.click(await screen.findByText('Edytuj'));
 
-    // Check if the onEdit function was called
     expect(mockOnEdit).toHaveBeenCalledTimes(1);
   });
 
