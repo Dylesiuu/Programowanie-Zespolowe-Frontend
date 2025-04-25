@@ -37,7 +37,7 @@ const GoogleSuccess = () => {
     } else {
       console.log('[GoogleSuccess] Missing token or userId, cannot proceed');
     }
-  }, [router.isReady, token, userId, isFirstLogin, error]);
+  }, [router.isReady, token, userId, isFirstLogin, error, router]);
 
   return (
     <div className="flex items-center justify-center min-h-screen p-4">
