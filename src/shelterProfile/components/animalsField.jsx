@@ -2,7 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import style from '../scrollbar.module.css';
 
-const AnimalsCard = ({ animals, onAnimalClick }) => {
+const AnimalsField = ({ animals, onAnimalClick }) => {
   return (
     <div className="flex flex-col w-full h-full px-2 rounded-3xl shadow-2xl bg-[#fefaf7]/80 justify-center items-center">
       <div
@@ -40,4 +40,4 @@ const AnimalsCard = ({ animals, onAnimalClick }) => {
   );
 };
 
-export default AnimalsCard;
+export default AnimalsField;

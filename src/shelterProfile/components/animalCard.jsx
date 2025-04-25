@@ -41,8 +41,8 @@ const AnimalCard = ({ animal, onEdit }) => {
         <Image
           src={animal.images[currentImageIndex]}
           alt={animal.name}
-          layout="fill"
-          objectFit="cover"
+          fill
+          style={{ objectFit: 'cover' }}
           className="rounded-2xl"
         />
         {/* Navigation Buttons - Show only if more than one image */}

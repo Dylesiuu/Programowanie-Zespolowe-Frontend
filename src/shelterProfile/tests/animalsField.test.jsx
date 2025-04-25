@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import AnimalsCard from '../components/animalsField';
+import AnimalsField from '../components/animalsField';
 import userEvent from '@testing-library/user-event';
 
 describe('AnimalsCard Component', () => {
@@ -26,7 +26,7 @@ describe('AnimalsCard Component', () => {
 
   it('renders the AnimalsCard component with a list of animals', () => {
     render(
-      <AnimalsCard animals={mockAnimals} onAnimalClick={mockOnAnimalClick} />
+      <AnimalsField animals={mockAnimals} onAnimalClick={mockOnAnimalClick} />
     );
 
     mockAnimals.forEach((animal) => {
@@ -45,7 +45,7 @@ describe('AnimalsCard Component', () => {
 
   it('calls the onAnimalClick function when an animal card is clicked', () => {
     render(
-      <AnimalsCard animals={mockAnimals} onAnimalClick={mockOnAnimalClick} />
+      <AnimalsField animals={mockAnimals} onAnimalClick={mockOnAnimalClick} />
     );
 
     fireEvent.click(screen.getByText('Bella'));
@@ -56,7 +56,7 @@ describe('AnimalsCard Component', () => {
 
   it('applies hover effects when an animal card is hovered', async () => {
     render(
-      <AnimalsCard animals={mockAnimals} onAnimalClick={mockOnAnimalClick} />
+      <AnimalsField animals={mockAnimals} onAnimalClick={mockOnAnimalClick} />
     );
 
     const animalElement = await screen.findByText('Bella');
@@ -68,7 +68,7 @@ describe('AnimalsCard Component', () => {
   });
 
   it('renders an empty state when no animals are provided', async () => {
-    render(<AnimalsCard animals={[]} onAnimalClick={mockOnAnimalClick} />);
+    render(<AnimalsField animals={[]} onAnimalClick={mockOnAnimalClick} />);
 
     expect(screen.queryByText('Bella')).not.toBeInTheDocument();
     expect(screen.queryByText('Max')).not.toBeInTheDocument();
