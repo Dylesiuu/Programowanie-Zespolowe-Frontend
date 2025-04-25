@@ -3,6 +3,24 @@ import Image from 'next/image';
 
 const AnimalCard = ({ animal, onEdit }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isDescriptionVisible, setIsDescriptionVisible] = useState(false);
+  const [isTraitsVisible, setIsTraitsVisible] = useState(false);
+
+  const showDescription = () => {
+    setIsDescriptionVisible(true);
+  };
+
+  const hideDescription = () => {
+    setIsDescriptionVisible(false);
+  };
+
+  const showTraits = () => {
+    setIsTraitsVisible(true);
+  };
+
+  const hideTraits = () => {
+    setIsTraitsVisible(false);
+  };
 
   const handleNextImage = () => {
     setCurrentImageIndex((prevIndex) =>
@@ -58,7 +76,20 @@ const AnimalCard = ({ animal, onEdit }) => {
         <strong>Wiek:</strong> {animal.age} lata
       </p>
       <p className="text-gray-600 mb-2">
-        <strong>Opis:</strong> {animal.description}
+        <strong>Description: </strong>
+        {animal.description.length > 100 ? (
+          <>
+            {animal.description.slice(0, 100).trimEnd()}...{' '}
+            <button
+              className="text-blue-500 hover:underline cursor-pointer ml-1"
+              onClick={showDescription}
+            >
+              Read More
+            </button>
+          </>
+        ) : (
+          animal.description
+        )}
       </p>
       <p className="text-gray-600 mb-2">
         <strong>Płeć:</strong> {animal.gender}
@@ -66,9 +97,13 @@ const AnimalCard = ({ animal, onEdit }) => {
       <p className="text-gray-600 mb-2">
         <strong>Typ:</strong> {animal.type}
       </p>
-      <p className="text-gray-600 mb-2">
-        <div className="flex flex-wrap gap-2 mb-4">
-          {animal.traits.map((trait, index) => (
+      <div className="text-gray-600 mb-2">
+        <strong>Traits: </strong>
+        <div className="flex flex-wrap gap-2">
+          {(animal.traits.length > 3
+            ? animal.traits.slice(0, 3)
+            : animal.traits
+          ).map((trait, index) => (
             <span
               key={index}
               className="bg-[#eca071] text-[#fefaf7] text-sm px-3 py-1 rounded-full shadow-lg"
@@ -77,7 +112,15 @@ const AnimalCard = ({ animal, onEdit }) => {
             </span>
           ))}
         </div>
-      </p>
+        {animal.traits.length > 3 && (
+          <button
+            className="text-blue-500 hover:underline cursor-pointer mt-2"
+            onClick={showTraits}
+          >
+            Show More
+          </button>
+        )}
+      </div>
 
       {/* Edit Button */}
       <button
@@ -89,6 +132,43 @@ const AnimalCard = ({ animal, onEdit }) => {
       >
         Edytuj
       </button>
+      {/* Description Card */}
+      {isDescriptionVisible && (
+        <div className="fixed inset-0 flex items-center justify-center backdrop-blur-sm opacity-100 z-50">
+          <div className="relative w-[90%] max-w-lg bg-white p-6 rounded-3xl shadow-2xl">
+            <button
+              className="absolute top-2 right-2 bg-[#CE8455] hover:bg-[#AA673C] text-[#fefaf7] w-8 h-8 flex items-center justify-center rounded-full shadow-md cursor-pointer"
+              onClick={hideDescription}
+            >
+              ✕
+            </button>
+            <p className="text-gray-600">{animal.description}</p>
+          </div>
+        </div>
+      )}
+      {/* Traits Card */}
+      {isTraitsVisible && (
+        <div className="fixed inset-0 flex items-center justify-center backdrop-blur-sm opacity-100 z-50">
+          <div className="relative w-[90%] max-w-lg bg-white p-6 rounded-3xl shadow-2xl">
+            <button
+              className="absolute top-2 right-2 bg-[#CE8455] hover:bg-[#AA673C] text-[#fefaf7] w-8 h-8 flex items-center justify-center rounded-full shadow-md cursor-pointer"
+              onClick={hideTraits}
+            >
+              ✕
+            </button>
+            <div className="flex flex-wrap gap-2 mb-4">
+              {animal.traits.map((trait, index) => (
+                <span
+                  key={index}
+                  className="bg-[#eca071] text-[#fefaf7] text-sm px-3 py-1 rounded-full shadow-lg"
+                >
+                  {trait}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
