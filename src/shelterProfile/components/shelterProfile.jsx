@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import InfoCard from './infoCard';
-import AnimalsCard from './animalsCard';
+import AnimalsCard from './animalsField';
 import AnimalCard from './animalCard';
 
 const ShelterProfile = () => {
   const [selectedAnimal, setSelectedAnimal] = useState(null);
-  const [showModal, setShowModal] = useState(false); // State to control modal animation
+  const [showModal, setShowModal] = useState(false);
 
   const shelter = {
     name: 'Happy Paws Shelter',
@@ -42,10 +42,15 @@ const ShelterProfile = () => {
       name: 'Mittens',
       age: 2,
       description: 'Ciekawski i czuły kot rasy tabby.',
-      gender: 'FeSamiec',
+      gender: 'Samica',
       type: 'Kot',
       shelterId: 102,
-      traits: ['Independent', 'Loves to cuddle'],
+      traits: [
+        'Independent',
+        'Loves to cuddle',
+        'Super długi tag, który zajmie dziwnie dużo miejsca',
+        'A tu taki krótki',
+      ],
       images: ['/img/cat.jpg'],
     },
     {
@@ -75,7 +80,7 @@ const ShelterProfile = () => {
       name: 'Mittens',
       age: 2,
       description: 'Zabawny i ciekawski kot rasy tabby.',
-      gender: 'FeSamiec',
+      gender: 'Samica',
       type: 'Kot',
       shelterId: 102,
       traits: ['Playful', 'Quiet', 'Loves attention'],
@@ -108,7 +113,7 @@ const ShelterProfile = () => {
       name: 'Mittens',
       age: 2,
       description: 'Zabawny i ciekawski kot rasy tabby.',
-      gender: 'FeSamiec',
+      gender: 'Samica',
       type: 'Kot',
       shelterId: 102,
       traits: ['Playful', 'Quiet', 'Loves attention'],
@@ -197,7 +202,7 @@ const ShelterProfile = () => {
   };
 
   return (
-    <div className="flex h-[100vh] w-[100vw] bg-[#fefaf7]">
+    <div className="flex w-full h-full">
       <div className="flex h-full w-full items-center justify-between pt-15 px-7 space-x-7">
         {/* Info Card */}
         <div className="flex w-full h-full max-w-md items-center justify-center py-5">
@@ -216,7 +221,7 @@ const ShelterProfile = () => {
           }`}
         >
           <div
-            className={`relative w-[30%] h-[85%] min-w-[20rem] top-7 bg-white p-6 rounded-3xl shadow-2xl transform transition-all duration-300 ease-in-out ${
+            className={`relative w-[30%] h-[85%] min-w-[20rem] top-7 bg-[#fefaf7]/85 p-6 rounded-3xl shadow-2xl transform transition-all duration-300 ease-in-out ${
               showModal ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
             }`}
           >

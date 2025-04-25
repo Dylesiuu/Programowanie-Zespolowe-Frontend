@@ -37,7 +37,7 @@ const AnimalCard = ({ animal, onEdit }) => {
   return (
     <div className="flex flex-col w-full h-full p-6 rounded-3xl shadow-2xl bg-white">
       {/* Animal Image Carousel */}
-      <div className="w-full h-64 relative mb-4">
+      <div className="w-full h-64 relative mb-4 ">
         <Image
           src={animal.images[currentImageIndex]}
           alt={animal.name}
@@ -76,15 +76,15 @@ const AnimalCard = ({ animal, onEdit }) => {
         <strong>Wiek:</strong> {animal.age} lata
       </p>
       <p className="text-gray-600 mb-2">
-        <strong>Description: </strong>
+        <strong>Opis: </strong>
         {animal.description.length > 100 ? (
           <>
             {animal.description.slice(0, 100).trimEnd()}...{' '}
             <button
-              className="text-blue-500 hover:underline cursor-pointer ml-1"
+              className="text-[#d46622] hover:underline cursor-pointer ml-1"
               onClick={showDescription}
             >
-              Read More
+              Więcej...
             </button>
           </>
         ) : (
@@ -97,8 +97,8 @@ const AnimalCard = ({ animal, onEdit }) => {
       <p className="text-gray-600 mb-2">
         <strong>Typ:</strong> {animal.type}
       </p>
-      <div className="text-gray-600 mb-2">
-        <strong>Traits: </strong>
+      <div className="flex flex-wrap items-center text-gray-600 mb-2 gap-1">
+        <strong>Tagi: </strong>
         <div className="flex flex-wrap gap-2">
           {(animal.traits.length > 3
             ? animal.traits.slice(0, 3)
@@ -106,7 +106,7 @@ const AnimalCard = ({ animal, onEdit }) => {
           ).map((trait, index) => (
             <span
               key={index}
-              className="bg-[#eca071] text-[#fefaf7] text-sm px-3 py-1 rounded-full shadow-lg"
+              className="bg-[#fefaf7] text-[#CE8455] border border-[#CE8455] text-sm px-3 py-1 rounded-full shadow-lg"
             >
               {trait}
             </span>
@@ -114,10 +114,10 @@ const AnimalCard = ({ animal, onEdit }) => {
         </div>
         {animal.traits.length > 3 && (
           <button
-            className="text-blue-500 hover:underline cursor-pointer mt-2"
+            className="text-[#d46622] hover:underline cursor-pointer mt-2"
             onClick={showTraits}
           >
-            Show More
+            Pokaż więcej
           </button>
         )}
       </div>
@@ -134,7 +134,7 @@ const AnimalCard = ({ animal, onEdit }) => {
       </button>
       {/* Description Card */}
       {isDescriptionVisible && (
-        <div className="fixed inset-0 flex items-center justify-center backdrop-blur-sm opacity-100 z-50">
+        <div className="fixed inset-0 flex items-center justify-center  backdrop-blur-sm opacity-100 z-50">
           <div className="relative w-[90%] max-w-lg bg-white p-6 rounded-3xl shadow-2xl">
             <button
               className="absolute top-2 right-2 bg-[#CE8455] hover:bg-[#AA673C] text-[#fefaf7] w-8 h-8 flex items-center justify-center rounded-full shadow-md cursor-pointer"
@@ -160,7 +160,7 @@ const AnimalCard = ({ animal, onEdit }) => {
               {animal.traits.map((trait, index) => (
                 <span
                   key={index}
-                  className="bg-[#eca071] text-[#fefaf7] text-sm px-3 py-1 rounded-full shadow-lg"
+                  className="bg-[#fefaf7] text-[#CE8455] border border-[#CE8455] text-sm px-3 py-1 rounded-full shadow-lg"
                 >
                   {trait}
                 </span>
