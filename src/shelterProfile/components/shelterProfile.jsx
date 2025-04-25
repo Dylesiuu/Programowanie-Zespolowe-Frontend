@@ -208,6 +208,7 @@ const ShelterProfile = () => {
         <div className="flex w-full h-full max-w-md items-center justify-center py-5">
           <InfoCard shelter={shelter} />
         </div>
+        {/* Animals Field */}
         <div className="flex w-full h-full items-center justify-center py-5">
           <AnimalsField animals={animals} onAnimalClick={handleAnimalClick} />
         </div>
