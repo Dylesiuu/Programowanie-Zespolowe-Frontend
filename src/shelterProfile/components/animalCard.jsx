@@ -75,6 +75,7 @@ const AnimalCard = ({ animal, onEdit }) => {
       <p className="text-gray-600 mb-2">
         <strong>Wiek:</strong> {animal.age} lata
       </p>
+      {/* Description */}
       <p className="text-gray-600 mb-2">
         <strong>Opis: </strong>
         {animal.description.length > 100 ? (
@@ -97,6 +98,7 @@ const AnimalCard = ({ animal, onEdit }) => {
       <p className="text-gray-600 mb-2">
         <strong>Typ:</strong> {animal.type}
       </p>
+      {/* Traits */}
       <div className="flex flex-wrap items-center text-gray-600 mb-2 gap-1">
         <strong>Tagi: </strong>
         <div className="flex flex-wrap gap-2">
