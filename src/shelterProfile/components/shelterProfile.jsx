@@ -19,11 +19,22 @@ const ShelterProfile = () => {
       id: 1,
       name: 'Buddy',
       age: 3,
-      description: 'Przyjazny i energiczny golden retriever.',
+      description:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
       gender: 'Samiec',
       type: 'Pies',
       shelterId: 101,
-      traits: ['Playful', 'Loyal', 'Good with kids'],
+      traits: [
+        'Playful',
+        'Loyal',
+        'Good with kids',
+        'Playful',
+        'Loyal',
+        'Good with kids',
+        'Playful',
+        'Loyal',
+        'Good with kids',
+      ],
       images: ['/img/dog.jpg', '/img/dog2.jpeg'],
     },
     {
@@ -34,7 +45,7 @@ const ShelterProfile = () => {
       gender: 'FeSamiec',
       type: 'Kot',
       shelterId: 102,
-      traits: ['Independent', 'Loves to cuddle', 'Quiet'],
+      traits: ['Independent', 'Loves to cuddle'],
       images: ['/img/cat.jpg'],
     },
     {
