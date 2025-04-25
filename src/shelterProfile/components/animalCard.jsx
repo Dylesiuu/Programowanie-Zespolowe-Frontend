@@ -123,7 +123,6 @@ const AnimalCard = ({ animal, onEdit }) => {
           </button>
         )}
       </div>
-
       {/* Edit Button */}
       <button
         className="mt-4 px-4 py-2 text-lg md:text-xl
