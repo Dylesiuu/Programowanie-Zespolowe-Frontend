@@ -4,7 +4,7 @@ import style from '../scrollbar.module.css';
 
 const AnimalsCard = ({ animals, onAnimalClick }) => {
   return (
-    <div className="flex flex-col w-full h-full px-2 rounded-3xl shadow-2xl bg-white justify-center items-center">
+    <div className="flex flex-col w-full h-full px-2 rounded-3xl shadow-2xl bg-[#fefaf7]/80  justify-center items-center">
       <div
         className={`w-full h-full py-6 overflow-hidden hover:overflow-y-auto ${style.transparentScrollbar} justify-center`}
         style={{ scrollbarGutter: 'stable' }}
