@@ -136,8 +136,8 @@ const AnimalCard = ({ animal, onEdit }) => {
       </button>
       {/* Description Card */}
       {isDescriptionVisible && (
-        <div className="fixed inset-0 flex items-center justify-center  backdrop-blur-sm opacity-100 z-50">
-          <div className="relative w-[90%] max-w-lg bg-white p-6 rounded-3xl shadow-2xl">
+        <div className="fixed inset-0 flex items-center justify-center backdrop-blur-sm z-50 transition-opacity duration-300 ease-in-out opacity-100">
+          <div className="relative w-[90%] max-w-lg bg-white p-6 rounded-3xl shadow-2xl transform transition-transform duration-300 ease-in-out scale-100">
             <button
               className="absolute top-2 right-2 bg-[#CE8455] hover:bg-[#AA673C] text-[#fefaf7] w-8 h-8 flex items-center justify-center rounded-full shadow-md cursor-pointer"
               onClick={hideDescription}
@@ -150,8 +150,8 @@ const AnimalCard = ({ animal, onEdit }) => {
       )}
       {/* Traits Card */}
       {isTraitsVisible && (
-        <div className="fixed inset-0 flex items-center justify-center backdrop-blur-sm opacity-100 z-50">
-          <div className="relative w-[90%] max-w-lg bg-white p-6 rounded-3xl shadow-2xl">
+        <div className="fixed inset-0 flex items-center justify-center backdrop-blur-sm z-50 transition-opacity duration-300 ease-in-out opacity-100">
+          <div className="relative w-[90%] max-w-lg bg-white p-6 rounded-3xl shadow-2xl transform transition-transform duration-300 ease-in-out scale-100">
             <button
               className="absolute top-2 right-2 bg-[#CE8455] hover:bg-[#AA673C] text-[#fefaf7] w-8 h-8 flex items-center justify-center rounded-full shadow-md cursor-pointer"
               onClick={hideTraits}

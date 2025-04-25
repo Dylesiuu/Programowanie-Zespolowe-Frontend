@@ -110,5 +110,4 @@ describe('ShelterProfile Component', () => {
     expect(await screen.findByText('Samica')).toBeInTheDocument();
     expect(await screen.findByText('Kot')).toBeInTheDocument();
   });
-
 });
