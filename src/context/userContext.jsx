@@ -4,6 +4,7 @@ const initialState = {
   user: null,
   setUser: () => {},
   isLoggedIn: () => false,
+  logout: () => {},
 };
 
 export const UserContext = createContext(initialState);
@@ -13,16 +14,17 @@ export const UserProvider = ({ children }) => {
 
   const isLoggedIn = () => Boolean(user && user.token);
 
+  const logout = () => {
+    setUser(null); // Clear user state
+    localStorage.removeItem('user'); // Remove user from localStorage
+    console.warn('User logged out and removed from localStorage.');
+  };
+
   useEffect(() => {
     // Save user to localStorage whenever it changes
-    if (user !== null) {
-      if (user) {
-        console.warn('Saving user to localStorage...', user);
-        localStorage.setItem('user', JSON.stringify(user));
-      } else {
-        console.warn('No user to save, clearing localStorage...');
-        localStorage.removeItem('user');
-      }
+    if (user) {
+      console.warn('Saving user to localStorage...', user);
+      localStorage.setItem('user', JSON.stringify(user));
     }
   }, [user]);
 
@@ -38,7 +40,7 @@ export const UserProvider = ({ children }) => {
   }, []);
 
   return (
-    <UserContext.Provider value={{ user, setUser, isLoggedIn }}>
+    <UserContext.Provider value={{ user, setUser, isLoggedIn, logout }}>
       {children}
     </UserContext.Provider>
   );
