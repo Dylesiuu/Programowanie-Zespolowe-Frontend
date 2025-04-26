@@ -15,12 +15,14 @@ export const UserProvider = ({ children }) => {
 
   useEffect(() => {
     // Save user to localStorage whenever it changes
-    if (user) {
-      console.warn('Saving user to localStorage...', user);
-      localStorage.setItem('user', JSON.stringify(user));
-    } else {
-      console.warn('No user to save, clearing localStorage...');
-      localStorage.removeItem('user');
+    if (user !== null) {
+      if (user) {
+        console.warn('Saving user to localStorage...', user);
+        localStorage.setItem('user', JSON.stringify(user));
+      } else {
+        console.warn('No user to save, clearing localStorage...');
+        localStorage.removeItem('user');
+      }
     }
   }, [user]);
 
