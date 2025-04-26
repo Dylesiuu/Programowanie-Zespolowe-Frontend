@@ -3,6 +3,7 @@ import '../src/styles/global.css';
 import 'normalize.css/normalize.css';
 import Navbar from '../src/navbar/components/navbar';
 import { useRouter } from 'next/router';
+import { UserProvider } from '../src/context/userContext';
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
@@ -15,11 +16,13 @@ function MyApp({ Component, pageProps }) {
   ];
 
   return (
-    <div className="page">
-      {/* Conditionally render the Navbar */}
-      {!hideNavbarRoutes.includes(router.pathname) && <Navbar />}
-      <Component {...pageProps} /> {}
-    </div>
+    <UserProvider>
+      <div className="page">
+        {/* Conditionally render the Navbar */}
+        {!hideNavbarRoutes.includes(router.pathname) && <Navbar />}
+        <Component {...pageProps} />
+      </div>
+    </UserProvider>
   );
 }
 
