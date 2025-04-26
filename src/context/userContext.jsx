@@ -1,47 +1,42 @@
 import { createContext, useEffect, useState } from 'react';
 
 const initialState = {
-  token: null,
-  userId: null,
-  setToken: () => {},
-  setUserId: () => {},
+  user: null,
+  setUser: () => {},
   isLoggedIn: () => false,
 };
 
 export const UserContext = createContext(initialState);
 
 export const UserProvider = ({ children }) => {
-  const [userId, setUserId] = useState(null);
-  const [token, setToken] = useState(null);
+  const [user, setUser] = useState(null);
 
-  const isLoggedIn = () => Boolean(token);
+  const isLoggedIn = () => Boolean(user && user.token);
 
   useEffect(() => {
-    if (token) {
-      console.warn('I have a token, saving... ', token);
-
-      localStorage.setItem('userToken', token);
-
-      return;
+    // Save user to localStorage whenever it changes
+    if (user) {
+      console.warn('Saving user to localStorage...', user);
+      localStorage.setItem('user', JSON.stringify(user));
+    } else {
+      console.warn('No user to save, clearing localStorage...');
+      localStorage.removeItem('user');
     }
+  }, [user]);
 
-    const storedToken = localStorage.getItem('userToken');
-
-    if (!storedToken) {
-      console.warn('no stored token, what a shame');
-
-      return;
+  useEffect(() => {
+    // Load user from localStorage on initial render
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      console.warn('Loading user from localStorage...', storedUser);
+      setUser(JSON.parse(storedUser));
+    } else {
+      console.warn('No user found in localStorage.');
     }
-
-    setToken(storedToken);
-
-    console.warn('I have a token, setting... ', storedToken);
-  }, [token]);
+  }, []);
 
   return (
-    <UserContext.Provider
-      value={{ userId, setUserId, token, setToken, isLoggedIn }}
-    >
+    <UserContext.Provider value={{ user, setUser, isLoggedIn }}>
       {children}
     </UserContext.Provider>
   );
