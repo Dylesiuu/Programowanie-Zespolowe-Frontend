@@ -2,6 +2,8 @@ import Image from 'next/image';
 import { BiHome, BiDesktop, BiClipboard } from 'react-icons/bi';
 import { useRouter } from 'next/router';
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { UserContext } from '@/context/userContext';
+import { useContext } from 'react';
 
 const Navbar = () => {
   const router = useRouter();
@@ -12,6 +14,7 @@ const Navbar = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const [isSearchDropdownOpen, setIsSearchDropdownOpen] = useState(false);
+  const userContext = useContext(UserContext);
 
   const debounce = (func, delay) => {
     let timer;
@@ -237,7 +240,10 @@ const Navbar = () => {
               </li>
               <li
                 className="px-4 py-2 hover:bg-[#AA673C] hover:rounded-b-lg cursor-pointer"
-                onClick={() => alert('Logged out!')}
+                onClick={() => {
+                  alert('Logged out!');
+                  userContext.logout();
+                }}
               >
                 Logout
               </li>
