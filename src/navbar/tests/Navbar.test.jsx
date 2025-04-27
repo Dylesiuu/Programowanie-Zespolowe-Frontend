@@ -3,6 +3,7 @@ import Navbar from '../components/navbar';
 import { useRouter } from 'next/router';
 import '@testing-library/jest-dom';
 import userEvents from '@testing-library/user-event';
+import { UserContext } from '@/context/userContext';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(),
@@ -11,11 +12,25 @@ jest.mock('next/router', () => ({
 describe('Navbar Component', () => {
   const mockPush = jest.fn();
   window.alert = jest.fn();
+  const mockLogout = jest.fn();
+
+  // Mock the UserContext value
+  const mockUserContextValue = {
+    user: { name: 'John Doe', email: 'john.doe@example.com' },
+    logout: mockLogout,
+    isLoggedIn: () => true,
+  };
+
   beforeEach(() => {
     useRouter.mockImplementation(() => ({
       push: mockPush,
     }));
-    render(<Navbar />);
+    // Render the Navbar with the mocked UserContext
+    render(
+      <UserContext.Provider value={mockUserContextValue}>
+        <Navbar />
+      </UserContext.Provider>
+    );
   });
 
   afterEach(() => {
@@ -137,5 +152,17 @@ describe('Navbar Component', () => {
     const shelterButton = screen.getByRole('button', { name: /Schronisko/i });
     await userEvents.click(shelterButton);
     expect(mockPush).toHaveBeenCalledWith('/shelterProfilePage');
+  });
+
+  it('calls the logout function when the logout button is clicked', async () => {
+    const profileButton = screen.getByAltText('User Profile');
+    await userEvents.click(profileButton);
+
+    const logoutButton = screen.getByText('Logout');
+    await userEvents.click(logoutButton);
+
+    await waitFor(() => {
+      expect(mockLogout).toHaveBeenCalledTimes(1);
+    });
   });
 });
