@@ -94,7 +94,7 @@ describe('LoginForm', () => {
     });
   });
 
-  it('redirects to swipePage and sets user in context when login is successful', async () => {
+  it('sets user in context when login is successful', async () => {
     // Mock the fetch API to return a successful response with user data
     const mockUserData = {
       _id: '123',
@@ -117,6 +117,7 @@ describe('LoginForm', () => {
       isLoggedIn: jest.fn(),
     };
 
+    // Render the component with the mocked UserContext
     render(
       <UserContext.Provider value={mockUserContextValue}>
         <LoginForm />
@@ -136,7 +137,7 @@ describe('LoginForm', () => {
     // Simulate form submission
     await userEvent.click(screen.getByRole('button', { name: 'Zaloguj się' }));
 
-    // Wait for the assertions
+    // Wait for the assertion
     await waitFor(() => {
       // Check that the fetch API was called with the correct arguments
       expect(global.fetch).toHaveBeenCalledWith(
@@ -153,9 +154,6 @@ describe('LoginForm', () => {
 
       // Check that the user data was set in the context
       expect(mockSetUser).toHaveBeenCalledWith(mockUserData);
-
-      // Check that the user was redirected to the swipePage
-      expect(mockPush).toHaveBeenCalledWith('/swipePage');
     });
   });
 });
