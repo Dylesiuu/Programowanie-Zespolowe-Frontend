@@ -50,6 +50,7 @@ const SwipePage = () => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${userContext.user?.token}`,
           },
           body: JSON.stringify(requestBody),
         });
@@ -79,7 +80,7 @@ const SwipePage = () => {
     };
 
     fetchPets();
-  }, [location, range]);
+  }, [location, range, userContext.user?.token]);
 
   const handleSwipe = useCallback(
     (decision) => {
