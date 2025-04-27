@@ -3,6 +3,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import LoginForm from '../components/LoginForm';
 import { useRouter } from 'next/router';
+import { UserContext } from '@/context/userContext';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -93,14 +94,36 @@ describe('LoginForm', () => {
     });
   });
 
-  it('redirects to swipePage when login is successful', async () => {
+  it('redirects to swipePage and sets user in context when login is successful', async () => {
+    // Mock the fetch API to return a successful response with user data
+    const mockUserData = {
+      _id: '123',
+      name: 'John Doe',
+      email: 'john.doe@example.com',
+      token: 'some_jwt_token',
+    };
+
     global.fetch = jest.fn(() =>
       Promise.resolve({
         ok: true,
+        json: () => Promise.resolve(mockUserData),
       })
     );
-    render(<LoginForm />);
 
+    // Mock the UserContext
+    const mockSetUser = jest.fn();
+    const mockUserContextValue = {
+      setUser: mockSetUser,
+      isLoggedIn: jest.fn(),
+    };
+
+    render(
+      <UserContext.Provider value={mockUserContextValue}>
+        <LoginForm />
+      </UserContext.Provider>
+    );
+
+    // Simulate user input
     await userEvent.type(
       screen.getByPlaceholderText('Email'),
       'john.doe@example.com'
@@ -109,9 +132,13 @@ describe('LoginForm', () => {
       screen.getByPlaceholderText('Hasło'),
       'StrongPassword123!'
     );
+
+    // Simulate form submission
     await userEvent.click(screen.getByRole('button', { name: 'Zaloguj się' }));
 
+    // Wait for the assertions
     await waitFor(() => {
+      // Check that the fetch API was called with the correct arguments
       expect(global.fetch).toHaveBeenCalledWith(
         `${API_BASE_URL}/auth/login`,
         expect.objectContaining({
@@ -124,6 +151,10 @@ describe('LoginForm', () => {
         })
       );
 
+      // Check that the user data was set in the context
+      expect(mockSetUser).toHaveBeenCalledWith(mockUserData);
+
+      // Check that the user was redirected to the swipePage
       expect(mockPush).toHaveBeenCalledWith('/swipePage');
     });
   });

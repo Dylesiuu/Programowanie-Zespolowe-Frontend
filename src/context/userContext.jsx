@@ -12,7 +12,12 @@ export const UserContext = createContext(initialState);
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
-  const isLoggedIn = () => Boolean(user && user.token);
+  const isLoggedIn = () => {
+    if (process.env.NODE_ENV === 'development') {
+      return true; // Always return true in development mode
+    }
+    return Boolean(user && user.token); // Normal behavior in production
+  };
 
   const logout = () => {
     setUser(null); // Clear user state
