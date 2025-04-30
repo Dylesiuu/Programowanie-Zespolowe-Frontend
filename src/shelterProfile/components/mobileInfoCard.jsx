@@ -8,8 +8,9 @@ const MobileInfoCard = ({ shelter, onEdit, toggleCard }) => {
       <button
         className="absolute top-1 -right-4 px-2 py-2 bg-[#CE8455] hover:bg-[#AA673C] text-[#fefaf7] rounded-full shadow-md z-10"
         onClick={toggleCard}
+        data-testid="close-button"
       >
-        <BiMenu className="text-md" />
+        <BiMenu className="text-md" data-testid="bi-menu-icon" />
       </button>
 
       {/* Shelter Info */}
