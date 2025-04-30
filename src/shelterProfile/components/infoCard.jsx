@@ -2,9 +2,9 @@ import React from 'react';
 
 const InfoCard = ({ shelter, onEdit }) => {
   return (
-    <div className="flex flex-col w-full h-full rounded-3xl shadow-2xl p-4 bg-white max-w-md md:max-w-lg lg:max-w-xl mx-auto space-y-6 justify-between items-center">
+    <div className="flex flex-col w-full h-full rounded-3xl shadow-2xl p-4 bg-[#fefaf7]/80 max-w-md md:max-w-lg lg:max-w-xl mx-auto space-y-6 justify-between items-center">
       {/* Shelter info */}
-      <div className="flex flex-col w-full items-center justify-around">
+      <div className="flex flex-col w-full p-6 bg-white rounded-3xl items-center justify-around">
         <h2 className="text-lg md:text-xl lg:text-2xl font-bold text-gray-800 mb-6 md:mb-8">
           {shelter.name}
         </h2>
