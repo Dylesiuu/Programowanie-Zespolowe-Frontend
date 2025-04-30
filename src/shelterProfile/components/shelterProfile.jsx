@@ -7,7 +7,7 @@ import MobileInfoCard from './mobileInfoCard';
 const ShelterProfile = () => {
   const [selectedAnimal, setSelectedAnimal] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  const [isMobileCardVisible, setIsMobileCardVisible] = useState(true);
+  const [isMobileCardVisible, setIsMobileCardVisible] = useState(false);
 
   const shelter = {
     name: 'Happy Paws Shelter',
@@ -211,6 +211,7 @@ const ShelterProfile = () => {
     <div className="flex w-full h-full">
       {/* Mobile Info Card Background blur */}
       <div
+        data-testid="mobile-backdrop"
         className={`fixed inset-0 md:hidden transition-all duration-400 ease-in-out ${
           isMobileCardVisible ? 'backdrop-blur-md opacity-100' : 'opacity-0'
         } z-49`}
