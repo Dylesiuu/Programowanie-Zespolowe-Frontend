@@ -15,9 +15,9 @@ export const UserProvider = ({ children }) => {
   const isLoggedIn = () => {
     //comment to go to normal mode
 
-    // if (process.env.NODE_ENV === 'development') {
-    //   return true; // Always return true in development mode
-    // }
+    if (process.env.NODE_ENV === 'development') {
+      return true; // Always return true in development mode
+    }
     return Boolean(user && user.token); // Normal behavior in production
   };
 

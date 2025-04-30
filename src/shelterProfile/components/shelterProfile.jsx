@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import InfoCard from './infoCard';
 import AnimalsField from './animalsField';
 import AnimalCard from './animalCard';
+import MobileInfoCard from './mobileInfoCard';
 
 const ShelterProfile = () => {
   const [selectedAnimal, setSelectedAnimal] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [isMobileCardVisible, setIsMobileCardVisible] = useState(true);
 
   const shelter = {
     name: 'Happy Paws Shelter',
@@ -201,13 +203,31 @@ const ShelterProfile = () => {
     setTimeout(() => setSelectedAnimal(null), 300);
   };
 
+  const toggleMobileCard = () => {
+    setIsMobileCardVisible((prev) => !prev); // Toggle MobileInfoCard visibility
+  };
+
   return (
     <div className="flex w-full h-full">
-      <div className="flex h-full w-full items-center justify-between pt-15 px-7 space-x-7">
-        {/* Info Card */}
-        <div className="flex w-full h-full max-w-md items-center justify-center py-5">
-          <InfoCard shelter={shelter} />
+      {/* Mobile Info Card for Smaller Screens */}
+      <div
+        className={`fixed inset-0 z-50 transition-transform duration-500 ease-in-out md:hidden ${
+          isMobileCardVisible ? 'translate-x-0' : '-translate-x-[70%]'
+        }`}
+      >
+        <MobileInfoCard
+          shelter={shelter}
+          onEdit={handleEdit}
+          toggleCard={toggleMobileCard}
+        />
+      </div>
+
+      <div className="flex h-full w-full items-center justify-between pt-15 px-7 space-x-3 md:space-x-7">
+        {/* Info Card for Larger Screens */}
+        <div className="hidden md:flex w-full h-full max-w-md items-center justify-center py-5">
+          <InfoCard shelter={shelter} onEdit={handleEdit} />
         </div>
+
         {/* Animals Field */}
         <div className="flex w-full h-full items-center justify-center py-5">
           <AnimalsField animals={animals} onAnimalClick={handleAnimalClick} />

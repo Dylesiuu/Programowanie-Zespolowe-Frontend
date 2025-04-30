@@ -1,9 +1,18 @@
 import React from 'react';
+import { BiMenu } from 'react-icons/bi';
 
-const InfoCard = ({ shelter, onEdit }) => {
+const MobileInfoCard = ({ shelter, onEdit, toggleCard }) => {
   return (
-    <div className="flex flex-col w-full h-full rounded-3xl shadow-2xl p-4 bg-white max-w-md md:max-w-lg lg:max-w-xl mx-auto space-y-6 justify-between items-center">
-      {/* Shelter info */}
+    <div className="fixed flex flex-col inset-y-0 left-0 z-50 w-[75vw] max-w-sm mt-[3.75rem] bg-[#fefaf7] shadow-2xl p-4 space-y-6 rounded-r-3xl">
+      {/* Close Button */}
+      <button
+        className="absolute top-1 -right-4 px-2 py-2 bg-[#CE8455] hover:bg-[#AA673C] text-[#fefaf7] rounded-full shadow-md z-10"
+        onClick={toggleCard}
+      >
+        <BiMenu className="text-md" />
+      </button>
+
+      {/* Shelter Info */}
       <div className="flex flex-col w-full items-center justify-around">
         <h2 className="text-lg md:text-xl lg:text-2xl font-bold text-gray-800 mb-6 md:mb-8">
           {shelter.name}
@@ -20,7 +29,8 @@ const InfoCard = ({ shelter, onEdit }) => {
           </p>
         </div>
       </div>
-      {/* Buttons */}
+
+      {/* Edit Button */}
       <div className="w-full flex justify-center">
         <button
           className="mt-4 px-4 py-2 text-sm md:text-lg lg:text-xl
@@ -36,4 +46,4 @@ const InfoCard = ({ shelter, onEdit }) => {
   );
 };
 
-export default InfoCard;
+export default MobileInfoCard;
