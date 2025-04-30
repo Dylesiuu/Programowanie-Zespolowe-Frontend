@@ -211,16 +211,18 @@ const ShelterProfile = () => {
     <div className="flex w-full h-full">
       {/* Mobile Info Card Background blur */}
       <div
-        data-testid="mobile-backdrop"
-        className={`fixed inset-0 md:hidden transition-all duration-400 ease-in-out ${
-          isMobileCardVisible ? 'backdrop-blur-md opacity-100' : 'opacity-0'
-        } z-49`}
+        className={`
+      fixed inset-0 transition-all duration-400 ease-in-out
+      ${isMobileCardVisible ? 'backdrop-blur-md opacity-100' : 'opacity-0 pointer-events-none'}
+      sm:hidden z-40
+    `}
       ></div>
       {/* Mobile Info Card for Smaller Screens */}
       <div
-        className={`fixed inset-0 z-50 transition-transform duration-500 ease-in-out md:hidden ${
-          isMobileCardVisible ? 'translate-x-0' : '-translate-x-[70%]'
-        }`}
+        className={`
+    fixed inset-0 z-50 transition-transform duration-500 ease-in-out sm:hidden
+    ${isMobileCardVisible ? 'translate-x-0' : '-translate-x-[75%]'}
+  `}
       >
         <MobileInfoCard
           shelter={shelter}
@@ -229,9 +231,9 @@ const ShelterProfile = () => {
         />
       </div>
 
-      <div className="flex h-full w-full items-center justify-between pt-15 px-7 space-x-3 md:space-x-7">
+      <div className="flex h-full w-full items-center justify-between pt-15 px-7 space-x-3 sm:space-x-7">
         {/* Info Card for Larger Screens */}
-        <div className="hidden md:flex w-full h-full max-w-md items-center justify-center py-5">
+        <div className="hidden sm:flex w-full h-full max-w-md items-center justify-center py-5">
           <InfoCard shelter={shelter} onEdit={handleEdit} />
         </div>
 

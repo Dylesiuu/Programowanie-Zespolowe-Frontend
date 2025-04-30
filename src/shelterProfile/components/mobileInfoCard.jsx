@@ -3,7 +3,7 @@ import { BiMenu } from 'react-icons/bi';
 
 const MobileInfoCard = ({ shelter, onEdit, toggleCard }) => {
   return (
-    <div className="fixed flex flex-col inset-y-0 left-0 z-50 w-[80vw] max-w-sm mt-[3.75rem] bg-[#fefaf7]/80 shadow-2xl p-4 space-y-6 rounded-r-3xl">
+    <div className="fixed flex flex-col inset-y-0 left-0 z-50 w-[80vw] mt-[3.75rem] bg-[#fefaf7]/80 shadow-2xl p-4 space-y-6 rounded-r-3xl">
       {/* Close Button */}
       <button
         className="absolute top-1 -right-4 px-2 py-2 bg-[#CE8455] hover:bg-[#AA673C] text-[#fefaf7] rounded-full shadow-md z-10"
