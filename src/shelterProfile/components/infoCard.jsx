@@ -28,6 +28,7 @@ const InfoCard = ({ shelter, onEdit }) => {
                      transition-all duration-300 transform hover:scale-105 shadow-lg
                      w-full max-w-[200px] md:max-w-[240px] lg:max-w-[280px]"
           onClick={onEdit}
+          data-testid="infoCard-edit-button"
         >
           Edit Info
         </button>

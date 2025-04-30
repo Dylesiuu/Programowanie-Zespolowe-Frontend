@@ -6,6 +6,13 @@ import ShelterProfile from '../components/shelterProfile';
 import AnimalsField from '../components/animalsField';
 
 describe('ShelterProfile Component', () => {
+  const mockShelter = {
+    name: 'Happy Paws Shelter',
+    location: '123 Main Street, Springfield',
+    phone: '+1 555-123-4567',
+    email: 'contact@happypaws.com',
+  };
+
   const mockAnimals = [
     {
       id: 1,
@@ -62,7 +69,7 @@ describe('ShelterProfile Component', () => {
     render(<ShelterProfile />);
   });
 
-  it('renders the shelter information and animals list', async () => {
+  it('renders the animals list', async () => {
     const buddyElements = await screen.findAllByText('Buddy');
     expect(buddyElements.length).toBeGreaterThan(0);
     const mittensElements = await screen.findAllByText('Mittens');
@@ -109,5 +116,83 @@ describe('ShelterProfile Component', () => {
     ).toBeInTheDocument();
     expect(await screen.findByText('Samica')).toBeInTheDocument();
     expect(await screen.findByText('Kot')).toBeInTheDocument();
+  });
+
+  it('displays shelter information in InfoCard on desktop', () => {
+    const infoCard = screen
+      .getByTestId('infoCard-edit-button')
+      .closest('div[class*="flex flex-col"]');
+    expect(infoCard).toBeInTheDocument();
+    expect(infoCard).toHaveTextContent(mockShelter.name);
+    expect(infoCard).toHaveTextContent(`Location: ${mockShelter.location}`);
+    expect(infoCard).toHaveTextContent(`Phone: ${mockShelter.phone}`);
+    expect(infoCard).toHaveTextContent(`Email: ${mockShelter.email}`);
+  });
+
+  it('calls onEdit when Edit Info button is clicked in InfoCard', async () => {
+    window.alert = jest.fn();
+    const editButton = screen.getByTestId('infoCard-edit-button');
+    await userEvent.click(editButton);
+    expect(window.alert).toHaveBeenCalledWith('Edit button clicked!');
+  });
+
+  it('toggles MobileInfoCard visibility when menu button is clicked', async () => {
+    const mobileCardContainer = screen
+      .getByTestId('close-button')
+      .closest('div[class*="fixed inset-0"]');
+
+    expect(mobileCardContainer).toHaveClass('-translate-x-[70%]');
+    expect(mobileCardContainer).not.toHaveClass('translate-x-0');
+
+    const toggleButton = screen.getByTestId('close-button');
+    await userEvent.click(toggleButton);
+    await waitFor(() => {
+      expect(mobileCardContainer).toHaveClass('translate-x-0');
+      expect(mobileCardContainer).not.toHaveClass('-translate-x-[70%]');
+    });
+
+    await userEvent.click(toggleButton);
+
+    await waitFor(() => {
+      expect(mobileCardContainer).toHaveClass('-translate-x-[70%]');
+      expect(mobileCardContainer).not.toHaveClass('translate-x-0');
+    });
+  });
+
+  it('displays shelter information in MobileInfoCard', () => {
+    const mobileCard = screen
+      .getByTestId('close-button')
+      .closest('div[class*="fixed flex"]');
+
+    expect(mobileCard).toHaveTextContent(mockShelter.name);
+    expect(mobileCard).toHaveTextContent(`Location: ${mockShelter.location}`);
+    expect(mobileCard).toHaveTextContent(`Phone: ${mockShelter.phone}`);
+    expect(mobileCard).toHaveTextContent(`Email: ${mockShelter.email}`);
+  });
+
+  it('calls onEdit when Edit Info button is clicked in MobileInfoCard', async () => {
+    window.alert = jest.fn();
+    const editButtons = screen.getAllByText('Edit Info');
+    await userEvent.click(editButtons[0]);
+    expect(window.alert).toHaveBeenCalledWith('Edit button clicked!');
+  });
+
+  it('shows backdrop blur when MobileInfoCard is visible', async () => {
+    const backdrop = screen.getByTestId('mobile-backdrop');
+    expect(backdrop).not.toHaveClass('backdrop-blur-md');
+
+    await userEvent.click(screen.getByTestId('close-button'));
+
+    await waitFor(() => {
+      expect(backdrop).toHaveClass('backdrop-blur-md');
+      expect(backdrop).toHaveClass('opacity-100');
+    });
+
+    await userEvent.click(screen.getByTestId('close-button'));
+
+    await waitFor(() => {
+      expect(backdrop).not.toHaveClass('backdrop-blur-md');
+      expect(backdrop).toHaveClass('opacity-0');
+    });
   });
 });
