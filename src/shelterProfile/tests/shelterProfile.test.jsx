@@ -141,20 +141,20 @@ describe('ShelterProfile Component', () => {
       .getByTestId('close-button')
       .closest('div[class*="fixed inset-0"]');
 
-    expect(mobileCardContainer).toHaveClass('-translate-x-[70%]');
+    expect(mobileCardContainer).toHaveClass('-translate-x-[75%]');
     expect(mobileCardContainer).not.toHaveClass('translate-x-0');
 
     const toggleButton = screen.getByTestId('close-button');
     await userEvent.click(toggleButton);
     await waitFor(() => {
       expect(mobileCardContainer).toHaveClass('translate-x-0');
-      expect(mobileCardContainer).not.toHaveClass('-translate-x-[70%]');
+      expect(mobileCardContainer).not.toHaveClass('-translate-x-[75%]');
     });
 
     await userEvent.click(toggleButton);
 
     await waitFor(() => {
-      expect(mobileCardContainer).toHaveClass('-translate-x-[70%]');
+      expect(mobileCardContainer).toHaveClass('-translate-x-[75%]');
       expect(mobileCardContainer).not.toHaveClass('translate-x-0');
     });
   });

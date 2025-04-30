@@ -211,11 +211,12 @@ const ShelterProfile = () => {
     <div className="flex w-full h-full">
       {/* Mobile Info Card Background blur */}
       <div
-        className={`
-      fixed inset-0 transition-all duration-400 ease-in-out
-      ${isMobileCardVisible ? 'backdrop-blur-md opacity-100' : 'opacity-0 pointer-events-none'}
-      sm:hidden z-40
-    `}
+        data-testid="mobile-backdrop"
+        className={`fixed inset-0 sm:hidden transition-all duration-400 ease-in-out ${
+          isMobileCardVisible
+            ? 'backdrop-blur-md opacity-100'
+            : 'opacity-0 pointer-events-none'
+        } z-49`}
       ></div>
       {/* Mobile Info Card for Smaller Screens */}
       <div
