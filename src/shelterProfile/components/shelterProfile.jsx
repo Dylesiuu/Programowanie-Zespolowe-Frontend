@@ -204,11 +204,17 @@ const ShelterProfile = () => {
   };
 
   const toggleMobileCard = () => {
-    setIsMobileCardVisible((prev) => !prev); // Toggle MobileInfoCard visibility
+    setIsMobileCardVisible((prev) => !prev);
   };
 
   return (
     <div className="flex w-full h-full">
+      {/* Mobile Info Card Background blur */}
+      <div
+        className={`fixed inset-0 md:hidden transition-all duration-400 ease-in-out ${
+          isMobileCardVisible ? 'backdrop-blur-md opacity-100' : 'opacity-0'
+        } z-49`}
+      ></div>
       {/* Mobile Info Card for Smaller Screens */}
       <div
         className={`fixed inset-0 z-50 transition-transform duration-500 ease-in-out md:hidden ${
