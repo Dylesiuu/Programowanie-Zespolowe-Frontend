@@ -70,9 +70,21 @@ describe('UserContext', () => {
     );
   });
 
-  it('clears user state and localStorage when logout is called', () => {
+  it('clears user state, localStorage, and sends a logout request to the backend', async () => {
     const testUser = { _id: '123', name: 'John Doe', token: 'some_jwt_token' };
     localStorage.setItem('user', JSON.stringify(testUser));
+
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            message: 'User logged out successfully',
+            token: null,
+            statusCode: 200,
+          }),
+      })
+    );
 
     render(
       <UserProvider>
@@ -81,6 +93,7 @@ describe('UserContext', () => {
             act(() => {
               value.setUser(testUser);
             });
+
             waitFor(() => {
               expect(value.user).toEqual(testUser);
             });
@@ -88,14 +101,28 @@ describe('UserContext', () => {
             act(() => {
               value.logout();
             });
+
             waitFor(() => {
               expect(value.user).toBeNull();
+
               expect(localStorage.getItem('user')).toBeNull();
+
+              expect(global.fetch).toHaveBeenCalledWith(
+                `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/logout`,
+                {
+                  method: 'GET',
+                  headers: {
+                    Authorization: `Bearer ${testUser.token}`,
+                  },
+                }
+              );
             });
           }}
         </UserContext.Consumer>
       </UserProvider>
     );
+
+    global.fetch.mockRestore();
   });
 
   it('loads user from localStorage on initial render', () => {
