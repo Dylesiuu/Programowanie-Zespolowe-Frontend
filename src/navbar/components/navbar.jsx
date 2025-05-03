@@ -88,7 +88,11 @@ const Navbar = () => {
             </label>
           </div>
           {/* Search bar */}
-          {isUserSearch ? <UserSearchBar /> : <ShelterSearchBar />}
+          {isUserSearch ? (
+            <UserSearchBar />
+          ) : (
+            <ShelterSearchBar userContext={userContext} />
+          )}
         </div>
         {/* Buttons for navigation */}
         <div className="flex flex-shrink-0 items-center justify-end space-x-[0.625rem] sm:space-x-[1.875rem]">

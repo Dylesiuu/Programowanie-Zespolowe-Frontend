@@ -85,7 +85,7 @@ const UserSearchBar = () => {
 
   return (
     <div
-      className="relative w-full items-center max-w-[25rem]"
+      className="relative w-full max-w-[25rem] items-center"
       ref={searchDropdownRef}
     >
       <input
@@ -98,28 +98,32 @@ const UserSearchBar = () => {
       />
 
       {/* Search results dropdown */}
-      {isSearchDropdownOpen && !isSearching && searchResults.length > 0 && (
+      {isSearchDropdownOpen && (
         <div className="absolute top-full left-0 right-0 mt-1 rounded-lg shadow-lg z-50 max-h-60 overflow-y-auto">
-          <ul>
-            {searchResults.map((user) => (
-              <li
-                key={user.id}
-                className="px-4 py-2 bg-[#CE8455] hover:bg-[#AA673C] cursor-pointer text-white"
-                onClick={() => {
-                  alert('profile/' + user.id);
-                  setIsSearchDropdownOpen(false);
-                }}
-              >
-                {user.name}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      {isSearching && (
-        <div className="absolute top-full left-0 right-0 mt-1 rounded-lg shadow-lg z-50 p-2 bg-[#CE8455] text-white">
-          Wyszukiwanie...
+          {isSearching ? (
+            <div className="p-2 rounded-lg shadow-lg z-50 bg-[#CE8455] text-white">
+              Wyszukiwanie...
+            </div>
+          ) : searchResults.length > 0 ? (
+            <ul>
+              {searchResults.map((user) => (
+                <li
+                  key={user.id}
+                  className="px-4 py-2 bg-[#CE8455] hover:bg-[#AA673C] cursor-pointer text-white"
+                  onClick={() => {
+                    alert('profile/' + user.id);
+                    setIsSearchDropdownOpen(false);
+                  }}
+                >
+                  {user.name}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <div className="p-2 rounded-lg shadow-lg z-50 bg-[#CE8455] text-white">
+              Brak wyników
+            </div>
+          )}
         </div>
       )}
     </div>
