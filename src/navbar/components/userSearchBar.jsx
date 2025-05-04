@@ -99,7 +99,10 @@ const UserSearchBar = () => {
 
       {/* Search results dropdown */}
       {isSearchDropdownOpen && (
-        <div className="absolute top-full left-0 right-0 mt-1 rounded-lg shadow-lg z-50 max-h-60 overflow-y-auto">
+        <div
+          data-testid="dropdown"
+          className="absolute top-full left-0 right-0 mt-1 rounded-lg shadow-lg z-50 max-h-60 overflow-y-auto"
+        >
           {isSearching ? (
             <div className="p-2 rounded-lg shadow-lg z-50 bg-[#CE8455] text-white">
               Wyszukiwanie...
