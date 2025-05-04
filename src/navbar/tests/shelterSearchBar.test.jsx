@@ -31,11 +31,13 @@ describe('ShelterSearchBar', () => {
             resolve({
               ok: true,
               json: () =>
-                Promise.resolve([
-                  { id: 1, name: 'Schronisko A' },
-                  { id: 2, name: 'Schronisko B' },
-                  { id: 3, name: 'Schronisko C' },
-                ]),
+                Promise.resolve({
+                  shelters: [
+                    { id: 1, name: 'Schronisko A' },
+                    { id: 2, name: 'Schronisko B' },
+                    { id: 3, name: 'Schronisko C' },
+                  ],
+                }),
             });
           }, 1000)
         )

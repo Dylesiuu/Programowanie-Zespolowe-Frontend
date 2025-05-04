@@ -26,7 +26,7 @@ const ShelterSearchBar = ({ userContext }) => {
       setIsLoading(true);
       setResults([]);
       setIsDropdownOpen(true);
-      const response = await fetch(`${API_BASE_URL}/api/location`, {
+      const response = await fetch(`${API_BASE_URL}/shelter/find-in-range`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -45,18 +45,18 @@ const ShelterSearchBar = ({ userContext }) => {
 
       const data = await response.json();
 
-      if (Array.isArray(data)) {
+      if (Array.isArray(data.shelters)) {
         console.log('Received an array:', data);
-        setResults(data); // Save the array in state
+        setResults(data.shelters);
       } else {
         console.log('Received a non-array response:', data);
-        setResults([]); // Clear results if not an array
+        setResults([]);
       }
     } catch (error) {
       console.error('Error sending location data:', error);
-      setResults([]); // Clear results on error
+      setResults([]);
     } finally {
-      setIsLoading(false); // Stop loading
+      setIsLoading(false);
     }
   };
 
