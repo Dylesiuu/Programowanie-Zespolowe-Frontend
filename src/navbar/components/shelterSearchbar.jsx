@@ -41,8 +41,6 @@ const ShelterSearchBar = ({ userContext }) => {
 
       if (!response.ok) {
         console.error(`HTTP error! Status: ${response.status}`);
-        setResults([]);
-        return;
       }
 
       const data = await response.json();
