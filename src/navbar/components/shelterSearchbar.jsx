@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import dynamic from 'next/dynamic';
+import { useRouter } from 'next/router';
 
 const MapComponent = dynamic(
   () => import('../../localization/components/mapComponent'),
@@ -20,6 +21,7 @@ const ShelterSearchBar = ({ userContext }) => {
   const [results, setResults] = useState([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const router = useRouter();
 
   const sendLocationData = async (position, range) => {
     try {
@@ -119,7 +121,9 @@ const ShelterSearchBar = ({ userContext }) => {
                       key={result.id}
                       className="px-4 py-2 bg-[#CE8455] hover:bg-[#AA673C] cursor-pointer text-white"
                       onClick={() => {
-                        alert(result.name);
+                        router.push(
+                          `/shelterProfilePage?shelterId=${result.id}`
+                        );
                         setIsDropdownOpen(false);
                       }}
                     >
