@@ -111,7 +111,6 @@ const ShelterSearchBar = ({ userContext }) => {
             className="px-2 py-2 w-full h-full rounded-lg border bg-[#fefaf7] border-[#FFD1DC] text-black focus:outline-none focus:ring-2 focus:ring-[#AA673C] cursor-pointer"
           />
           {/* Dropdown for results */}
-          {/* Dropdown for results */}
           {isDropdownOpen && (
             <div
               ref={dropdownRef}

@@ -59,33 +59,35 @@ const Navbar = () => {
       <div className="flex h-full w-full justify-between items-center text-white text-[0.9375rem] space-x-[0.625rem] sm:space-x-[1.25rem]">
         <div>Logo</div>
         <div className="flex h-full w-full items-center justify-center space-x-2">
-          <div className="flex items-center gap-1">
-            <input
-              type="radio"
-              id="userSearch"
-              name="searchType"
-              value="user"
-              checked={isUserSearch}
-              onChange={() => setIsUserSearch(true)}
-              className="mr-2 cursor-pointer accent-[#AA673C] focus:ring-[#FFD1DC]"
-            />
-            <label htmlFor="userSearch" className="text-sm cursor-pointer">
-              User
-            </label>
-          </div>
-          <div className="flex items-center gap-1">
-            <input
-              type="radio"
-              id="shelterSearch"
-              name="searchType"
-              value="shelter"
-              checked={!isUserSearch}
-              onChange={() => setIsUserSearch(false)}
-              className="mr-2 cursor-pointer accent-[#AA673C] focus:ring-[#FFD1DC]"
-            />
-            <label htmlFor="shelterSearch" className="text-sm cursor-pointer">
-              Shelter
-            </label>
+          <div className="flex flex-col items-start space-y-1">
+            <div className="flex items-center">
+              <input
+                type="radio"
+                id="userSearch"
+                name="searchType"
+                value="user"
+                checked={isUserSearch}
+                onChange={() => setIsUserSearch(true)}
+                className="mr-2 cursor-pointer accent-[#ba6c3b] focus:ring-[#FFD1DC]"
+              />
+              <label htmlFor="userSearch" className="text-sm cursor-pointer">
+                Użytkownicy
+              </label>
+            </div>
+            <div className="flex items-center">
+              <input
+                type="radio"
+                id="shelterSearch"
+                name="searchType"
+                value="shelter"
+                checked={!isUserSearch}
+                onChange={() => setIsUserSearch(false)}
+                className="mr-2 cursor-pointer accent-[#ba6c3b] focus:ring-[#FFD1DC]"
+              />
+              <label htmlFor="shelterSearch" className="text-sm cursor-pointer">
+                Schroniska
+              </label>
+            </div>
           </div>
           {/* Search bar */}
           {isUserSearch ? (
@@ -95,7 +97,7 @@ const Navbar = () => {
           )}
         </div>
         {/* Buttons for navigation */}
-        <div className="flex flex-shrink-0 items-center justify-end space-x-[0.625rem] sm:space-x-[1.875rem]">
+        <div className="flex flex-shrink-0 items-center justify-end space-x-[0.625rem] sm:space-x-1.5">
           {/* Admin control panel button */}
           <div>
             <button
