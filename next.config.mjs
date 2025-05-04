@@ -8,10 +8,21 @@ const nextConfig = {
         port: '',
         pathname: '/**', // Allows all paths
       },
+      {
+        protocol: 'https',
+        hostname: 'schronisko.org.pl',
+        port: '',
+        pathname: '/**', // Allows all paths
+      },
       // Add more patterns if needed:
       {
         protocol: 'https',
         hostname: '**.schronisko.org.pl', // All subdomains
+      },
+      {
+        protocol: 'https',
+        hostname: 'pettownsendvet.com',
+        pathname: '/wp-content/uploads/**',
       },
     ],
   },
