@@ -26,33 +26,24 @@ const ShelterSearchBar = ({ userContext }) => {
       setIsLoading(true);
       setResults([]);
       setIsDropdownOpen(true);
-      //   const response = await fetch(`${API_BASE_URL}/api/location`, {
-      //     method: 'POST',
-      //     headers: {
-      //       'Content-Type': 'application/json',
-      //       Authorization: `Bearer ${userContext.user?.token}`,
-      //     },
-      //     body: JSON.stringify({
-      //       lat: position.lat,
-      //       lng: position.lng,
-      //       range,
-      //     }),
-      //   });
+      const response = await fetch(`${API_BASE_URL}/api/location`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userContext.user?.token}`,
+        },
+        body: JSON.stringify({
+          lat: position.lat,
+          lng: position.lng,
+          range,
+        }),
+      });
 
-      //   if (!response.ok) {
-      //     console.error(`HTTP error! Status: ${response.status}`);
-      //   }
+      if (!response.ok) {
+        console.error(`HTTP error! Status: ${response.status}`);
+      }
 
-      //   const data = await response.json();
-
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // Mock data
-      const data = [
-        { id: 1, name: 'Schronisko A' },
-        { id: 2, name: 'Schronisko B' },
-        { id: 3, name: 'Schronisko C' },
-      ];
+      const data = await response.json();
 
       if (Array.isArray(data)) {
         console.log('Received an array:', data);
@@ -113,6 +104,7 @@ const ShelterSearchBar = ({ userContext }) => {
           {/* Dropdown for results */}
           {isDropdownOpen && (
             <div
+              data-testid="dropdown"
               ref={dropdownRef}
               className="absolute top-full left-0 right-0 mt-1 rounded-lg shadow-lg z-50 max-h-60 overflow-y-auto"
             >
