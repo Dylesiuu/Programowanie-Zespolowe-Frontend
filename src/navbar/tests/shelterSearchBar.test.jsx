@@ -2,6 +2,11 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import ShelterSearchBar from '../components/shelterSearchbar';
 import userEvent from '@testing-library/user-event';
+import { useRouter } from 'next/router';
+
+jest.mock('next/router', () => ({
+  useRouter: jest.fn(),
+}));
 
 jest.mock('next/dynamic', () => () => {
   const MockedComponent = ({ onLocationSelect }) => {
@@ -23,7 +28,16 @@ jest.mock('next/dynamic', () => () => {
 });
 
 describe('ShelterSearchBar', () => {
+  const mockPush = jest.fn();
   beforeEach(() => {
+    useRouter.mockReturnValue({
+      route: '/',
+      pathname: '/',
+      query: {},
+      asPath: '/',
+      push: mockPush, // Mock the push function
+    });
+
     global.fetch = jest.fn(
       () =>
         new Promise((resolve) =>
@@ -156,6 +170,6 @@ describe('ShelterSearchBar', () => {
 
     await userEvent.click(await screen.findByText('Schronisko A'));
 
-    expect(window.alert).toHaveBeenCalledWith('Schronisko A');
+    expect(mockPush).toHaveBeenCalledWith(`/shelterProfilePage?shelterId=1`);
   });
 });

@@ -3,18 +3,46 @@ import InfoCard from './infoCard';
 import AnimalsField from './animalsField';
 import AnimalCard from './animalCard';
 import MobileInfoCard from './mobileInfoCard';
+import { UserContext } from '@/context/userContext';
+import { useContext, useEffect } from 'react';
 
-const ShelterProfile = () => {
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+
+const ShelterProfile = ({ shelterId }) => {
+  const [shelter, setShelter] = useState(null);
   const [selectedAnimal, setSelectedAnimal] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [isMobileCardVisible, setIsMobileCardVisible] = useState(false);
+  const userContext = useContext(UserContext);
 
-  const shelter = {
-    name: 'Happy Paws Shelter',
-    location: '123 Main Street, Springfield',
-    phone: '+1 555-123-4567',
-    email: 'contact@happypaws.com',
-  };
+  useEffect(() => {
+    const fetchShelterData = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/shelter/find-by-id`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${userContext.user?.token}`,
+          },
+          body: JSON.stringify({ shelterId }),
+        });
+
+        if (!response.ok) {
+          console.error(`HTTP error! Status: ${response.status}`);
+          return;
+        }
+
+        const data = await response.json();
+        setShelter(data.shelter);
+      } catch (error) {
+        console.error('Error fetching shelter data:', error.message);
+      }
+    };
+
+    if (shelterId) {
+      fetchShelterData();
+    }
+  }, [shelterId, userContext]);
 
   const animals = [
     {
@@ -207,6 +235,10 @@ const ShelterProfile = () => {
     setIsMobileCardVisible((prev) => !prev);
   };
 
+  if (!shelter) {
+    return <div>Ładowanie danych schroniska...</div>;
+  }
+
   return (
     <div className="flex w-full h-full">
       {/* Mobile Info Card Background blur */}
@@ -240,7 +272,10 @@ const ShelterProfile = () => {
 
         {/* Animals Field */}
         <div className="flex w-full h-full items-center justify-center py-5">
-          <AnimalsField animals={animals} onAnimalClick={handleAnimalClick} />
+          <AnimalsField
+            animals={shelter.animals}
+            onAnimalClick={handleAnimalClick}
+          />
         </div>
       </div>
 

@@ -16,7 +16,7 @@ describe('Navbar Component', () => {
 
   // Mock the UserContext value
   const mockUserContextValue = {
-    user: { name: 'John Doe', email: 'john.doe@example.com' },
+    user: { name: 'John Doe', email: 'john.doe@example.com', shelterId: 1 },
     logout: mockLogout,
     isLoggedIn: () => true,
   };
@@ -81,7 +81,9 @@ describe('Navbar Component', () => {
   it('navigate to shelter page when shetler button is clicked', async () => {
     const homeButton = screen.getByRole('button', { name: /Schronisko/i });
     await userEvent.click(homeButton);
-    expect(mockPush).toHaveBeenCalledWith('/shelterProfilePage');
+    expect(mockPush).toHaveBeenCalledWith(
+      `/shelterProfilePage?shelterId=${mockUserContextValue.user.shelterId}`
+    );
   });
 
   it('navigate to admin panel when admin button is clicked', async () => {

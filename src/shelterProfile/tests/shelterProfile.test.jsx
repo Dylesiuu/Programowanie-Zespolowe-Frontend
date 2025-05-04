@@ -7,66 +7,76 @@ import AnimalsField from '../components/animalsField';
 
 describe('ShelterProfile Component', () => {
   const mockShelter = {
+    id: 1,
     name: 'Happy Paws Shelter',
     location: '123 Main Street, Springfield',
     phone: '+1 555-123-4567',
     email: 'contact@happypaws.com',
+    animals: [
+      {
+        id: 1,
+        name: 'Buddy',
+        age: 3,
+        description:
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+        gender: 'Samiec',
+        type: 'Pies',
+        shelterId: 101,
+        traits: [
+          'Playful',
+          'Loyal',
+          'Good with kids',
+          'Playful',
+          'Loyal',
+          'Good with kids',
+          'Playful',
+          'Loyal',
+          'Good with kids',
+        ],
+        images: ['/img/dog.jpg', '/img/dog2.jpeg'],
+      },
+      {
+        id: 2,
+        name: 'Mittens',
+        age: 2,
+        description: 'Ciekawski i czuły kot rasy tabby.',
+        gender: 'Samica',
+        type: 'Kot',
+        shelterId: 102,
+        traits: [
+          'Independent',
+          'Loves to cuddle',
+          'Super długi tag, który zajmie dziwnie dużo miejsca',
+          'A tu taki krótki',
+        ],
+        images: ['/img/cat.jpg'],
+      },
+      {
+        id: 3,
+        name: 'Charlie',
+        age: 4,
+        description: 'Zabawny i przygodowy beagle.',
+        gender: 'Samiec',
+        type: 'Pies',
+        shelterId: 101,
+        traits: ['Energetic', 'Friendly', 'Good with other dogs'],
+        images: ['/img/dog2.jpeg', '/img/dog.jpg'],
+      },
+    ],
   };
 
-  const mockAnimals = [
-    {
-      id: 1,
-      name: 'Buddy',
-      age: 3,
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-      gender: 'Samiec',
-      type: 'Pies',
-      shelterId: 101,
-      traits: [
-        'Playful',
-        'Loyal',
-        'Good with kids',
-        'Playful',
-        'Loyal',
-        'Good with kids',
-        'Playful',
-        'Loyal',
-        'Good with kids',
-      ],
-      images: ['/img/dog.jpg', '/img/dog2.jpeg'],
-    },
-    {
-      id: 2,
-      name: 'Mittens',
-      age: 2,
-      description: 'Ciekawski i czuły kot rasy tabby.',
-      gender: 'Samica',
-      type: 'Kot',
-      shelterId: 102,
-      traits: [
-        'Independent',
-        'Loves to cuddle',
-        'Super długi tag, który zajmie dziwnie dużo miejsca',
-        'A tu taki krótki',
-      ],
-      images: ['/img/cat.jpg'],
-    },
-    {
-      id: 3,
-      name: 'Charlie',
-      age: 4,
-      description: 'Zabawny i przygodowy beagle.',
-      gender: 'Samiec',
-      type: 'Pies',
-      shelterId: 101,
-      traits: ['Energetic', 'Friendly', 'Good with other dogs'],
-      images: ['/img/dog2.jpeg', '/img/dog.jpg'],
-    },
-  ];
-
   beforeEach(() => {
-    render(<ShelterProfile />);
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve({ shelter: mockShelter }),
+      })
+    );
+    render(<ShelterProfile shelterId={1} />);
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
   it('renders the animals list', async () => {
@@ -118,10 +128,9 @@ describe('ShelterProfile Component', () => {
     expect(await screen.findByText('Kot')).toBeInTheDocument();
   });
 
-  it('displays shelter information in InfoCard on desktop', () => {
-    const infoCard = screen
-      .getByTestId('infoCard-edit-button')
-      .closest('div[class*="flex flex-col"]');
+  it('displays shelter information in InfoCard on desktop', async () => {
+    const editButton = await screen.findByTestId('infoCard-edit-button');
+    const infoCard = editButton.closest('div[class*="flex flex-col"]');
     expect(infoCard).toBeInTheDocument();
     expect(infoCard).toHaveTextContent(mockShelter.name);
     expect(infoCard).toHaveTextContent(`Location: ${mockShelter.location}`);
@@ -131,15 +140,17 @@ describe('ShelterProfile Component', () => {
 
   it('calls onEdit when Edit Info button is clicked in InfoCard', async () => {
     window.alert = jest.fn();
-    const editButton = screen.getByTestId('infoCard-edit-button');
+    const editButton = await screen.findByTestId('infoCard-edit-button');
     await userEvent.click(editButton);
     expect(window.alert).toHaveBeenCalledWith('Edit button clicked!');
   });
 
   it('toggles MobileInfoCard visibility when menu button is clicked', async () => {
-    const mobileCardContainer = screen
-      .getByTestId('close-button')
-      .closest('div[class*="fixed inset-0"]');
+    const closeButton = await screen.findByTestId('close-button');
+
+    const mobileCardContainer = closeButton.closest(
+      'div[class*="fixed inset-0"]'
+    );
 
     expect(mobileCardContainer).toHaveClass('-translate-x-[75%]');
     expect(mobileCardContainer).not.toHaveClass('translate-x-0');
@@ -159,10 +170,10 @@ describe('ShelterProfile Component', () => {
     });
   });
 
-  it('displays shelter information in MobileInfoCard', () => {
-    const mobileCard = screen
-      .getByTestId('close-button')
-      .closest('div[class*="fixed flex"]');
+  it('displays shelter information in MobileInfoCard', async () => {
+    const closeButton = await screen.findByTestId('close-button');
+
+    const mobileCard = closeButton.closest('div[class*="fixed flex"]');
 
     expect(mobileCard).toHaveTextContent(mockShelter.name);
     expect(mobileCard).toHaveTextContent(`Location: ${mockShelter.location}`);
@@ -172,13 +183,13 @@ describe('ShelterProfile Component', () => {
 
   it('calls onEdit when Edit Info button is clicked in MobileInfoCard', async () => {
     window.alert = jest.fn();
-    const editButtons = screen.getAllByText('Edit Info');
+    const editButtons = await screen.findAllByText('Edit Info');
     await userEvent.click(editButtons[0]);
     expect(window.alert).toHaveBeenCalledWith('Edit button clicked!');
   });
 
   it('shows backdrop blur when MobileInfoCard is visible', async () => {
-    const backdrop = screen.getByTestId('mobile-backdrop');
+    const backdrop = await screen.findByTestId('mobile-backdrop');
     expect(backdrop).not.toHaveClass('backdrop-blur-md');
 
     await userEvent.click(screen.getByTestId('close-button'));
