@@ -5,7 +5,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { UserContext } from '@/context/userContext';
 import { useContext } from 'react';
 import UserSearchBar from './userSearchBar';
-import ShelterSearchBar from './shelterSearchBar';
+import ShelterSearchBar from './shelterSearchbar';
 
 const Navbar = () => {
   const router = useRouter();
