@@ -18,7 +18,7 @@ const ShelterSearchBar = ({ userContext }) => {
   const [range, setRange] = useState(30000);
   const [isLoading, setIsLoading] = useState(false);
   const [results, setResults] = useState([]);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // Dropdown state
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
   const sendLocationData = async (position, range) => {
