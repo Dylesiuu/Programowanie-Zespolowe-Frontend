@@ -3,6 +3,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import ShelterProfile from '../components/shelterProfile';
+import { UserContext } from '@/context/userContext';
 
 jest.mock('../components/animalCard', () => {
   return function MockAnimalCard({ animalId, onEdit }) {
@@ -20,7 +21,7 @@ jest.mock('../components/animalCard', () => {
 
 describe('ShelterProfile Component', () => {
   const mockShelter = {
-    id: '1',
+    _id: '1',
     name: 'Happy Paws Shelter',
     location: '123 Main Street, Springfield',
     phone: '+1 555-123-4567',
@@ -39,6 +40,13 @@ describe('ShelterProfile Component', () => {
     ],
   };
 
+  const mockUserContext = {
+    user: {
+      token: 'mockToken',
+      shelterId: '1',
+    },
+  };
+
   beforeEach(() => {
     global.fetch = jest.fn((url) => {
       if (url.includes('/shelter/find-by-id')) {
@@ -49,7 +57,11 @@ describe('ShelterProfile Component', () => {
       }
       return Promise.reject(new Error('Unexpected URL'));
     });
-    render(<ShelterProfile shelterId={1} />);
+    render(
+      <UserContext.Provider value={mockUserContext}>
+        <ShelterProfile shelterId={1} />
+      </UserContext.Provider>
+    );
   });
 
   afterEach(() => {

@@ -94,7 +94,11 @@ const ShelterProfile = ({ shelterId }) => {
       <div className="flex h-full w-full items-center justify-between pt-15 px-7 space-x-3 sm:space-x-7">
         {/* Info Card for Larger Screens */}
         <div className="hidden sm:flex w-full h-full max-w-md items-center justify-center py-5">
-          <InfoCard shelter={shelter} onEdit={handleEdit} />
+          <InfoCard
+            shelter={shelter}
+            onEdit={handleEdit}
+            userContext={userContext}
+          />
         </div>
 
         {/* Animals Field */}
@@ -127,6 +131,7 @@ const ShelterProfile = ({ shelterId }) => {
             <AnimalCard
               animalId={selectedAnimal._id}
               onEdit={() => alert(`Edytujesz zwierzę: ${selectedAnimal.name}`)}
+              userContext={userContext}
             />
           </div>
         </div>
