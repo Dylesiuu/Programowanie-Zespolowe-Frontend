@@ -15,7 +15,10 @@ const MobileInfoCard = ({ shelter, onEdit, toggleCard }) => {
 
       {/* Shelter Info */}
       <div className="flex flex-col w-full p-6 bg-white rounded-3xl items-center justify-around">
-        <h2 className="text-lg font-bold text-gray-800 text-center mb-6">
+        <h2
+          data-testid="mobile-shelter-name"
+          className="text-lg font-bold text-gray-800 text-center mb-6"
+        >
           {shelter.name}
         </h2>
         <div className="flex flex-col w-full space-y-4 px-2 ">
