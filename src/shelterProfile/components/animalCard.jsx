@@ -1,10 +1,40 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
+import { useEffect } from 'react';
 
-const AnimalCard = ({ animal, onEdit }) => {
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+
+const AnimalCard = ({ animalId, onEdit, userContext }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isDescriptionVisible, setIsDescriptionVisible] = useState(false);
   const [isTraitsVisible, setIsTraitsVisible] = useState(false);
+  const [animal, setAnimal] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const fetchAnimalData = async (id) => {
+    try {
+      setIsLoading(true);
+      const response = await fetch(`${API_BASE_URL}/animals/${id}`);
+
+      if (!response.ok) {
+        console.error(`HTTP error! Status: ${response.status}`);
+        return;
+      }
+
+      const data = await response.json();
+      setAnimal(data);
+    } catch (error) {
+      console.error('Error fetching animal data:', error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (animalId) {
+      fetchAnimalData(animalId);
+    }
+  }, [animalId]);
 
   const showDescription = () => {
     setIsDescriptionVisible(true);
@@ -33,6 +63,22 @@ const AnimalCard = ({ animal, onEdit }) => {
       prevIndex === 0 ? animal.images.length - 1 : prevIndex - 1
     );
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col w-full h-full p-6 rounded-3xl shadow-2xl bg-white items-center justify-center">
+        <p>Ładowanie danych zwierzęcia...</p>
+      </div>
+    );
+  }
+
+  if (!animal) {
+    return (
+      <div className="flex flex-col w-full h-full p-6 rounded-3xl shadow-2xl bg-white items-center justify-center">
+        <p>Nie udało się załadować danych zwierzęcia.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col w-full h-full p-6 rounded-3xl shadow-2xl bg-white">
@@ -73,7 +119,7 @@ const AnimalCard = ({ animal, onEdit }) => {
       {/* Animal Info */}
       <h2 className="text-2xl font-bold text-gray-800 mb-2">{animal.name}</h2>
       <p className="text-gray-600 mb-2">
-        <strong>Wiek:</strong> {animal.age} lata
+        <strong>Wiek:</strong> {animal.age}
       </p>
       {/* Description */}
       <p className="text-gray-600 mb-2">
