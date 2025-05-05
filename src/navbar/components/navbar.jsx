@@ -111,21 +111,23 @@ const Navbar = () => {
             </button>
           </div>
           {/* Shelter button */}
-          <div>
-            <button
-              className="flex cursor-pointer items-center space-x-1 "
-              onClick={() =>
-                router.push(
-                  `/shelterProfilePage?shelterId=${userContext.user?.shelterId}`
-                )
-              }
-            >
-              <span className="flex items-center">
-                <BiClipboard className="text-[1.5625rem]" />
-              </span>
-              <span className="hidden md:block">Schronisko</span>
-            </button>
-          </div>
+          {userContext.user?.shelterId && (
+            <div>
+              <button
+                className="flex cursor-pointer items-center space-x-1"
+                onClick={() =>
+                  router.push(
+                    `/shelterProfilePage?shelterId=${userContext.user.shelterId}`
+                  )
+                }
+              >
+                <span className="flex items-center">
+                  <BiClipboard className="text-[1.5625rem]" />
+                </span>
+                <span className="hidden md:block">Schronisko</span>
+              </button>
+            </div>
+          )}
           {/* Home button */}
           <div>
             <button
