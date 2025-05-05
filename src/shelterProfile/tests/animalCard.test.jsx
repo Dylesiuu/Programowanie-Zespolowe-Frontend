@@ -8,6 +8,7 @@ describe('AnimalCard Component', () => {
   const mockAnimal = {
     _id: '123',
     name: 'Bella',
+    shelterId: '1',
     age: '3 lata',
     description:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum',
@@ -15,6 +16,13 @@ describe('AnimalCard Component', () => {
     type: 'Dog',
     traits: ['Friendly', 'Playful', 'Energetic', 'Loyal'],
     images: ['/image1.jpg', '/image2.jpg'],
+  };
+
+  const mockUserContext = {
+    user: {
+      token: 'mockToken',
+      shelterId: '1',
+    },
   };
 
   const mockOnEdit = jest.fn();
@@ -26,6 +34,14 @@ describe('AnimalCard Component', () => {
         json: () => Promise.resolve(mockAnimal),
       })
     );
+
+    render(
+      <AnimalCard
+        animalId={mockAnimal._id}
+        onEdit={mockOnEdit}
+        userContext={mockUserContext}
+      />
+    );
   });
 
   afterEach(() => {
@@ -33,8 +49,6 @@ describe('AnimalCard Component', () => {
   });
 
   it('renders the AnimalCard component with animal details', async () => {
-    render(<AnimalCard animalId={mockAnimal._id} onEdit={mockOnEdit} />);
-
     expect(await screen.findByText('Bella')).toBeInTheDocument();
     expect(await screen.findByText('Wiek:')).toBeInTheDocument();
     expect(await screen.findByText('3 lata')).toBeInTheDocument();
@@ -49,16 +63,12 @@ describe('AnimalCard Component', () => {
   });
 
   it('calls the onEdit function when the "Edytuj" button is clicked', async () => {
-    render(<AnimalCard animalId={mockAnimal._id} onEdit={mockOnEdit} />);
-
     const editButton = await screen.findByText('Edytuj');
     await userEvent.click(editButton);
     expect(mockOnEdit).toHaveBeenCalledTimes(1);
   });
 
   it('shows the description modal when "Więcej..." is clicked', async () => {
-    render(<AnimalCard animalId={mockAnimal._id} onEdit={mockOnEdit} />);
-
     const moreButton = await screen.findByText('Więcej...');
     await userEvent.click(moreButton);
 
@@ -71,8 +81,6 @@ describe('AnimalCard Component', () => {
   });
 
   it('shows the traits modal when "Pokaż więcej" is clicked', async () => {
-    render(<AnimalCard animalId={mockAnimal._id} onEdit={mockOnEdit} />);
-
     const showMoreButton = await screen.findByText('Pokaż więcej');
     await userEvent.click(showMoreButton);
 
@@ -85,8 +93,6 @@ describe('AnimalCard Component', () => {
   });
 
   it('navigates through images using the navigation buttons', async () => {
-    render(<AnimalCard animalId={mockAnimal._id} onEdit={mockOnEdit} />);
-
     const image = await screen.findByAltText(mockAnimal.name);
     expect(image).toHaveAttribute('src');
 
