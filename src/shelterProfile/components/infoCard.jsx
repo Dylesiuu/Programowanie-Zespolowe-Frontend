@@ -1,6 +1,6 @@
 import React from 'react';
 
-const InfoCard = ({ shelter, onEdit }) => {
+const InfoCard = ({ shelter, onEdit, userContext }) => {
   return (
     <div className="flex flex-col w-full h-full rounded-3xl shadow-2xl p-4 bg-[#fefaf7]/80 max-w-md md:max-w-lg lg:max-w-xl mx-auto space-y-6 justify-between items-center">
       {/* Shelter info */}
@@ -25,16 +25,19 @@ const InfoCard = ({ shelter, onEdit }) => {
       </div>
       {/* Buttons */}
       <div className="w-full flex justify-center">
-        <button
-          className="mt-4 px-4 py-2 text-sm md:text-lg lg:text-xl
+        {userContext.user?.shelterId &&
+          userContext.user.shelterId === shelter._id && (
+            <button
+              className="mt-4 px-4 py-2 text-sm md:text-lg lg:text-xl
                      bg-[#CE8455] hover:bg-[#AA673C] text-[#fefaf7] rounded-full
                      transition-all duration-300 transform hover:scale-105 shadow-lg
                      w-full max-w-[200px] md:max-w-[240px] lg:max-w-[280px]"
-          onClick={onEdit}
-          data-testid="infoCard-edit-button"
-        >
-          Edit Info
-        </button>
+              onClick={onEdit}
+              data-testid="infoCard-edit-button"
+            >
+              Edytuj
+            </button>
+          )}
       </div>
     </div>
   );

@@ -5,16 +5,30 @@ import { userEvent } from '@testing-library/user-event';
 
 describe('InfoCard Component', () => {
   const mockShelter = {
+    _id: '1',
     name: 'Happy Paws Shelter',
     location: '123 Main Street, Springfield',
     phone: '+1 555-123-4567',
     email: 'contact@happypaws.com',
   };
 
+  const mockUserContext = {
+    user: {
+      token: 'mockToken',
+      shelterId: '1',
+    },
+  };
+
   const mockOnEdit = jest.fn();
 
   beforeEach(() => {
-    render(<InfoCard shelter={mockShelter} onEdit={mockOnEdit} />);
+    render(
+      <InfoCard
+        shelter={mockShelter}
+        onEdit={mockOnEdit}
+        userContext={mockUserContext}
+      />
+    );
   });
 
   afterEach(() => {
@@ -32,13 +46,13 @@ describe('InfoCard Component', () => {
     expect(screen.getByText(mockShelter.email)).toBeInTheDocument();
   });
 
-  it('renders the Edit Info button', () => {
-    const editButton = screen.getByText('Edit Info');
+  it('renders the Edit Info button', async () => {
+    const editButton = await screen.findByTestId('infoCard-edit-button');
     expect(editButton).toBeInTheDocument();
   });
 
   it('calls the onEdit function when the Edit Info button is clicked', async () => {
-    const editButton = screen.getByText('Edit Info');
+    const editButton = await screen.findByTestId('infoCard-edit-button');
     await userEvent.click(editButton);
 
     expect(mockOnEdit).toHaveBeenCalledTimes(1);

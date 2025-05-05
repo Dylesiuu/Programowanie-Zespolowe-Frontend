@@ -14,7 +14,13 @@ const AnimalCard = ({ animalId, onEdit, userContext }) => {
   const fetchAnimalData = async (id) => {
     try {
       setIsLoading(true);
-      const response = await fetch(`${API_BASE_URL}/animals/${id}`);
+      const response = await fetch(`${API_BASE_URL}/animals/${id}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userContext.user?.token}`,
+        },
+      });
 
       if (!response.ok) {
         console.error(`HTTP error! Status: ${response.status}`);
@@ -34,6 +40,7 @@ const AnimalCard = ({ animalId, onEdit, userContext }) => {
     if (animalId) {
       fetchAnimalData(animalId);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [animalId]);
 
   const showDescription = () => {
@@ -170,15 +177,18 @@ const AnimalCard = ({ animalId, onEdit, userContext }) => {
         )}
       </div>
       {/* Edit Button */}
-      <button
-        className="mt-4 px-4 py-2 text-lg md:text-xl
+      {userContext.user?.shelterId &&
+        userContext.user.shelterId === animal.shelterId && (
+          <button
+            className="mt-4 px-4 py-2 text-lg md:text-xl
                      bg-[#CE8455] hover:bg-[#AA673C] text-[#fefaf7] rounded-full
                      transition-all duration-300 transform hover:scale-105 shadow-lg
                      w-full"
-        onClick={onEdit}
-      >
-        Edytuj
-      </button>
+            onClick={onEdit}
+          >
+            Edytuj
+          </button>
+        )}
       {/* Description Card */}
       {isDescriptionVisible && (
         <div className="fixed inset-0 flex items-center justify-center backdrop-blur-sm z-50 transition-opacity duration-300 ease-in-out opacity-100">
