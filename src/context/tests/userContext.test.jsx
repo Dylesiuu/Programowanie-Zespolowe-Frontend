@@ -13,6 +13,7 @@ describe('UserContext', () => {
         <UserContext.Consumer>
           {(value) => {
             expect(value.user).toBeNull();
+            expect(value.token).toBeNull();
             expect(value.isLoggedIn()).toBe(false);
           }}
         </UserContext.Consumer>
@@ -39,8 +40,29 @@ describe('UserContext', () => {
     );
   });
 
+  it('updates the token state when setUser is called', () => {
+    const testUser = { _id: '123', name: 'John Doe' };
+    const token = 'some_jwt_token';
+
+    render(
+      <UserProvider>
+        <UserContext.Consumer>
+          {(value) => {
+            act(() => {
+              value.setToken(token);
+            });
+            waitFor(() => {
+              expect(value.token).toEqual(token);
+            });
+          }}
+        </UserContext.Consumer>
+      </UserProvider>
+    );
+  });
+
   it('returns true for isLoggedIn when user has a valid token', async () => {
-    const testUser = { _id: '123', name: 'John Doe', token: 'some_jwt_token' };
+    const testUser = { _id: '123', name: 'John Doe' };
+    const token = 'some_jwt_token';
 
     render(
       <UserProvider>
@@ -48,6 +70,7 @@ describe('UserContext', () => {
           {(value) => {
             act(() => {
               value.setUser(testUser);
+              value.setToken(token);
             });
             waitFor(() => {
               expect(value.isLoggedIn()).toBe(true);
@@ -59,11 +82,37 @@ describe('UserContext', () => {
   });
 
   it('returns false for isLoggedIn when no user is set', () => {
+    const token = 'some_jwt_token';
+
     render(
       <UserProvider>
         <UserContext.Consumer>
           {(value) => {
-            expect(value.isLoggedIn()).toBe(false);
+            act(() => {
+              value.setToken(token);
+            });
+            waitFor(() => {
+              expect(value.isLoggedIn()).toBe(false);
+            });
+          }}
+        </UserContext.Consumer>
+      </UserProvider>
+    );
+  });
+
+  it('returns false for isLoggedIn when no token is set', () => {
+    const testUser = { _id: '123', name: 'John Doe' };
+
+    render(
+      <UserProvider>
+        <UserContext.Consumer>
+          {(value) => {
+            act(() => {
+              value.setUser(testUser);
+            });
+            waitFor(() => {
+              expect(value.isLoggedIn()).toBe(false);
+            });
           }}
         </UserContext.Consumer>
       </UserProvider>
@@ -71,7 +120,8 @@ describe('UserContext', () => {
   });
 
   it('clears user state, localStorage, and sends a logout request to the backend', async () => {
-    const testUser = { _id: '123', name: 'John Doe', token: 'some_jwt_token' };
+    const testUser = { _id: '123', name: 'John Doe' };
+    const token = 'some_jwt_token';
     localStorage.setItem('user', JSON.stringify(testUser));
 
     global.fetch = jest.fn(() =>
@@ -92,10 +142,12 @@ describe('UserContext', () => {
           {(value) => {
             act(() => {
               value.setUser(testUser);
+              value.setToken(token);
             });
 
             waitFor(() => {
               expect(value.user).toEqual(testUser);
+              expect(value.token).toEqual(token);
             });
 
             act(() => {
@@ -104,15 +156,17 @@ describe('UserContext', () => {
 
             waitFor(() => {
               expect(value.user).toBeNull();
+              expect(value.token).toBeNull();
 
               expect(localStorage.getItem('user')).toBeNull();
+              expect(localStorage.getItem('token')).toBeNull();
 
               expect(global.fetch).toHaveBeenCalledWith(
                 `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/logout`,
                 {
                   method: 'GET',
                   headers: {
-                    Authorization: `Bearer ${testUser.token}`,
+                    Authorization: `Bearer ${token}`,
                   },
                 }
               );
