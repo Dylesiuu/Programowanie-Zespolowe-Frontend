@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import styles from '../../register/Register.module.css';
 import { useRouter } from 'next/router';
+import { UserContext } from '@/context/userContext';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-const LoginForm = (userContext) => {
+const LoginForm = () => {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({});
+  const userContext = useContext(UserContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

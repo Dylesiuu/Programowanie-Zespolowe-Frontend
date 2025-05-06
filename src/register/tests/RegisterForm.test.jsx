@@ -168,7 +168,7 @@ describe('RegisterForm', () => {
     // Render the component with the mocked UserContext
     render(
       <UserContext.Provider value={mockUserContextValue}>
-        <RegisterForm {...mockUserContextValue} />
+        <RegisterForm />
       </UserContext.Provider>
     );
 

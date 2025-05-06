@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import styles from '../Register.module.css';
 import { useRouter } from 'next/router';
+import { UserContext } from '@/context/userContext';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-const RegisterForm = (userContext) => {
+const RegisterForm = () => {
   const router = useRouter();
   const [name, setName] = useState('');
   const [lastname, setLastname] = useState('');
@@ -12,6 +13,7 @@ const RegisterForm = (userContext) => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errors, setErrors] = useState({});
+  const userContext = useContext(UserContext);
 
   const passwordRequirements =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{12,}$/;
