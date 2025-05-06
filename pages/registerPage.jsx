@@ -18,7 +18,7 @@ const RegisterPage = () => {
 
   return (
     <div className={styles.registerPageContainer}>
-      <RegisterForm />
+      <RegisterForm userContext={userContext} />
     </div>
   );
 };

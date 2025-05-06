@@ -19,7 +19,7 @@ const LoginPage = () => {
 
   return (
     <div className={styles.registerPageContainer}>
-      <LoginForm />
+      <LoginForm userContext={userContext} />
     </div>
   );
 };

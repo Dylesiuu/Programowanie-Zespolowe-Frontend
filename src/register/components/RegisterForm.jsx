@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-const RegisterForm = () => {
+const RegisterForm = (userContext) => {
   const router = useRouter();
   const [name, setName] = useState('');
   const [lastname, setLastname] = useState('');
@@ -46,7 +46,9 @@ const RegisterForm = () => {
         body: JSON.stringify({ name, lastname, email, password }),
       });
       if (response.ok) {
-        await router.replace('/loginPage');
+        const data = await response.json();
+        userContext.setUser(data.user);
+        userContext.setToken(data.token);
       } else if (response.status === 409) {
         setErrors({
           global: 'Dany email jest już zajęty.',
