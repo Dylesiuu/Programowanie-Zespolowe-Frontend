@@ -32,7 +32,7 @@ const ShelterSearchBar = ({ userContext }) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${userContext.user?.token}`,
+          Authorization: `Bearer ${userContext.token}`,
         },
         body: JSON.stringify({
           lat: position.lat,

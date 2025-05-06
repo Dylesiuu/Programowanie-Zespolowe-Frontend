@@ -22,7 +22,7 @@ const ShelterProfile = ({ shelterId }) => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${userContext.user?.token}`,
+            Authorization: `Bearer ${userContext.token}`,
           },
           body: JSON.stringify({ shelterId }),
         });

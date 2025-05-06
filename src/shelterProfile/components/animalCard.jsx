@@ -18,7 +18,7 @@ const AnimalCard = ({ animalId, onEdit, userContext }) => {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${userContext.user?.token}`,
+          Authorization: `Bearer ${userContext.token}`,
         },
       });
 
