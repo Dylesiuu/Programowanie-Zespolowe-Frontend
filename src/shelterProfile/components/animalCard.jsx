@@ -90,13 +90,13 @@ const AnimalCard = ({ animalId, onEdit, userContext }) => {
   return (
     <div className="flex flex-col w-full h-full p-6 rounded-3xl shadow-2xl bg-white">
       {/* Animal Image Carousel */}
-      <div className="w-full h-64 relative mb-4 ">
+      <div className="w-full h-[40%] relative mb-4">
         <Image
           src={animal.images[currentImageIndex]}
           alt={animal.name}
           fill
           style={{ objectFit: 'cover' }}
-          className="rounded-2xl"
+          className="rounded-2xl items-center"
         />
         {/* Navigation Buttons - Show only if more than one image */}
         {animal.images.length > 1 && (
