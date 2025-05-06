@@ -2,6 +2,8 @@ import { createContext, useEffect, useState } from 'react';
 
 const initialState = {
   user: null,
+  token: null,
+  setToken: () => {},
   setUser: () => {},
   isLoggedIn: () => false,
   logout: () => {},
@@ -11,6 +13,7 @@ export const UserContext = createContext(initialState);
 
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [token, setToken] = useState(null);
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   const isLoggedIn = () => {
@@ -41,7 +44,9 @@ export const UserProvider = ({ children }) => {
       }
     }
     setUser(null); // Clear user state
+    setToken(null); // Clear token state
     localStorage.removeItem('user'); // Remove user from localStorage
+    localStorage.removeItem('token'); // Remove token from localStorage
     console.warn('User logged out and removed from localStorage.');
   };
 
@@ -51,7 +56,11 @@ export const UserProvider = ({ children }) => {
       console.warn('Saving user to localStorage...', user);
       localStorage.setItem('user', JSON.stringify(user));
     }
-  }, [user]);
+    if (token) {
+      console.warn('Saving token to localStorage...', token);
+      localStorage.setItem('token', token);
+    }
+  }, [user, token]);
 
   useEffect(() => {
     // Load user from localStorage on initial render
@@ -62,10 +71,20 @@ export const UserProvider = ({ children }) => {
     } else {
       console.warn('No user found in localStorage.');
     }
+
+    const storedToken = localStorage.getItem('token');
+    if (storedToken) {
+      console.warn('Loading token from localStorage...', storedToken);
+      setToken(storedToken);
+    } else {
+      console.warn('No token found in localStorage.');
+    }
   }, []);
 
   return (
-    <UserContext.Provider value={{ user, setUser, isLoggedIn, logout }}>
+    <UserContext.Provider
+      value={{ user, token, setToken, setUser, isLoggedIn, logout }}
+    >
       {children}
     </UserContext.Provider>
   );
