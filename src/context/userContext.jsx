@@ -20,16 +20,16 @@ export const UserProvider = ({ children }) => {
     if (process.env.NODE_ENV === 'development') {
       return true; // Always return true in development mode
     }
-    return Boolean(user && user.token); // Normal behavior in production
+    return Boolean(user && token); // Normal behavior in production
   };
 
   const logout = async () => {
-    if (user && user.token) {
+    if (user && token) {
       try {
         const response = await fetch(`${API_BASE_URL}/auth/logout`, {
           method: 'GET',
           headers: {
-            Authorization: `Bearer ${user.token}`,
+            Authorization: `Bearer ${token}`,
           },
         });
 
