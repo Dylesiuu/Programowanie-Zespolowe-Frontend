@@ -100,27 +100,30 @@ describe('LoginForm', () => {
       _id: '123',
       name: 'John Doe',
       email: 'john.doe@example.com',
-      token: 'some_jwt_token',
     };
+
+    const mockToken = 'mock token';
 
     global.fetch = jest.fn(() =>
       Promise.resolve({
         ok: true,
-        json: () => Promise.resolve(mockUserData),
+        json: () => Promise.resolve({ user: mockUserData, token: mockToken }),
       })
     );
 
     // Mock the UserContext
     const mockSetUser = jest.fn();
+    const mockSetToken = jest.fn();
     const mockUserContextValue = {
       setUser: mockSetUser,
+      setToken: mockSetToken,
       isLoggedIn: jest.fn(),
     };
 
     // Render the component with the mocked UserContext
     render(
       <UserContext.Provider value={mockUserContextValue}>
-        <LoginForm />
+        <LoginForm {...mockUserContextValue} />
       </UserContext.Provider>
     );
 
@@ -154,6 +157,7 @@ describe('LoginForm', () => {
 
       // Check that the user data was set in the context
       expect(mockSetUser).toHaveBeenCalledWith(mockUserData);
+      expect(mockSetToken).toHaveBeenCalledWith(mockToken);
     });
   });
 });
