@@ -3,6 +3,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import RegisterForm from '../components/RegisterForm';
 import { useRouter } from 'next/router';
+import { UserContext } from '@/context/userContext';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -138,10 +139,40 @@ describe('RegisterForm', () => {
     });
   });
 
-  it('redirects to login page when registration is successful', async () => {
-    global.fetch = jest.fn(() => Promise.resolve({ ok: true }));
+  it('sets user and token in context when registration is successful', async () => {
+    // Mock the fetch API to return a successful response with user data
+    const mockUserData = {
+      _id: '123',
+      name: 'John Doe',
+      email: 'john.doe@example.com',
+    };
 
-    render(<RegisterForm />);
+    const mockToken = 'mock token';
+
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve({ user: mockUserData, token: mockToken }),
+      })
+    );
+
+    // Mock the UserContext
+    const mockSetUser = jest.fn();
+    const mockSetToken = jest.fn();
+    const mockUserContextValue = {
+      setUser: mockSetUser,
+      setToken: mockSetToken,
+      isLoggedIn: jest.fn(),
+    };
+
+    // Render the component with the mocked UserContext
+    render(
+      <UserContext.Provider value={mockUserContextValue}>
+        <RegisterForm {...mockUserContextValue} />
+      </UserContext.Provider>
+    );
+
+    // Simulate user input
     await userEvent.type(screen.getByPlaceholderText('Imię'), 'John');
     await userEvent.type(screen.getByPlaceholderText('Nazwisko'), 'Doe');
     await userEvent.type(
@@ -156,9 +187,13 @@ describe('RegisterForm', () => {
       screen.getByPlaceholderText('Powtórz hasło'),
       'StrongPassword123!'
     );
+
+    // Simulate form submission
     await userEvent.click(screen.getByRole('button', { name: 'Zarejestruj' }));
 
+    // Wait for the assertion
     await waitFor(() => {
+      // Check that the fetch API was called with the correct arguments
       expect(global.fetch).toHaveBeenCalledWith(
         `${API_BASE_URL}/auth/register`,
         expect.objectContaining({
@@ -172,7 +207,10 @@ describe('RegisterForm', () => {
           }),
         })
       );
-      expect(mockPush).toHaveBeenCalledWith('/loginPage');
+
+      // Check that the user data and token were set in the context
+      expect(mockSetUser).toHaveBeenCalledWith(mockUserData);
+      expect(mockSetToken).toHaveBeenCalledWith(mockToken);
     });
   });
 

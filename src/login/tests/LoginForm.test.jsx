@@ -94,7 +94,7 @@ describe('LoginForm', () => {
     });
   });
 
-  it('sets user in context when login is successful', async () => {
+  it('sets user and token in context when login is successful', async () => {
     // Mock the fetch API to return a successful response with user data
     const mockUserData = {
       _id: '123',
