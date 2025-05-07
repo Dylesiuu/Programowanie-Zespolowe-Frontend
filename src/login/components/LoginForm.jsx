@@ -61,9 +61,9 @@ const LoginForm = () => {
         className="flex flex-col w-[70%] sm:w-[50%] md:w-[35%] h-[85%] py-2 px-5 sm:py-5 sm:px-8 lg:py-7 lg:px-10 bg-white rounded-4xl shadow-lg justify-center"
         noValidate
       >
-        <h1 className="text-[#264653] pb-3 text-xl font-bold text-center">
+        <label className="text-[#264653] pb-3 text-xl md:text-4xl font-bold text-center">
           Zaloguj się!
-        </h1>
+        </label>
 
         {/* Input section */}
         <div className="flex flex-col w-full space-y-4">
