@@ -7,7 +7,7 @@ import LoggedUser from '../src/login/components/loggedUser';
 const LoginPage = () => {
   const userContext = useContext(UserContext);
   const router = useRouter();
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     if (!userContext.isLoggedIn()) {
