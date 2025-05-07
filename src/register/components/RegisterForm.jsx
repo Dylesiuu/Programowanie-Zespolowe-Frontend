@@ -72,12 +72,12 @@ const RegisterForm = () => {
     <div className="flex flex-col h-full w-full justify-center items-center max-h-screen">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col w-[70%] sm:w-[50%] md:w-[35%] h-[92%] py-2 px-5 sm:py-5 sm:px-8 lg:py-7 lg:px-10 bg-white rounded-4xl shadow-lg justify-center"
+        className="flex flex-col w-[80%] sm:w-[50%] md:w-[35%] h-[92%] py-2 px-5 sm:py-5 sm:px-8 lg:py-7 lg:px-10 bg-white rounded-4xl shadow-lg justify-center"
         noValidate
       >
-        <h1 className="text-[#264653] pb-3 text-xl font-bold text-center">
+        <label className="text-[#264653] pb-3 text-xl md:text-4xl font-bold text-center">
           Zarejestruj się!
-        </h1>
+        </label>
 
         {/* Input section */}
         <div className="flex flex-col w-full space-y-4">
@@ -99,7 +99,7 @@ const RegisterForm = () => {
                 {...register('name', { required: 'Imię jest wymagane.' })}
               />
               {/* Name error message container with fixed height */}
-              <div className="top-full left-0 w-full h-3">
+              <div className="top-full left-0 w-full h-4 sm:h-3">
                 {errors.name && (
                   <p className="text-red-500 text-sm text-center">
                     {errors.name.message}
@@ -125,7 +125,7 @@ const RegisterForm = () => {
                 })}
               />
               {/* Lastname error message container with fixed height */}
-              <div className="top-full left-0 w-full h-3">
+              <div className="top-full left-0 w-full h-4 sm:h-3">
                 {errors.name && (
                   <p className="text-red-500 text-sm text-center">
                     {errors.name.message}
@@ -191,7 +191,7 @@ const RegisterForm = () => {
             {/* Password error message container with fixed height */}
             <div className="top-full left-0 w-full h-4">
               {errors.password && (
-                <p className="text-red-500 text-sm text-center">
+                <p className="text-red-500 text-sm sm:text-sm text-center">
                   {errors.password.message}
                 </p>
               )}
@@ -242,10 +242,10 @@ const RegisterForm = () => {
         <div className="flex w-full h-full mt-4 px-2 pt-2 sm:px-5 sm:pt-5 items-center justify-center">
           <button
             onClick={() => Router.replace(`${API_BASE_URL}/auth/google`)}
-            className="bg-white text-[#333] border border-[#ccc] rounded-lg px-4 py-2 text-base flex items-center gap-2 hover:bg-[#f0f0f0] cursor-pointer"
+            className="bg-white text-[#333] border border-[#ccc] rounded-lg px-4 py-1 text-base flex items-center gap-2 hover:bg-[#f0f0f0] cursor-pointer"
           >
             <Image src={googleLogo} alt="Google icon" width={20} height={20} />
-            <label className="text-sm sm:text-base cursor-pointer">
+            <label className="text-xs sm:text-base cursor-pointer">
               Zarejestruj się z Google
             </label>
           </button>
