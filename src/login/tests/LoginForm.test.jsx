@@ -13,12 +13,14 @@ jest.mock('next/router', () => ({
 
 describe('LoginForm', () => {
   let mockPush;
+  let mockReplace;
 
   beforeEach(() => {
     mockPush = jest.fn();
+    mockReplace = jest.fn();
     useRouter.mockImplementation(() => ({
       push: mockPush,
-      replace: mockPush,
+      replace: mockReplace,
     }));
   });
 
@@ -30,11 +32,18 @@ describe('LoginForm', () => {
     render(<LoginForm />);
 
     expect(screen.getByText('Zaloguj się!')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('Email')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('Hasło')).toBeInTheDocument();
+    expect(
+      screen.getByPlaceholderText('Wpisz swój adres e-mail')
+    ).toBeInTheDocument();
+    expect(
+      screen.getByPlaceholderText('Wpisz swoje hasło')
+    ).toBeInTheDocument();
     expect(
       screen.getByRole('button', { name: 'Zaloguj się' })
     ).toBeInTheDocument();
+    expect(screen.getByText('Zaloguj się z Google')).toBeInTheDocument();
+    expect(screen.getByText('Nie masz konta?')).toBeInTheDocument();
+    expect(screen.getByText('Zarejestruj się')).toBeInTheDocument();
   });
 
   it('shows an error message when required fields are empty', async () => {
@@ -48,7 +57,7 @@ describe('LoginForm', () => {
     });
   });
 
-  it('shows an error message when login credencials are invalid', async () => {
+  it('shows an error message when login credentials are invalid', async () => {
     global.fetch = jest.fn(() =>
       Promise.resolve({
         ok: false,
@@ -59,10 +68,13 @@ describe('LoginForm', () => {
     render(<LoginForm />);
 
     await userEvent.type(
-      screen.getByPlaceholderText('Email'),
+      screen.getByPlaceholderText('Wpisz swój adres e-mail'),
       'wrong@example.com'
     );
-    await userEvent.type(screen.getByPlaceholderText('Hasło'), 'wrongpassword');
+    await userEvent.type(
+      screen.getByPlaceholderText('Wpisz swoje hasło'),
+      'wrongpassword'
+    );
     await userEvent.click(screen.getByRole('button', { name: 'Zaloguj się' }));
 
     await waitFor(() => {
@@ -84,7 +96,10 @@ describe('LoginForm', () => {
   it('shows an error message when email format is invalid', async () => {
     render(<LoginForm />);
 
-    await userEvent.type(screen.getByPlaceholderText('Email'), 'invalid-email');
+    await userEvent.type(
+      screen.getByPlaceholderText('Wpisz swój adres e-mail'),
+      'invalid-email'
+    );
     await userEvent.click(screen.getByRole('button', { name: 'Zaloguj się' }));
 
     await waitFor(() => {
@@ -95,7 +110,6 @@ describe('LoginForm', () => {
   });
 
   it('sets user and token in context when login is successful', async () => {
-    // Mock the fetch API to return a successful response with user data
     const mockUserData = {
       _id: '123',
       name: 'John Doe',
@@ -111,7 +125,6 @@ describe('LoginForm', () => {
       })
     );
 
-    // Mock the UserContext
     const mockSetUser = jest.fn();
     const mockSetToken = jest.fn();
     const mockUserContextValue = {
@@ -120,29 +133,24 @@ describe('LoginForm', () => {
       isLoggedIn: jest.fn(),
     };
 
-    // Render the component with the mocked UserContext
     render(
       <UserContext.Provider value={mockUserContextValue}>
         <LoginForm />
       </UserContext.Provider>
     );
 
-    // Simulate user input
     await userEvent.type(
-      screen.getByPlaceholderText('Email'),
+      screen.getByPlaceholderText('Wpisz swój adres e-mail'),
       'john.doe@example.com'
     );
     await userEvent.type(
-      screen.getByPlaceholderText('Hasło'),
+      screen.getByPlaceholderText('Wpisz swoje hasło'),
       'StrongPassword123!'
     );
 
-    // Simulate form submission
     await userEvent.click(screen.getByRole('button', { name: 'Zaloguj się' }));
 
-    // Wait for the assertion
     await waitFor(() => {
-      // Check that the fetch API was called with the correct arguments
       expect(global.fetch).toHaveBeenCalledWith(
         `${API_BASE_URL}/auth/login`,
         expect.objectContaining({
@@ -155,9 +163,33 @@ describe('LoginForm', () => {
         })
       );
 
-      // Check that the user data was set in the context
       expect(mockSetUser).toHaveBeenCalledWith(mockUserData);
       expect(mockSetToken).toHaveBeenCalledWith(mockToken);
     });
+  });
+
+  it('renders Google login button', () => {
+    render(<LoginForm />);
+    expect(screen.getByText('Zaloguj się z Google')).toBeInTheDocument();
+    expect(
+      screen.getByRole('img', { name: 'Google icon' })
+    ).toBeInTheDocument();
+  });
+
+  it('redirects to Google auth endpoint when Google login button is clicked', async () => {
+    render(<LoginForm />);
+
+    const googleButton = screen
+      .getByText('Zaloguj się z Google')
+      .closest('button');
+    await userEvent.click(googleButton);
+
+    expect(mockReplace).toHaveBeenCalledWith(`${API_BASE_URL}/auth/google`);
+  });
+
+  it('renders registration link', () => {
+    render(<LoginForm />);
+    const registerLink = screen.getByText('Zarejestruj się').closest('a');
+    expect(registerLink).toHaveAttribute('href', '/registerPage');
   });
 });

@@ -5,11 +5,13 @@ import Image from 'next/image';
 import Link from 'next/link';
 import googleLogo from '../../../public/img/google.png';
 import { BiLockAlt, BiEnvelope } from 'react-icons/bi';
+import { useRouter } from 'next/router';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 const LoginForm = () => {
   const userContext = useContext(UserContext);
+  const Router = useRouter();
 
   const {
     register,
@@ -128,7 +130,7 @@ const LoginForm = () => {
           <div className="w-full h-full min-h-[2rem] lg:min-h-[3rem] mt-2 relative">
             <button
               className="px-2 py-2 w-full h-full bg-[#CE8455] text-white hover:bg-[#AA673C] rounded-full transition-all duration-300 transform hover:scale-105 
-                    text-sm sm:text-base md:text-lg whitespace-nowrap"
+                    text-sm sm:text-base md:text-lg whitespace-nowrap cursor-pointer"
               type="submit"
               disabled={isSubmitting}
             >
@@ -149,7 +151,7 @@ const LoginForm = () => {
         <div className="flex w-full h-full mt-4 p-2 sm:p-5 items-center justify-center">
           <button
             onClick={() => Router.replace(`${API_BASE_URL}/auth/google`)}
-            className="bg-white text-[#333] border border-[#ccc] rounded-lg px-4 py-2 text-base flex items-center gap-2 hover:bg-[#f0f0f0]"
+            className="bg-white text-[#333] border border-[#ccc] rounded-lg px-4 py-2 text-base flex items-center gap-2 hover:bg-[#f0f0f0] cursor-pointer"
           >
             <Image src={googleLogo} alt="Google icon" width={20} height={20} />
             <label className="text-sm sm:text-base">Zaloguj się z Google</label>
@@ -161,7 +163,7 @@ const LoginForm = () => {
           <p className="text-xs md:text-sm sm:pr-1 text-gray-600">
             Nie masz konta?
           </p>
-          <p className="text-xs md:text-sm text-gray-600">
+          <p className="text-xs md:text-sm text-gray-600 cursor-pointer">
             <Link
               href="/registerPage"
               className="text-[#CE8455] hover:underline font-bold"
