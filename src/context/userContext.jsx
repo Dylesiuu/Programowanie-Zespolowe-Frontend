@@ -17,9 +17,9 @@ export const UserProvider = ({ children }) => {
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   const isLoggedIn = () => {
-    // if (process.env.NODE_ENV === 'development') {
-    //   return true; // Always return true in development mode
-    // }
+    if (process.env.NODE_ENV === 'development') {
+      return true; // Always return true in development mode
+    }
     return Boolean(user && token); // Normal behavior in production
   };
 
