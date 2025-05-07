@@ -1,95 +1,172 @@
-import React, { useState, useContext } from 'react';
-import styles from '../../register/Register.module.css';
-import { useRouter } from 'next/router';
+import React, { useContext } from 'react';
+import { useForm } from 'react-hook-form';
 import { UserContext } from '@/context/userContext';
+import Image from 'next/image';
+import Link from 'next/link';
+import googleLogo from '../../../public/img/google.png';
+import { BiLockAlt, BiEnvelope } from 'react-icons/bi';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 const LoginForm = () => {
-  const router = useRouter();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [errors, setErrors] = useState({});
   const userContext = useContext(UserContext);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const newErrors = {};
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    setError,
+  } = useForm({
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  });
 
-    if (!email) newErrors.email = 'Email jest wymagany.';
-    else if (!/\S+@\S+\.\S+/.test(email))
-      newErrors.email = 'Nieprawidłowy format adresu e-mail.';
-    if (!password) newErrors.password = 'Hasło jest wymagane.';
-
-    setErrors(newErrors);
-    if (Object.keys(newErrors).length > 0) return;
-
+  const onSubmit = async (data) => {
     try {
+      console.log('Submitting login form with data:', data);
       const response = await fetch(`${API_BASE_URL}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify(data),
       });
 
       if (response.ok) {
-        const data = await response.json();
-        userContext.setUser(data.user);
-        userContext.setToken(data.token);
+        const { user, token } = await response.json();
+        userContext.setUser(user);
+        userContext.setToken(token);
       } else {
-        if (response.status === 401 || response.status === 409) {
-          setErrors({
-            global: 'Złe dane logowania.',
-          });
-        }
+        setError('root', {
+          type: 'manual',
+          message: 'Złe dane logowania.',
+        });
       }
     } catch (error) {
-      setErrors({
-        global: 'Wystąpił problem z połączeniem. Spróbuj ponownie później.',
+      setError('root', {
+        type: 'manual',
+        message: 'Wystąpił problem z połączeniem. Spróbuj ponownie później.',
       });
     }
   };
 
   return (
-    <div className={styles.registerFormContainer}>
-      <div className={styles.headerContainer}>
-        <h1 className={styles.title}>PETFINITY</h1>
-      </div>
+    <div className="flex flex-col h-full w-full justify-center items-center max-h-screen">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="flex flex-col w-[35%] h-[85%] py-7 px-10  bg-white rounded-4xl shadow-lg justify-center"
+        noValidate
+      >
+        <h1 className="text-[#264653] pb-3 text-xl font-bold text-center">
+          Zaloguj się!
+        </h1>
 
-      <form onSubmit={handleSubmit} className={styles.registerform} noValidate>
-        <h1 className={styles.headerRegister}>Zaloguj się!</h1>
+        {/* Input section */}
+        <div className="flex flex-col w-full space-y-4">
+          {/* Email input section */}
+          <div className="flex flex-col w-full relative">
+            <label
+              htmlFor="email"
+              className="text-[#264653] text-lg font-bold text-left"
+            >
+              <BiEnvelope className="flex left-3 top-2 text-[#AA673C]" />
+              <span>Email</span>
+            </label>
+            <input
+              id="email"
+              className="px-2 py-2 w-full rounded-lg border bg-[#fefaf7] border-[#FFD1DC] text-black focus:outline-none focus:ring-2 focus:ring-[#AA673C]"
+              type="email"
+              {...register('email', {
+                required: 'Email jest wymagany.',
+                pattern: {
+                  value: /\S+@\S+\.\S+/,
+                  message: 'Nieprawidłowy format adresu e-mail.',
+                },
+              })}
+              placeholder="Wpisz swój adres e-mail"
+              autoComplete="off"
+            />
+            {/* Email error message container with fixed height */}
+            <div className="absolute top-full left-0 w-full h-5">
+              {errors.email && (
+                <p className="text-red-500 text-sm text-center">
+                  {errors.email.message}
+                </p>
+              )}
+            </div>
+          </div>
 
-        <div className={styles.userInfoInput}>
-          <input
-            className={styles.userInput}
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Email"
-            autoComplete="off"
-          />
-          {errors.email && (
-            <p className={styles.errorMessage}>{errors.email}</p>
-          )}
+          {/* Password input section */}
+          <div className="flex flex-col w-full relative">
+            <label
+              htmlFor="password"
+              className="text-[#264653] text-lg font-bold text-left"
+            >
+              Hasło
+            </label>
+            <input
+              id="password"
+              className="px-2 py-2 w-full rounded-lg border bg-[#fefaf7] border-[#FFD1DC] text-black focus:outline-none focus:ring-2 focus:ring-[#AA673C]"
+              type="password"
+              {...register('password', {
+                required: 'Hasło jest wymagane.',
+              })}
+              placeholder="Wpisz swoje hasło"
+              autoComplete="new-password"
+            />
+            {/* Password error message container with fixed height */}
+            <div className="absolute top-full left-0 w-full h-5">
+              {errors.password && (
+                <p className="text-red-500 text-sm text-center">
+                  {errors.password.message}
+                </p>
+              )}
+            </div>
+          </div>
+          {/* Submit button */}
+          <div className="w-full h-full min-h-[3rem] mt-2 relative">
+            <button
+              className="px-2 py-2 w-full h-full bg-[#CE8455] text-white hover:bg-[#AA673C] rounded-full transition-all duration-300 transform hover:scale-105 
+                    text-sm sm:text-base md:text-lg whitespace-nowrap"
+              type="submit"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? 'Logowanie...' : 'Zaloguj się'}
+            </button>
+            {/* Error message container for root errors */}
+            <div className="absolute top-full left-0 w-full h-5">
+              {errors.root && (
+                <p className="text-red-500 text-sm text-center">
+                  {errors.root.message}
+                </p>
+              )}
+            </div>
+          </div>
         </div>
-        <div className={styles.userInfoInput}>
-          <input
-            className={styles.userInput}
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Hasło"
-            autoComplete="new-password"
-          />
-          {errors.password && (
-            <p className={styles.errorMessage}>{errors.password}</p>
-          )}
+
+        {/* Google login button */}
+        <div className="flex w-full h-full mt-4 p-5 items-center justify-center">
+          <button
+            onClick={() => Router.replace(`${API_BASE_URL}/auth/google`)}
+            className="bg-white text-[#333] border border-[#ccc] rounded-lg px-4 py-2 text-base flex items-center gap-2 hover:bg-[#f0f0f0]"
+          >
+            <Image src={googleLogo} alt="Google icon" width={20} height={20} />
+            Zaloguj się z Google
+          </button>
         </div>
-        <button className={styles.registerButton} type="submit">
-          Zaloguj się
-        </button>
-        {errors.global && (
-          <p className={styles.errorMessage}>{errors.global}</p>
-        )}
+
+        {/* Registration message */}
+        <div className="flex flex-col w-full items-center justify-center mt-6">
+          <p className="text-sm text-gray-600">
+            Nie masz konta?{' '}
+            <Link
+              href="/registerPage"
+              className="text-[#CE8455] hover:underline font-bold"
+            >
+              Zarejestruj się
+            </Link>
+          </p>
+        </div>
       </form>
     </div>
   );
