@@ -1,7 +1,6 @@
 'use client';
 import { useContext, useEffect } from 'react';
 import LoginForm from '../src/login/components/LoginForm';
-import styles from '../src/styles/registerPage.module.css';
 import { UserContext } from '@/context/userContext';
 import { useRouter } from 'next/navigation';
 
@@ -18,7 +17,7 @@ const LoginPage = () => {
   }, [router, userContext]);
 
   return (
-    <div className={styles.registerPageContainer}>
+    <div className="m-0 p-0 h-[100vh] w-[100vw] bg-[url('/Union.svg')] bg-repeat bg-[length:150rem_100rem] bg-[#FFF0E9]">
       <LoginForm />
     </div>
   );
