@@ -64,7 +64,7 @@ const LoginForm = () => {
         {/* Input section */}
         <div className="flex flex-col w-full space-y-4">
           {/* Email input section */}
-          <div className="flex flex-col w-full relative">
+          <div className="flex flex-col w-full">
             <label
               htmlFor="email"
               className="text-[#264653] text-lg font-bold text-left flex items-center gap-2"
@@ -87,7 +87,7 @@ const LoginForm = () => {
               autoComplete="off"
             />
             {/* Email error message container with fixed height */}
-            <div className="absolute top-full left-0 w-full h-5">
+            <div className="top-full left-0 w-full h-5">
               {errors.email && (
                 <p className="text-red-500 text-sm text-center">
                   {errors.email.message}
@@ -97,7 +97,7 @@ const LoginForm = () => {
           </div>
 
           {/* Password input section */}
-          <div className="flex flex-col w-full relative">
+          <div className="flex flex-col w-full">
             <label
               htmlFor="password"
               className="text-[#264653] text-lg font-bold text-left flex items-center gap-2"
@@ -116,7 +116,7 @@ const LoginForm = () => {
               autoComplete="new-password"
             />
             {/* Password error message container with fixed height */}
-            <div className="absolute top-full left-0 w-full h-5">
+            <div className="top-full left-0 w-full h-4">
               {errors.password && (
                 <p className="text-red-500 text-sm text-center">
                   {errors.password.message}
