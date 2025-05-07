@@ -16,6 +16,7 @@ const LoginForm = () => {
   const {
     register,
     handleSubmit,
+    clearErrors,
     formState: { errors, isSubmitting },
     setError,
   } = useForm({
@@ -26,6 +27,7 @@ const LoginForm = () => {
   });
 
   const onSubmit = async (data) => {
+    clearErrors('root');
     try {
       console.log('Submitting login form with data:', data);
       const response = await fetch(`${API_BASE_URL}/auth/login`, {
@@ -136,14 +138,6 @@ const LoginForm = () => {
             >
               {isSubmitting ? 'Logowanie...' : 'Zaloguj się'}
             </button>
-            {/* Error message container for root errors */}
-            <div className="absolute top-full left-0 w-full h-5">
-              {errors.root && (
-                <p className="text-red-500 text-sm text-center">
-                  {errors.root.message}
-                </p>
-              )}
-            </div>
           </div>
         </div>
 
@@ -154,7 +148,9 @@ const LoginForm = () => {
             className="bg-white text-[#333] border border-[#ccc] rounded-lg px-4 py-2 text-base flex items-center gap-2 hover:bg-[#f0f0f0] cursor-pointer"
           >
             <Image src={googleLogo} alt="Google icon" width={20} height={20} />
-            <label className="text-sm sm:text-base">Zaloguj się z Google</label>
+            <label className="text-sm sm:text-base cursor-pointer">
+              Zaloguj się z Google
+            </label>
           </button>
         </div>
 
@@ -173,6 +169,22 @@ const LoginForm = () => {
           </p>
         </div>
       </form>
+      {/* Error message modal for root errors */}
+      {errors.root && (
+        <div className="fixed inset-0 flex items-center justify-center backdrop-blur-md z-50">
+          <div className="bg-white p-6 rounded-xl shadow-lg text-center w-[90%] sm:w-[50%] md:w-[30%]">
+            <p className="text-red-500 text-lg font-bold mb-4">
+              {errors.root.message}
+            </p>
+            <button
+              onClick={() => clearErrors('root')}
+              className="px-4 py-2 bg-[#CE8455] text-white rounded-lg hover:bg-[#AA673C] transition-all"
+            >
+              Zamknij
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -1,151 +1,286 @@
-import React, { useState, useContext } from 'react';
-import styles from '../Register.module.css';
+import React, { useContext } from 'react';
 import { useRouter } from 'next/router';
+import { useForm } from 'react-hook-form';
 import { UserContext } from '@/context/userContext';
+import Image from 'next/image';
+import googleLogo from '../../../public/img/google.png';
+import { BiLockAlt, BiEnvelope } from 'react-icons/bi';
+import Link from 'next/link';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 const RegisterForm = () => {
   const router = useRouter();
-  const [name, setName] = useState('');
-  const [lastname, setLastname] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [errors, setErrors] = useState({});
   const userContext = useContext(UserContext);
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors, isSubmitting },
+    setError,
+    clearErrors,
+  } = useForm({
+    defaultValues: {
+      email: '',
+      password: '',
+      confirmPassword: '',
+      name: '',
+      lastname: '',
+    },
+  });
+
+  const password = watch('password', '');
 
   const passwordRequirements =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{12,}$/;
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const newErrors = {};
-
-    if (!name) newErrors.name = 'Imię jest wymagane.';
-    if (!lastname) newErrors.lastname = 'Nazwisko jest wymagane.';
-    if (!email) newErrors.email = 'Email jest wymagany.';
-    else if (!/\S+@\S+\.\S+/.test(email))
-      newErrors.email = 'Nieprawidłowy format adresu e-mail.';
-    if (!password) newErrors.password = 'Hasło jest wymagane.';
-    if (!confirmPassword) newErrors.confirmPassword = 'Powtórz hasło.';
-
-    if (password && !passwordRequirements.test(password)) {
-      newErrors.password =
-        'Hasło musi mieć co najmniej 12 znaków, zawierać dużą literę, cyfrę i znak specjalny.';
-    }
-
-    if (password && confirmPassword && password !== confirmPassword) {
-      newErrors.confirmPassword = 'Hasła muszą być takie same!';
-    }
-    setErrors(newErrors);
-    if (Object.keys(newErrors).length > 0) return;
+  const onSubmit = async (data) => {
+    clearErrors('global');
 
     try {
       const response = await fetch(`${API_BASE_URL}/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, lastname, email, password }),
+        body: JSON.stringify(data),
       });
+
       if (response.ok) {
-        const data = await response.json();
-        userContext.setUser(data.user);
-        userContext.setToken(data.token);
+        const responseData = await response.json();
+        userContext.setUser(responseData.user);
+        userContext.setToken(responseData.token);
       } else if (response.status === 409) {
-        setErrors({
-          global: 'Dany email jest już zajęty.',
+        setError('global', {
+          type: 'manual',
+          message: 'Dany email jest już zajęty.',
         });
       } else {
-        setErrors({
-          global: 'Wystąpił problem podczas rejestracji.',
+        setError('global', {
+          type: 'manual',
+          message: 'Wystąpił problem podczas rejestracji.',
         });
       }
     } catch (error) {
-      setErrors({
-        global: 'Wystąpił problem z połączeniem. Spróbuj ponownie później.',
+      setError('global', {
+        type: 'manual',
+        message: 'Wystąpił problem z połączeniem. Spróbuj ponownie później.',
       });
     }
   };
 
   return (
-    <div className={styles.registerFormContainer}>
-      <div className={styles.headerContainer}>
-        <h1 className={styles.title}>PETFINITY</h1>
-      </div>
-      <form onSubmit={handleSubmit} className={styles.registerform} noValidate>
-        <h1 className={styles.headerRegister}>Zarejestruj się!</h1>
-        <div className={styles.nameAndLastnameInput}>
-          <div className={styles.userNameContainer}>
-            <input
-              className={styles.userNamesInput}
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Imię"
-            />
-            {errors.name && (
-              <p className={styles.errorMessage}>{errors.name}</p>
-            )}
+    <div className="flex flex-col h-full w-full justify-center items-center max-h-screen">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="flex flex-col w-[70%] sm:w-[50%] md:w-[35%] h-[92%] py-2 px-5 sm:py-5 sm:px-8 lg:py-7 lg:px-10 bg-white rounded-4xl shadow-lg justify-center"
+        noValidate
+      >
+        <h1 className="text-[#264653] pb-3 text-xl font-bold text-center">
+          Zarejestruj się!
+        </h1>
+
+        {/* Input section */}
+        <div className="flex flex-col w-full space-y-4">
+          {/* Name and Lastname input section */}
+          <div className="flex flex-row w-full space-x-4">
+            {/* Name input section */}
+            <div className="w-full">
+              <label
+                htmlFor="imie"
+                className="text-[#264653] text-lg font-bold text-left flex items-center gap-2"
+              >
+                Imię
+              </label>
+              <input
+                id="imie"
+                className="px-2 py-2 w-full rounded-lg border bg-[#fefaf7] border-[#FFD1DC] text-black focus:outline-none focus:ring-2 focus:ring-[#AA673C]"
+                type="text"
+                placeholder="Wpisz swoje imię"
+                {...register('name', { required: 'Imię jest wymagane.' })}
+              />
+              {/* Name error message container with fixed height */}
+              <div className="top-full left-0 w-full h-3">
+                {errors.name && (
+                  <p className="text-red-500 text-sm text-center">
+                    {errors.name.message}
+                  </p>
+                )}
+              </div>
+            </div>
+            <div className="w-full">
+              {/* Lastname input section */}
+              <label
+                htmlFor="nazwisko"
+                className="text-[#264653] text-lg font-bold text-left flex items-center gap-2"
+              >
+                Nazwisko
+              </label>
+              <input
+                id="nazwisko"
+                className="px-2 py-2 w-full rounded-lg border bg-[#fefaf7] border-[#FFD1DC] text-black focus:outline-none focus:ring-2 focus:ring-[#AA673C]"
+                type="text"
+                placeholder="Wpisz swoje nazwisko"
+                {...register('lastname', {
+                  required: 'Nazwisko jest wymagane.',
+                })}
+              />
+              {/* Lastname error message container with fixed height */}
+              <div className="top-full left-0 w-full h-3">
+                {errors.name && (
+                  <p className="text-red-500 text-sm text-center">
+                    {errors.name.message}
+                  </p>
+                )}
+              </div>
+            </div>
           </div>
-          <div className={styles.userNameContainer}>
+
+          {/* Email input section */}
+          <div className="flex flex-col w-full">
+            <label
+              htmlFor="email"
+              className="text-[#264653] text-lg font-bold text-left flex items-center gap-2"
+            >
+              Email
+            </label>
             <input
-              className={styles.userNamesInput}
-              type="text"
-              value={lastname}
-              onChange={(e) => setLastname(e.target.value)}
-              placeholder="Nazwisko"
+              id="email"
+              className="px-2 py-2 w-full rounded-lg border bg-[#fefaf7] border-[#FFD1DC] text-black focus:outline-none focus:ring-2 focus:ring-[#AA673C]"
+              type="email"
+              {...register('email', {
+                required: 'Email jest wymagany.',
+                pattern: {
+                  value: /\S+@\S+\.\S+/,
+                  message: 'Nieprawidłowy format adresu e-mail.',
+                },
+              })}
+              placeholder="Wpisz swój adres e-mail"
+              autoComplete="off"
             />
-            {errors.lastname && (
-              <p className={styles.errorMessage}>{errors.lastname}</p>
-            )}
+            {/* Email error message container with fixed height */}
+            <div className="top-full left-0 w-full h-3">
+              {errors.email && (
+                <p className="text-red-500 text-sm text-center">
+                  {errors.email.message}
+                </p>
+              )}
+            </div>
+          </div>
+
+          {/* Password input section */}
+          <div className="flex flex-col w-full">
+            <label
+              htmlFor="password"
+              className="text-[#264653] text-lg font-bold text-left flex items-center gap-2"
+            >
+              Hasło
+            </label>
+            <input
+              id="haslo"
+              className="px-2 py-2 w-full rounded-lg border bg-[#fefaf7] border-[#FFD1DC] text-black focus:outline-none focus:ring-2 focus:ring-[#AA673C]"
+              type="password"
+              placeholder="Hasło"
+              autoComplete="new-password"
+              {...register('password', {
+                required: 'Hasło jest wymagane.',
+                validate: (value) =>
+                  passwordRequirements.test(value) ||
+                  'Hasło musi mieć co najmniej 12 znaków, zawierać dużą literę, cyfrę i znak specjalny.',
+              })}
+            />
+            {/* Password error message container with fixed height */}
+            <div className="top-full left-0 w-full h-4">
+              {errors.password && (
+                <p className="text-red-500 text-sm text-center">
+                  {errors.password.message}
+                </p>
+              )}
+            </div>
+          </div>
+          {/* Confirm password input section */}
+          <div className="flex flex-col w-full">
+            <label
+              htmlFor="password"
+              className="text-[#264653] text-lg font-bold text-left flex items-center gap-2"
+            >
+              Powtórz hasło
+            </label>
+            <input
+              id="powtorz-haslo"
+              className="px-2 py-2 w-full rounded-lg border bg-[#fefaf7] border-[#FFD1DC] text-black focus:outline-none focus:ring-2 focus:ring-[#AA673C]"
+              type="password"
+              placeholder="Powtórz hasło"
+              autoComplete="new-password"
+              {...register('confirmPassword', {
+                required: 'Powtórz hasło.',
+                validate: (value) =>
+                  value === password || 'Hasła muszą być takie same!',
+              })}
+            />
+            {/* Confirm password error message container with fixed height */}
+            <div className="top-full left-0 w-full h-4">
+              {errors.confirmPassword && (
+                <p className="text-red-500 text-sm text-center">
+                  {errors.confirmPassword.message}
+                </p>
+              )}
+            </div>
+          </div>
+          {/* Submit button */}
+          <div className="w-full h-full min-h-[2rem] lg:min-h-[3rem] mt-2 relative">
+            <button
+              className="px-2 py-2 w-full h-full bg-[#CE8455] text-white hover:bg-[#AA673C] rounded-full transition-all duration-300 transform hover:scale-105 
+                    text-sm sm:text-base md:text-lg whitespace-nowrap cursor-pointer"
+              type="submit"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? 'Rejestracja...' : 'Zarejestruj się'}
+            </button>
           </div>
         </div>
-        <div className={styles.userInfoInput}>
-          <input
-            className={styles.userInput}
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Email"
-            autoComplete="off"
-          />
-          {errors.email && (
-            <p className={styles.errorMessage}>{errors.email}</p>
-          )}
+        {/* Google login button */}
+        <div className="flex w-full h-full mt-4 px-2 pt-2 sm:px-5 sm:pt-5 items-center justify-center">
+          <button
+            onClick={() => Router.replace(`${API_BASE_URL}/auth/google`)}
+            className="bg-white text-[#333] border border-[#ccc] rounded-lg px-4 py-2 text-base flex items-center gap-2 hover:bg-[#f0f0f0] cursor-pointer"
+          >
+            <Image src={googleLogo} alt="Google icon" width={20} height={20} />
+            <label className="text-sm sm:text-base cursor-pointer">
+              Zarejestruj się z Google
+            </label>
+          </button>
         </div>
-        <div className={styles.userInfoInput}>
-          <input
-            className={styles.userInput}
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Hasło"
-            autoComplete="new-password"
-          />
-          {errors.password && (
-            <p className={styles.errorMessage}>{errors.password}</p>
-          )}
+        {/* Registration message */}
+        <div className="flex flex-col sm:flex-row w-full items-center justify-center pt-2">
+          <p className="text-xs md:text-sm sm:pr-1 text-gray-600">
+            Masz już konto?
+          </p>
+          <p className="text-xs md:text-sm text-gray-600 cursor-pointer">
+            <Link
+              href="/loginPage"
+              className="text-[#CE8455] hover:underline font-bold"
+            >
+              Zaloguj się
+            </Link>
+          </p>
         </div>
-        <div className={styles.userInfoInput}>
-          <input
-            className={styles.userInput}
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            placeholder="Powtórz hasło"
-            autoComplete="new-password"
-          />
-          {errors.confirmPassword && (
-            <p className={styles.errorMessage}>{errors.confirmPassword}</p>
-          )}
-        </div>
-        <button className={styles.registerButton} type="submit">
-          Zarejestruj
-        </button>
-        {errors.global && (
-          <p className={styles.errorMessage}>{errors.global}</p>
-        )}
       </form>
+      {/* Error message modal for global errors */}
+      {errors.global && (
+        <div className="fixed inset-0 flex items-center justify-center backdrop-blur-md z-50">
+          <div className="bg-white p-6 rounded-xl shadow-lg text-center w-[90%] sm:w-[50%] md:w-[30%]">
+            <p className="text-red-500 text-lg font-bold mb-4">
+              {errors.global.message}
+            </p>
+            <button
+              onClick={() => clearErrors('global')}
+              className="px-4 py-2 bg-[#CE8455] text-white rounded-lg hover:bg-[#AA673C] transition-all"
+            >
+              Zamknij
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
