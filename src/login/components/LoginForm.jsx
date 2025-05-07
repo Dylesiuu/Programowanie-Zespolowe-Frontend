@@ -54,7 +54,7 @@ const LoginForm = () => {
     <div className="flex flex-col h-full w-full justify-center items-center max-h-screen">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col w-[35%] h-[85%] py-7 px-10  bg-white rounded-4xl shadow-lg justify-center"
+        className="flex flex-col w-[70%] sm:w-[50%] md:w-[35%] h-[85%] py-2 px-5 sm:py-5 sm:px-8 lg:py-7 lg:px-10 bg-white rounded-4xl shadow-lg justify-center"
         noValidate
       >
         <h1 className="text-[#264653] pb-3 text-xl font-bold text-center">
@@ -67,10 +67,10 @@ const LoginForm = () => {
           <div className="flex flex-col w-full relative">
             <label
               htmlFor="email"
-              className="text-[#264653] text-lg font-bold text-left"
+              className="text-[#264653] text-lg font-bold text-left flex items-center gap-2"
             >
-              <BiEnvelope className="flex left-3 top-2 text-[#AA673C]" />
-              <span>Email</span>
+              <BiEnvelope className="text-[#AA673C]" />
+              Email
             </label>
             <input
               id="email"
@@ -100,8 +100,9 @@ const LoginForm = () => {
           <div className="flex flex-col w-full relative">
             <label
               htmlFor="password"
-              className="text-[#264653] text-lg font-bold text-left"
+              className="text-[#264653] text-lg font-bold text-left flex items-center gap-2"
             >
+              <BiLockAlt className="text-[#AA673C]" />
               Hasło
             </label>
             <input
@@ -124,7 +125,7 @@ const LoginForm = () => {
             </div>
           </div>
           {/* Submit button */}
-          <div className="w-full h-full min-h-[3rem] mt-2 relative">
+          <div className="w-full h-full min-h-[2rem] lg:min-h-[3rem] mt-2 relative">
             <button
               className="px-2 py-2 w-full h-full bg-[#CE8455] text-white hover:bg-[#AA673C] rounded-full transition-all duration-300 transform hover:scale-105 
                     text-sm sm:text-base md:text-lg whitespace-nowrap"
@@ -145,20 +146,22 @@ const LoginForm = () => {
         </div>
 
         {/* Google login button */}
-        <div className="flex w-full h-full mt-4 p-5 items-center justify-center">
+        <div className="flex w-full h-full mt-4 p-2 sm:p-5 items-center justify-center">
           <button
             onClick={() => Router.replace(`${API_BASE_URL}/auth/google`)}
             className="bg-white text-[#333] border border-[#ccc] rounded-lg px-4 py-2 text-base flex items-center gap-2 hover:bg-[#f0f0f0]"
           >
             <Image src={googleLogo} alt="Google icon" width={20} height={20} />
-            Zaloguj się z Google
+            <label className="text-sm sm:text-base">Zaloguj się z Google</label>
           </button>
         </div>
 
         {/* Registration message */}
-        <div className="flex flex-col w-full items-center justify-center mt-6">
-          <p className="text-sm text-gray-600">
-            Nie masz konta?{' '}
+        <div className="flex flex-col sm:flex-row w-full items-center justify-center mt-6">
+          <p className="text-xs md:text-sm sm:pr-1 text-gray-600">
+            Nie masz konta?
+          </p>
+          <p className="text-xs md:text-sm text-gray-600">
             <Link
               href="/registerPage"
               className="text-[#CE8455] hover:underline font-bold"
