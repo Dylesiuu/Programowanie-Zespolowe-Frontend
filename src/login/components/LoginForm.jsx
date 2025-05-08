@@ -11,7 +11,7 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 const LoginForm = () => {
   const userContext = useContext(UserContext);
-  const Router = useRouter();
+  const router = useRouter();
 
   const {
     register,
@@ -144,7 +144,7 @@ const LoginForm = () => {
         {/* Google login button */}
         <div className="flex w-full h-full mt-4 p-2 sm:p-5 items-center justify-center">
           <button
-            onClick={() => Router.replace(`${API_BASE_URL}/auth/google`)}
+            onClick={() => router.replace(`${API_BASE_URL}/auth/google`)}
             className="bg-white text-[#333] border border-[#ccc] rounded-lg px-4 py-2 text-base flex items-center gap-2 hover:bg-[#f0f0f0] cursor-pointer"
           >
             <Image src={googleLogo} alt="Google icon" width={20} height={20} />
