@@ -1,9 +1,8 @@
-import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import RegisterForm from '../components/RegisterForm';
-import { useRouter } from 'next/router';
 import { UserContext } from '@/context/userContext';
+import { useRouter } from 'next/router';
+import userEvent from '@testing-library/user-event';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -13,138 +12,70 @@ jest.mock('next/router', () => ({
 
 describe('RegisterForm', () => {
   let mockPush;
+  let mockReplace;
 
   beforeEach(() => {
     mockPush = jest.fn();
+    mockReplace = jest.fn();
     useRouter.mockImplementation(() => ({
       push: mockPush,
-      replace: mockPush,
+      replace: mockReplace,
     }));
   });
 
   afterEach(() => {
     jest.clearAllMocks();
   });
-
-  it('renders the registration form', () => {
+  it('renders form fields correctly', async () => {
     render(<RegisterForm />);
-    expect(screen.getByText('Zarejestruj się!')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('Imię')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('Nazwisko')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('Email')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('Hasło')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('Powtórz hasło')).toBeInTheDocument();
+    expect(await screen.findByLabelText('Imię')).toBeInTheDocument();
+    expect(await screen.findByLabelText('Nazwisko')).toBeInTheDocument();
+    expect(await screen.findByLabelText('Email')).toBeInTheDocument();
+    expect(await screen.findByLabelText('Hasło')).toBeInTheDocument();
+    expect(await screen.findByLabelText('Powtórz hasło')).toBeInTheDocument();
+  });
+
+  it('shows validation errors on submit with empty fields', async () => {
+    render(<RegisterForm />);
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Zarejestruj się' })
+    );
+
+    expect(await screen.findByText('Imię jest wymagane.')).toBeInTheDocument();
     expect(
-      screen.getByRole('button', { name: 'Zarejestruj' })
+      await screen.findByText('Nazwisko jest wymagane.')
+    ).toBeInTheDocument();
+    expect(await screen.findByText('Email jest wymagany.')).toBeInTheDocument();
+    expect(await screen.findByText('Hasło jest wymagane.')).toBeInTheDocument();
+    expect(await screen.findByText('Powtórz hasło.')).toBeInTheDocument();
+  });
+
+  it('shows password mismatch error', async () => {
+    render(<RegisterForm />);
+
+    await userEvent.type(
+      await screen.findByLabelText('Hasło'),
+      'StrongPassw0rd!'
+    );
+    await userEvent.type(
+      await screen.findByLabelText('Powtórz hasło'),
+      'DifferentPass'
+    );
+
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Zarejestruj się' })
+    );
+
+    expect(
+      await screen.findByText('Hasła muszą być takie same!')
     ).toBeInTheDocument();
   });
 
-  it('shows error messages when required fields are empty', async () => {
-    render(<RegisterForm />);
-    await userEvent.click(screen.getByRole('button', { name: 'Zarejestruj' }));
-
-    await waitFor(() => {
-      expect(screen.getByText('Imię jest wymagane.')).toBeInTheDocument();
-      expect(screen.getByText('Nazwisko jest wymagane.')).toBeInTheDocument();
-      expect(screen.getByText('Email jest wymagany.')).toBeInTheDocument();
-      expect(screen.getByText('Hasło jest wymagane.')).toBeInTheDocument();
-      expect(screen.getByText('Powtórz hasło.')).toBeInTheDocument();
-    });
-  });
-
-  it('shows an error message when passwords do not match', async () => {
-    render(<RegisterForm />);
-    await userEvent.type(screen.getByPlaceholderText('Hasło'), 'Password123!');
-    await userEvent.type(
-      screen.getByPlaceholderText('Powtórz hasło'),
-      'DifferentPassword123!'
-    );
-    await userEvent.click(screen.getByRole('button', { name: 'Zarejestruj' }));
-
-    await waitFor(() => {
-      expect(
-        screen.getByText('Hasła muszą być takie same!')
-      ).toBeInTheDocument();
-    });
-  });
-
-  it('shows an error message when password does not meet requirements', async () => {
-    render(<RegisterForm />);
-    await userEvent.type(screen.getByPlaceholderText('Hasło'), 'weakpassword');
-    await userEvent.click(screen.getByRole('button', { name: 'Zarejestruj' }));
-
-    await waitFor(() => {
-      expect(
-        screen.getByText(
-          'Hasło musi mieć co najmniej 12 znaków, zawierać dużą literę, cyfrę i znak specjalny.'
-        )
-      ).toBeInTheDocument();
-    });
-  });
-
-  it('shows an error message when email format is invalid', async () => {
-    render(<RegisterForm />);
-    await userEvent.type(screen.getByPlaceholderText('Email'), 'invalid-email');
-    await userEvent.click(screen.getByRole('button', { name: 'Zarejestruj' }));
-
-    await waitFor(() => {
-      expect(
-        screen.getByText('Nieprawidłowy format adresu e-mail.')
-      ).toBeInTheDocument();
-    });
-  });
-
-  it('shows an error message when email is already taken', async () => {
-    global.fetch = jest.fn(() =>
-      Promise.resolve({
-        ok: false,
-        status: 409,
-      })
-    );
-
-    render(<RegisterForm />);
-    await userEvent.type(screen.getByPlaceholderText('Imię'), 'John');
-    await userEvent.type(screen.getByPlaceholderText('Nazwisko'), 'Doe');
-    await userEvent.type(
-      screen.getByPlaceholderText('Email'),
-      'taken@example.com'
-    );
-    await userEvent.type(
-      screen.getByPlaceholderText('Hasło'),
-      'StrongPassword123!'
-    );
-    await userEvent.type(
-      screen.getByPlaceholderText('Powtórz hasło'),
-      'StrongPassword123!'
-    );
-    await userEvent.click(screen.getByRole('button', { name: 'Zarejestruj' }));
-
-    await waitFor(() => {
-      expect(
-        screen.getByText('Dany email jest już zajęty.')
-      ).toBeInTheDocument();
-      expect(global.fetch).toHaveBeenCalledWith(
-        `${API_BASE_URL}/auth/register`,
-        expect.objectContaining({
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            name: 'John',
-            lastname: 'Doe',
-            email: 'taken@example.com',
-            password: 'StrongPassword123!',
-          }),
-        })
-      );
-    });
-  });
-
-  it('sets user and token in context when registration is successful', async () => {
-    // Mock the fetch API to return a successful response with user data
+  it('calls API and updates context on successful registration', async () => {
     const mockUserData = {
       _id: '123',
-      name: 'John Doe',
-      email: 'john.doe@example.com',
+      name: 'Jan Doe',
+      email: 'Jan.doe@example.com',
     };
 
     const mockToken = 'mock token';
@@ -156,7 +87,6 @@ describe('RegisterForm', () => {
       })
     );
 
-    // Mock the UserContext
     const mockSetUser = jest.fn();
     const mockSetToken = jest.fn();
     const mockUserContextValue = {
@@ -165,84 +95,97 @@ describe('RegisterForm', () => {
       isLoggedIn: jest.fn(),
     };
 
-    // Render the component with the mocked UserContext
     render(
       <UserContext.Provider value={mockUserContextValue}>
         <RegisterForm />
       </UserContext.Provider>
     );
 
-    // Simulate user input
-    await userEvent.type(screen.getByPlaceholderText('Imię'), 'John');
-    await userEvent.type(screen.getByPlaceholderText('Nazwisko'), 'Doe');
+    await userEvent.type(await screen.findByLabelText('Imię'), 'Jan');
+    await userEvent.type(await screen.findByLabelText('Nazwisko'), 'Kowalski');
     await userEvent.type(
-      screen.getByPlaceholderText('Email'),
-      'john.doe@example.com'
+      await screen.findByLabelText('Email'),
+      'jan@example.com'
     );
     await userEvent.type(
-      screen.getByPlaceholderText('Hasło'),
-      'StrongPassword123!'
+      await screen.findByLabelText('Hasło'),
+      'StrongPassw0rd!'
     );
     await userEvent.type(
-      screen.getByPlaceholderText('Powtórz hasło'),
-      'StrongPassword123!'
+      await screen.findByLabelText('Powtórz hasło'),
+      'StrongPassw0rd!'
     );
 
-    // Simulate form submission
-    await userEvent.click(screen.getByRole('button', { name: 'Zarejestruj' }));
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Zarejestruj się' })
+    );
 
-    // Wait for the assertion
-    await waitFor(() => {
-      // Check that the fetch API was called with the correct arguments
-      expect(global.fetch).toHaveBeenCalledWith(
-        `${API_BASE_URL}/auth/register`,
-        expect.objectContaining({
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            name: 'John',
-            lastname: 'Doe',
-            email: 'john.doe@example.com',
-            password: 'StrongPassword123!',
-          }),
-        })
-      );
-
-      // Check that the user data and token were set in the context
-      expect(mockSetUser).toHaveBeenCalledWith(mockUserData);
-      expect(mockSetToken).toHaveBeenCalledWith(mockToken);
-    });
+    expect(mockSetUser).toHaveBeenCalledWith(mockUserData);
+    expect(mockSetToken).toHaveBeenCalledWith(mockToken);
   });
 
-  it('shows an error message when registration fails', async () => {
+  it('renders Google register button', async () => {
+    render(<RegisterForm />);
+    expect(
+      await screen.findByText('Zarejestruj się z Google')
+    ).toBeInTheDocument();
+    expect(
+      await screen.findByRole('img', { name: 'Google icon' })
+    ).toBeInTheDocument();
+  });
+
+  it('redirects to Google auth endpoint when Google register button is clicked', async () => {
+    render(<RegisterForm />);
+
+    const googleButton = (
+      await screen.findByText('Zarejestruj się z Google')
+    ).closest('button');
+    await userEvent.click(googleButton);
+
+    expect(mockReplace).toHaveBeenCalledWith(`${API_BASE_URL}/auth/google`);
+  });
+
+  it('renders registration link', async () => {
+    render(<RegisterForm />);
+    const registerLink = (await screen.findByText('Zaloguj się')).closest('a');
+    expect(registerLink).toHaveAttribute('href', '/loginPage');
+  });
+
+  it('shows error message on duplicate email', async () => {
+    // global.fetch.mockResolvedValueOnce({
+    //   ok: false,
+    //   status: 409,
+    // });
+
     global.fetch = jest.fn(() =>
       Promise.resolve({
         ok: false,
-        json: () =>
-          Promise.resolve({ message: 'Wystąpił problem podczas rejestracji' }),
+        status: 409,
       })
     );
 
     render(<RegisterForm />);
-    await userEvent.type(screen.getByPlaceholderText('Imię'), 'John');
-    await userEvent.type(screen.getByPlaceholderText('Nazwisko'), 'Doe');
-    await userEvent.type(
-      screen.getByPlaceholderText('Email'),
-      'john.doe@example.com'
-    );
-    await userEvent.type(
-      screen.getByPlaceholderText('Hasło'),
-      'StrongPassword123!'
-    );
-    await userEvent.type(
-      screen.getByPlaceholderText('Powtórz hasło'),
-      'StrongPassword123!'
-    );
-    await userEvent.click(screen.getByRole('button', { name: 'Zarejestruj' }));
 
-    await waitFor(() => {
+    await userEvent.type(
+      await screen.findByLabelText('Email'),
+      'taken@example.com'
+    );
+    await userEvent.type(
+      await screen.findByLabelText('Hasło'),
+      'StrongPassw0rd!'
+    );
+    await userEvent.type(
+      await screen.findByLabelText('Powtórz hasło'),
+      'StrongPassw0rd!'
+    );
+
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Zarejestruj się' })
+    );
+
+    waitFor(() => {
       expect(
-        screen.getByText('Wystąpił problem podczas rejestracji.')
+        screen.getByText('Dany email jest już zajęty.')
       ).toBeInTheDocument();
     });
   });

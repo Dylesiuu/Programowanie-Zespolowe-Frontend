@@ -4,7 +4,6 @@ import { useForm } from 'react-hook-form';
 import { UserContext } from '@/context/userContext';
 import Image from 'next/image';
 import googleLogo from '../../../public/img/google.png';
-import { BiLockAlt, BiEnvelope } from 'react-icons/bi';
 import Link from 'next/link';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -86,13 +85,13 @@ const RegisterForm = () => {
             {/* Name input section */}
             <div className="w-full">
               <label
-                htmlFor="imie"
+                htmlFor="name"
                 className="text-[#264653] text-lg font-bold text-left flex items-center gap-2"
               >
                 Imię
               </label>
               <input
-                id="imie"
+                id="name"
                 className="px-2 py-2 w-full rounded-lg border bg-[#fefaf7] border-[#FFD1DC] text-black focus:outline-none focus:ring-2 focus:ring-[#AA673C]"
                 type="text"
                 placeholder="Wpisz swoje imię"
@@ -110,13 +109,13 @@ const RegisterForm = () => {
             <div className="w-full">
               {/* Lastname input section */}
               <label
-                htmlFor="nazwisko"
+                htmlFor="lastname"
                 className="text-[#264653] text-lg font-bold text-left flex items-center gap-2"
               >
                 Nazwisko
               </label>
               <input
-                id="nazwisko"
+                id="lastname"
                 className="px-2 py-2 w-full rounded-lg border bg-[#fefaf7] border-[#FFD1DC] text-black focus:outline-none focus:ring-2 focus:ring-[#AA673C]"
                 type="text"
                 placeholder="Wpisz swoje nazwisko"
@@ -128,7 +127,7 @@ const RegisterForm = () => {
               <div className="top-full left-0 w-full h-4 sm:h-3">
                 {errors.name && (
                   <p className="text-red-500 text-sm text-center">
-                    {errors.name.message}
+                    {errors.lastname.message}
                   </p>
                 )}
               </div>
@@ -176,7 +175,7 @@ const RegisterForm = () => {
               Hasło
             </label>
             <input
-              id="haslo"
+              id="password"
               className="px-2 py-2 w-full rounded-lg border bg-[#fefaf7] border-[#FFD1DC] text-black focus:outline-none focus:ring-2 focus:ring-[#AA673C]"
               type="password"
               placeholder="Hasło"
@@ -200,13 +199,13 @@ const RegisterForm = () => {
           {/* Confirm password input section */}
           <div className="flex flex-col w-full">
             <label
-              htmlFor="password"
+              htmlFor="confirmPassword"
               className="text-[#264653] text-lg font-bold text-left flex items-center gap-2"
             >
               Powtórz hasło
             </label>
             <input
-              id="powtorz-haslo"
+              id="confirmPassword"
               className="px-2 py-2 w-full rounded-lg border bg-[#fefaf7] border-[#FFD1DC] text-black focus:outline-none focus:ring-2 focus:ring-[#AA673C]"
               type="password"
               placeholder="Powtórz hasło"
@@ -241,7 +240,7 @@ const RegisterForm = () => {
         {/* Google login button */}
         <div className="flex w-full h-full mt-4 px-2 pt-2 sm:px-5 sm:pt-5 items-center justify-center">
           <button
-            onClick={() => Router.replace(`${API_BASE_URL}/auth/google`)}
+            onClick={() => router.replace(`${API_BASE_URL}/auth/google`)}
             className="bg-white text-[#333] border border-[#ccc] rounded-lg px-4 py-1 text-base flex items-center gap-2 hover:bg-[#f0f0f0] cursor-pointer"
           >
             <Image src={googleLogo} alt="Google icon" width={20} height={20} />
