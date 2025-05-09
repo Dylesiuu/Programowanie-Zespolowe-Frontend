@@ -115,12 +115,14 @@ const AnimalCard = ({ animalId, onEdit, userContext, addToFavourite }) => {
         {animal.images.length > 1 && (
           <>
             <button
+              data-testid="prev-button"
               className="absolute top-1/2 left-2 transform -translate-y-1/2 bg-[#CE8455] hover:bg-[#AA673C] text-[#fefaf7] p-1.5 pl-1 rounded-full shadow-lg items-center justify-center cursor-pointer"
               onClick={handlePreviousImage}
             >
               <BiLeftArrow className="h-4 w-4" />
             </button>
             <button
+              data-testid="next-button"
               className="absolute top-1/2 right-2 transform -translate-y-1/2 bg-[#CE8455] hover:bg-[#AA673C] text-[#fefaf7] p-1.5 pr-1 rounded-full shadow-lg cursor-pointer"
               onClick={handleNextImage}
             >
@@ -192,6 +194,7 @@ const AnimalCard = ({ animalId, onEdit, userContext, addToFavourite }) => {
           <button
             className="flex w-12 h-12 bg-[#4caf50] text-white rounded-full items-center justify-center text-2xl transition-all duration-300 ease-in-out hover:bg-[#45a049] hover:scale-110 cursor-pointer"
             onClick={() => addToFavourite(animal._id)}
+            data-testid="add-to-favourites-button"
           >
             <FaHeart className="w-[50%] h-[50%]" />
           </button>
@@ -250,7 +253,10 @@ const AnimalCard = ({ animalId, onEdit, userContext, addToFavourite }) => {
       )}
       {/* Image Modal */}
       {isImageModalVisible && (
-        <div className="fixed inset-0 flex items-center justify-center backdrop-blur-sm z-50 transition-opacity duration-300 ease-in-out">
+        <div
+          className="fixed inset-0 flex items-center justify-center backdrop-blur-sm z-50 transition-opacity duration-300 ease-in-out"
+          data-testid="image-modal"
+        >
           <div className="relative w-[90%] max-w-4xl bg-white p-6 rounded-3xl shadow-2xl">
             <button
               className="absolute top-2 right-2 bg-[#CE8455] hover:bg-[#AA673C] text-[#fefaf7] w-8 h-8 flex items-center justify-center rounded-full shadow-md cursor-pointer"
@@ -260,7 +266,7 @@ const AnimalCard = ({ animalId, onEdit, userContext, addToFavourite }) => {
             </button>
             <Image
               src={animal.images[currentImageIndex]}
-              alt={animal.name}
+              alt={`modal-${animal.name}`}
               width={800}
               height={600}
               className="w-full h-auto object-contain rounded-lg"

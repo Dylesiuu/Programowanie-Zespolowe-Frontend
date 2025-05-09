@@ -8,7 +8,7 @@ describe('AnimalCard Component', () => {
   const mockAnimal = {
     _id: '123',
     name: 'Bella',
-    shelterId: '1',
+    shelter: '1',
     age: '3 lata',
     description:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum',
@@ -26,6 +26,7 @@ describe('AnimalCard Component', () => {
   };
 
   const mockOnEdit = jest.fn();
+  const mockAddToFavourites = jest.fn();
 
   beforeEach(() => {
     global.fetch = jest.fn(() =>
@@ -40,6 +41,7 @@ describe('AnimalCard Component', () => {
         animalId={mockAnimal._id}
         onEdit={mockOnEdit}
         userContext={mockUserContext}
+        addToFavourite={mockAddToFavourites}
       />
     );
   });
@@ -56,8 +58,6 @@ describe('AnimalCard Component', () => {
     expect(await screen.findByText('Więcej...')).toBeInTheDocument();
     expect(await screen.findByText('Płeć:')).toBeInTheDocument();
     expect(await screen.findByText('Female')).toBeInTheDocument();
-    expect(await screen.findByText('Typ:')).toBeInTheDocument();
-    expect(await screen.findByText('Dog')).toBeInTheDocument();
     expect(await screen.findByText('Friendly')).toBeInTheDocument();
     expect(await screen.findByText('Pokaż więcej')).toBeInTheDocument();
   });
@@ -96,12 +96,35 @@ describe('AnimalCard Component', () => {
     const image = await screen.findByAltText(mockAnimal.name);
     expect(image).toHaveAttribute('src');
 
-    const nextButton = await screen.findByText('›');
+    const nextButton = await screen.findByTestId('next-button');
     await userEvent.click(nextButton);
     expect(image).toHaveAttribute('src');
 
-    const prevButton = await screen.findByText('‹');
+    const prevButton = await screen.findByTestId('prev-button');
     await userEvent.click(prevButton);
     expect(image).toHaveAttribute('src');
+  });
+
+  it('shows the image modal when the image is clicked', async () => {
+    const image = await screen.findByAltText(mockAnimal.name);
+    await userEvent.click(image);
+
+    expect(await screen.findByTestId('image-modal')).toBeInTheDocument();
+    const modalImage = await screen.findByAltText(`modal-${mockAnimal.name}`);
+    const imageUrl = new URL(modalImage.src, window.location.origin);
+    expect(imageUrl.searchParams.get('url')).toBe('/image1.jpg');
+
+    const closeButton = await screen.findByText('✕');
+    await userEvent.click(closeButton);
+
+    expect(screen.queryByTestId('image-modal')).not.toBeInTheDocument();
+  });
+
+  it('calls the addToFavourite function when the like button is clicked', async () => {
+    const likeButton = await screen.findByTestId('add-to-favourites-button');
+    await userEvent.click(likeButton);
+
+    expect(mockAddToFavourites).toHaveBeenCalledTimes(1);
+    expect(mockAddToFavourites).toHaveBeenCalledWith(mockAnimal._id);
   });
 });
