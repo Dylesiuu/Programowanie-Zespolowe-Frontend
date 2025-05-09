@@ -5,7 +5,7 @@ describe('LoggedUser Component', () => {
   it('renders the correct message', async () => {
     render(<LoggedUser />);
 
-    const mainMessage = await screen.findByText('Jesteś już zalogowany!');
+    const mainMessage = await screen.findByText('Jesteś zalogowany!');
     expect(mainMessage).toBeInTheDocument();
 
     const subText = await screen.findByText(
