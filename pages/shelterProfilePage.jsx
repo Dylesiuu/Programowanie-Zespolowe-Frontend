@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react';
-import ShelterProfile from '@/shelterProfile/components/shelterProfile';
+import ShelterProfile from '@/shelter/components/shelterProfile';
 import { UserContext } from '@/context/userContext';
 import { useRouter } from 'next/router';
 

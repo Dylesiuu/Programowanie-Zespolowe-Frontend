@@ -62,6 +62,28 @@ const ShelterProfile = ({ shelterId }) => {
     setIsMobileCardVisible((prev) => !prev);
   };
 
+  const addToFavourite = async (fav) => {
+    try {
+      const response = fetch(`${API_BASE_URL}/user/addfavourite`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userContext.token}`,
+        },
+        body: JSON.stringify({ fav }),
+      });
+      if (!response.ok) {
+        console.error(`HTTP error! Status: ${response.status}`);
+        return;
+      }
+
+      const data = await response.json();
+      userContext.setUser(data.user);
+    } catch (error) {
+      console.error('Error fetching shelter data:', error.message);
+    }
+  };
+
   if (!shelter) {
     return <div>Ładowanie danych schroniska...</div>;
   }
@@ -132,6 +154,7 @@ const ShelterProfile = ({ shelterId }) => {
               animalId={selectedAnimal._id}
               onEdit={() => alert(`Edytujesz zwierzę: ${selectedAnimal.name}`)}
               userContext={userContext}
+              addToFavourite={addToFavourite}
             />
           </div>
         </div>
