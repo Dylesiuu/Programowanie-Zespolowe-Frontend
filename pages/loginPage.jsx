@@ -17,7 +17,7 @@ const LoginPage = () => {
 
     const timeout = setTimeout(() => {
       router.replace('/swipePage');
-    }, 1000); // Wait for 1 seconds (1000 milliseconds)
+    }, 500); // Wait for 0.5 seconds (500 milliseconds)
 
     return () => clearTimeout(timeout);
   }, [router, userContext]);
