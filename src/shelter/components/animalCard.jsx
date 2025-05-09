@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { useEffect } from 'react';
+import { FaHeart } from 'react-icons/fa';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-const AnimalCard = ({ animalId, onEdit, userContext }) => {
+const AnimalCard = ({ animalId, onEdit, userContext, addToFavourite }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isDescriptionVisible, setIsDescriptionVisible] = useState(false);
   const [isTraitsVisible, setIsTraitsVisible] = useState(false);
@@ -29,6 +30,7 @@ const AnimalCard = ({ animalId, onEdit, userContext }) => {
 
       const data = await response.json();
       setAnimal(data);
+      console.log('Animal data:', data);
     } catch (error) {
       console.error('Error fetching animal data:', error.message);
     } finally {
@@ -148,9 +150,6 @@ const AnimalCard = ({ animalId, onEdit, userContext }) => {
       <p className="text-gray-600 mb-2">
         <strong>Płeć:</strong> {animal.gender}
       </p>
-      <p className="text-gray-600 mb-2">
-        <strong>Typ:</strong> {animal.type}
-      </p>
       {/* Traits */}
       <div className="flex flex-wrap items-center text-gray-600 mb-2 gap-1">
         <strong>Tagi: </strong>
@@ -176,9 +175,20 @@ const AnimalCard = ({ animalId, onEdit, userContext }) => {
           </button>
         )}
       </div>
+      {/* Like Button */}
+      {!userContext.user?.favourites?.includes(animal._id) && (
+        <div className="flex justify-center mt-4 py-2">
+          <button
+            className="flex w-12 h-12 bg-[#4caf50] text-white rounded-full items-center justify-center text-2xl transition-all duration-300 ease-in-out hover:bg-[#45a049] hover:scale-110"
+            onClick={() => addToFavourite(animal._id)}
+          >
+            <FaHeart className="w-[50%] h-[50%]" />
+          </button>
+        </div>
+      )}
       {/* Edit Button */}
       {userContext.user?.shelterId &&
-        userContext.user.shelterId === animal.shelterId && (
+        userContext.user.shelterId === animal.shelter && (
           <button
             className="mt-4 px-4 py-2 text-lg md:text-xl
                      bg-[#CE8455] hover:bg-[#AA673C] text-[#fefaf7] rounded-full
@@ -189,6 +199,7 @@ const AnimalCard = ({ animalId, onEdit, userContext }) => {
             Edytuj
           </button>
         )}
+      {/* Model Section}
       {/* Description Card */}
       {isDescriptionVisible && (
         <div className="fixed inset-0 flex items-center justify-center backdrop-blur-sm z-50 transition-opacity duration-300 ease-in-out opacity-100">
