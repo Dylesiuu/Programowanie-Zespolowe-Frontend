@@ -12,6 +12,7 @@ const AnimalCard = ({ animalId, onEdit, userContext, addToFavourite }) => {
   const [isTraitsVisible, setIsTraitsVisible] = useState(false);
   const [animal, setAnimal] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isImageModalVisible, setIsImageModalVisible] = useState(false);
 
   const fetchAnimalData = async (id) => {
     try {
@@ -74,6 +75,14 @@ const AnimalCard = ({ animalId, onEdit, userContext, addToFavourite }) => {
     );
   };
 
+  const showImageModal = () => {
+    setIsImageModalVisible(true);
+  };
+
+  const hideImageModal = () => {
+    setIsImageModalVisible(false);
+  };
+
   if (isLoading) {
     return (
       <div className="flex flex-col w-full h-full p-6 rounded-3xl shadow-2xl bg-white items-center justify-center">
@@ -99,7 +108,8 @@ const AnimalCard = ({ animalId, onEdit, userContext, addToFavourite }) => {
           alt={animal.name}
           fill
           style={{ objectFit: 'cover' }}
-          className="rounded-2xl items-center"
+          className="rounded-2xl items-center cursor-pointer"
+          onClick={showImageModal}
         />
         {/* Navigation Buttons - Show only if more than one image */}
         {animal.images.length > 1 && (
@@ -235,6 +245,26 @@ const AnimalCard = ({ animalId, onEdit, userContext, addToFavourite }) => {
                 </span>
               ))}
             </div>
+          </div>
+        </div>
+      )}
+      {/* Image Modal */}
+      {isImageModalVisible && (
+        <div className="fixed inset-0 flex items-center justify-center backdrop-blur-sm z-50 transition-opacity duration-300 ease-in-out">
+          <div className="relative w-[90%] max-w-4xl bg-white p-6 rounded-3xl shadow-2xl">
+            <button
+              className="absolute top-2 right-2 bg-[#CE8455] hover:bg-[#AA673C] text-[#fefaf7] w-8 h-8 flex items-center justify-center rounded-full shadow-md cursor-pointer"
+              onClick={hideImageModal}
+            >
+              ✕
+            </button>
+            <Image
+              src={animal.images[currentImageIndex]}
+              alt={animal.name}
+              width={800}
+              height={600}
+              className="w-full h-auto object-contain rounded-lg"
+            />
           </div>
         </div>
       )}
