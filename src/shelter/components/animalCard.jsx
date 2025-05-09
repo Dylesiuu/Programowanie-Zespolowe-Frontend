@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { useEffect } from 'react';
 import { FaHeart } from 'react-icons/fa';
+import { BiLeftArrow, BiRightArrow } from 'react-icons/bi';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -104,22 +105,22 @@ const AnimalCard = ({ animalId, onEdit, userContext, addToFavourite }) => {
         {animal.images.length > 1 && (
           <>
             <button
-              className="absolute top-1/2 left-2 transform -translate-y-1/2 bg-[#CE8455] hover:bg-[#AA673C] text-[#fefaf7] p-2 rounded-full shadow-lg cursor-pointer"
+              className="absolute top-1/2 left-2 transform -translate-y-1/2 bg-[#CE8455] hover:bg-[#AA673C] text-[#fefaf7] p-1.5 pl-1 rounded-full shadow-lg items-center justify-center cursor-pointer"
               onClick={handlePreviousImage}
             >
-              ‹
+              <BiLeftArrow className="h-4 w-4" />
             </button>
             <button
-              className="absolute top-1/2 right-2 transform -translate-y-1/2 bg-[#CE8455] hover:bg-[#AA673C] text-[#fefaf7] p-2 rounded-full shadow-lg cursor-pointer"
+              className="absolute top-1/2 right-2 transform -translate-y-1/2 bg-[#CE8455] hover:bg-[#AA673C] text-[#fefaf7] p-1.5 pr-1 rounded-full shadow-lg cursor-pointer"
               onClick={handleNextImage}
             >
-              ›
+              <BiRightArrow className="h-4 w-4" />
             </button>
           </>
         )}
         {/* Image Counter - Show only if more than one image */}
         {animal.images.length > 1 && (
-          <div className="absolute bottom-2 right-2 bg-[#CE8455] text-[#fefaf7] text-sm px-3 py-1 rounded-full shadow-lg">
+          <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-[#CE8455] text-[#fefaf7] text-sm px-3 py-1 rounded-full shadow-lg items-center justify-center">
             {currentImageIndex + 1}/{animal.images.length}
           </div>
         )}
@@ -179,7 +180,7 @@ const AnimalCard = ({ animalId, onEdit, userContext, addToFavourite }) => {
       {!userContext.user?.favourites?.includes(animal._id) && (
         <div className="flex justify-center mt-4 py-2">
           <button
-            className="flex w-12 h-12 bg-[#4caf50] text-white rounded-full items-center justify-center text-2xl transition-all duration-300 ease-in-out hover:bg-[#45a049] hover:scale-110"
+            className="flex w-12 h-12 bg-[#4caf50] text-white rounded-full items-center justify-center text-2xl transition-all duration-300 ease-in-out hover:bg-[#45a049] hover:scale-110 cursor-pointer"
             onClick={() => addToFavourite(animal._id)}
           >
             <FaHeart className="w-[50%] h-[50%]" />
