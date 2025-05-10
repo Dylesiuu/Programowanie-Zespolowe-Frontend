@@ -53,7 +53,7 @@ describe('ShelterSearchBar', () => {
                   ],
                 }),
             });
-          }, 1000)
+          }, 500)
         )
     );
   });
@@ -98,7 +98,7 @@ describe('ShelterSearchBar', () => {
   it('displays results in the dropdown after loading', async () => {
     render(<ShelterSearchBar userContext={{ user: { token: 'mockToken' } }} />);
 
-    const inputField = screen.getByPlaceholderText(
+    const inputField = await screen.findByPlaceholderText(
       'Kliknij, aby wybrać lokalizację'
     );
     await userEvent.click(inputField);
@@ -106,7 +106,7 @@ describe('ShelterSearchBar', () => {
     const selectLocationButton = await screen.findByText('Select Location');
     await userEvent.click(selectLocationButton);
 
-    expect(screen.getByTestId('dropdown')).toBeInTheDocument();
+    expect(await screen.findByTestId('dropdown')).toBeInTheDocument();
 
     expect(await screen.findByText('Schronisko A')).toBeInTheDocument();
     expect(await screen.findByText('Schronisko B')).toBeInTheDocument();
