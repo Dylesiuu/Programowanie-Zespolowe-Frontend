@@ -14,29 +14,6 @@ const Navbar = () => {
   const userContext = useContext(UserContext);
   const [isUserSearch, setIsUserSearch] = useState(true); // Toggle state for search bar
 
-  // const debouncedSearch = useRef(
-  //   debounce(async (query) => {
-  //     if (query.length >= 2) {
-  //       setIsSearching(true);
-  //       try {
-  //         const response = await fetch(`${API_BASE_URL}/auth/login`);
-  //         if (!response.ok) throw new Error('Network response was not ok');
-  //         const data = await response.json();
-  //         setSearchResults(data);
-  //         setIsSearchDropdownOpen(true);
-  //       } catch (error) {
-  //         console.error("Error searching users:", error);
-  //         setSearchResults([]);
-  //       } finally {
-  //         setIsSearching(false);
-  //       }
-  //     } else {
-  //       setSearchResults([]);
-  //       setIsSearchDropdownOpen(false);
-  //     }
-  //   }, 300)
-  // ).current;
-
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
@@ -91,7 +68,7 @@ const Navbar = () => {
           </div>
           {/* Search bar */}
           {isUserSearch ? (
-            <UserSearchBar />
+            <UserSearchBar userContext={userContext} />
           ) : (
             <ShelterSearchBar userContext={userContext} />
           )}
