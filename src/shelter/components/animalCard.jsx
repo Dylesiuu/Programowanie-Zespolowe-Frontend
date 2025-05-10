@@ -32,7 +32,6 @@ const AnimalCard = ({ animalId, onEdit, userContext, addToFavourite }) => {
 
       const data = await response.json();
       setAnimal(data);
-      console.log('Animal data:', data);
     } catch (error) {
       console.error('Error fetching animal data:', error.message);
     } finally {
