@@ -13,6 +13,7 @@ const AnimalsField = ({ animals, onAnimalClick }) => {
           <div className="grid gap-4 grid-cols-[repeat(auto-fit,minmax(3rem,12rem))] auto-rows-[minmax(2rem,11rem)] place-items-center place-content-center">
             {animals.map((animal) => (
               <div
+                data-testid="animal-card"
                 key={animal._id}
                 className="w-full h-full rounded-3xl shadow-2xl p-4 bg-white cursor-pointer transition-all duration-300 transform hover:scale-105"
                 onClick={() => onAnimalClick(animal)}

@@ -64,21 +64,29 @@ const ShelterProfile = ({ shelterId }) => {
 
   const addToFavourite = async (fav) => {
     try {
-      const response = fetch(`${API_BASE_URL}/user/addfavourite`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${userContext.token}`,
-        },
-        body: JSON.stringify({ fav }),
-      });
+      const response = await fetch(
+        `${API_BASE_URL}/user/addfavourite/${userContext.user.email}`,
+        {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${userContext.token}`,
+          },
+          body: JSON.stringify({ favourites: [selectedAnimal._id] }),
+        }
+      );
+
       if (!response.ok) {
         console.error(`HTTP error! Status: ${response.status}`);
         return;
       }
 
       const data = await response.json();
-      userContext.setUser(data.user);
+      if (data.statusCode === 200) {
+        userContext.setUser(data.user);
+        return;
+      }
+      console.error('Failed to add to favourites: ', data.message);
     } catch (error) {
       console.error('Error fetching shelter data:', error.message);
     }

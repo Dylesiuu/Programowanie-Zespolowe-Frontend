@@ -1,12 +1,12 @@
 import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
+import { findByTestId, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import ShelterProfile from '../components/shelterProfile';
 import { UserContext } from '@/context/userContext';
 
 jest.mock('../components/animalCard', () => {
-  return function MockAnimalCard({ animalId, onEdit }) {
+  return function MockAnimalCard({ animalId, onEdit, addToFavourite }) {
     return (
       <div data-testid="mock-animal-card">
         Mock Animal Card for {animalId}
@@ -14,10 +14,15 @@ jest.mock('../components/animalCard', () => {
         <p>Ciekawski i czuły kot rasy tabby.</p>
         <p>Samica</p>
         <button onClick={onEdit}>Edytuj</button>
+        <button onClick={addToFavourite} data-testid="add-to-favourites-button">
+          Add to Favourites
+        </button>
       </div>
     );
   };
 });
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 describe('ShelterProfile Component', () => {
   const mockShelter = {
@@ -39,12 +44,17 @@ describe('ShelterProfile Component', () => {
       },
     ],
   };
+  const setUserMock = jest.fn();
 
   const mockUserContext = {
+    token: 'mockToken',
     user: {
-      token: 'mockToken',
       shelterId: '1',
+      email: 'test@example.com',
+      favourites: [],
     },
+    isLoggedIn: jest.fn(),
+    setUser: setUserMock,
   };
 
   beforeEach(() => {
@@ -55,6 +65,21 @@ describe('ShelterProfile Component', () => {
           json: () => Promise.resolve({ shelter: mockShelter }),
         });
       }
+
+      if (url.includes(`/user/addfavourite/${mockUserContext.user.email}`)) {
+        return Promise.resolve({
+          ok: true,
+          json: () =>
+            Promise.resolve({
+              statusCode: 200,
+              user: {
+                email: 'test@example.com',
+                favourites: ['123'],
+              },
+            }),
+        });
+      }
+
       return Promise.reject(new Error('Unexpected URL'));
     });
     render(
@@ -196,5 +221,22 @@ describe('ShelterProfile Component', () => {
       expect(backdrop).not.toHaveClass('backdrop-blur-md');
       expect(backdrop).toHaveClass('opacity-0');
     });
+  });
+
+  it('calls addToFavourite and updates userContext on success', async () => {
+    const animalCard = await screen.findByTestId('animal-card');
+    await userEvent.click(animalCard);
+
+    const addToFavouritesButton = await screen.findByTestId(
+      'add-to-favourites-button'
+    );
+    await userEvent.click(addToFavouritesButton);
+
+    await waitFor(() =>
+      expect(setUserMock).toHaveBeenCalledWith({
+        email: 'test@example.com',
+        favourites: ['123'],
+      })
+    );
   });
 });
