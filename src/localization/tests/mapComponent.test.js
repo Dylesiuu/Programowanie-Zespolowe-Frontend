@@ -48,7 +48,9 @@ describe('MapComponent', () => {
       />
     );
 
-    expect(screen.getByRole('button', { name: /zapisz lokalizację/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: /zapisz lokalizację/i })
+    ).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /anuluj/i })).toBeInTheDocument();
   });
 
@@ -62,7 +64,9 @@ describe('MapComponent', () => {
     );
 
     await act(async () => {
-      fireEvent.click(screen.getByRole('button', { name: /zapisz lokalizację/i }));
+      fireEvent.click(
+        screen.getByRole('button', { name: /zapisz lokalizację/i })
+      );
     });
 
     expect(mockOnLocationSelect).toHaveBeenCalledWith(
@@ -88,6 +92,8 @@ describe('MapComponent', () => {
       fireEvent.click(screen.getByText(/szukaj/i));
     });
 
-    expect(global.fetch).toHaveBeenCalledWith(expect.stringContaining('Warszawa'));
+    expect(global.fetch).toHaveBeenCalledWith(
+      expect.stringContaining('Warszawa')
+    );
   });
 });
