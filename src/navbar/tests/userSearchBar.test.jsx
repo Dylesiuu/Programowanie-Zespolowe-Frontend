@@ -3,14 +3,33 @@ import { render, screen, waitFor } from '@testing-library/react';
 import UserSearchBar from '../components/userSearchBar';
 import userEvent from '@testing-library/user-event';
 
+global.fetch = jest.fn(() =>
+  Promise.resolve({
+    ok: true,
+    json: () =>
+      Promise.resolve({
+        data: [
+          { _id: '1', name: 'Jan', lastname: 'Kowalski' },
+          { _id: '2', name: 'Janek', lastname: 'Wiśniewski' },
+        ],
+      }),
+  })
+);
+
 describe('UserSearchBar', () => {
+  const mockUserContext = {
+    token: 'test-token',
+  };
+
   beforeEach(() => {
+    render(<UserSearchBar userContext={mockUserContext} />);
+  });
+
+  afterEach(() => {
     jest.clearAllMocks();
   });
 
   it('renders the input field', () => {
-    render(<UserSearchBar />);
-
     const inputField = screen.getByPlaceholderText(
       'Wpisz imię lub nazwisko użytkownika...'
     );
@@ -18,8 +37,6 @@ describe('UserSearchBar', () => {
   });
 
   it('displays search results in the dropdown', async () => {
-    render(<UserSearchBar />);
-
     const inputField = screen.getByPlaceholderText(
       'Wpisz imię lub nazwisko użytkownika...'
     );
@@ -30,8 +47,6 @@ describe('UserSearchBar', () => {
   });
 
   it('closes the dropdown when clicking outside', async () => {
-    render(<UserSearchBar />);
-
     const inputField = screen.getByPlaceholderText(
       'Wpisz imię lub nazwisko użytkownika...'
     );
@@ -46,8 +61,6 @@ describe('UserSearchBar', () => {
 
   it('handles selecting a result from the dropdown', async () => {
     window.alert = jest.fn();
-
-    render(<UserSearchBar />);
 
     const inputField = screen.getByPlaceholderText(
       'Wpisz imię lub nazwisko użytkownika...'
