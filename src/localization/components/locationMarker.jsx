@@ -6,10 +6,10 @@ const LocationMarker = ({ position, setPosition, reverseGeocode }) => {
 
   useEffect(() => {
     if (position) {
-      map.flyTo(position, map.getZoom()); 
+      map.flyTo(position, map.getZoom());
     }
   }, [position, map]);
-  
+
   useMapEvents({
     click(event) {
       setPosition(event.latlng);

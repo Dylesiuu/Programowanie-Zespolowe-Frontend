@@ -91,7 +91,6 @@ const MapComponent = ({ onLocationSelect, onCancel, setLocationName }) => {
   return (
     <div className="fixed inset-0 z-[9999] bg-transparent flex justify-center items-center px-4">
       <div className="relative bg-white rounded-xl w-full max-w-3xl h-[80vh] flex flex-col shadow-xl overflow-hidden">
-  
         <div className="p-4 flex gap-2 items-center bg-white z-10">
           <input
             type="text"

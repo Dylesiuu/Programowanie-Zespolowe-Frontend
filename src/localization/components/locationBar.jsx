@@ -59,7 +59,7 @@ const LocationBar = ({ defaultLocation, onLocationChange, onRangeChange }) => {
         <MapComponent
           onLocationSelect={handleLocationSelect}
           onCancel={handleMapCancel}
-          setLocationName={setLocationName} 
+          setLocationName={setLocationName}
         />
       )}
     </div>

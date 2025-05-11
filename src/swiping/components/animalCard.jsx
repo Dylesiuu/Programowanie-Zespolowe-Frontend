@@ -30,13 +30,9 @@ const AnimalCard = ({
   };
 
   return (
-    <div
-      className="w-[90%] max-w-[350px] bg-[#FEFEFE] border-[3px] border-[#AF6B6B] rounded-[22px] shadow-md px-[22px] pt-[15px] pb-[30px] mx-auto mb-5 relative flex flex-col items-center cursor-pointer hover:shadow-lg transition"
-    >
-
+    <div className="w-[90%] max-w-[350px] bg-[#FEFEFE] border-[3px] border-[#AF6B6B] rounded-[22px] shadow-md px-[22px] pt-[15px] pb-[30px] mx-auto mb-5 relative flex flex-col items-center cursor-pointer hover:shadow-lg transition">
       <div
         className="w-full aspect-[9/10] max-h-[350px] border border-[#AF6B6B] rounded-[22px] overflow-hidden flex items-center justify-center relative cursor-pointer"
-
         onClick={toggleFullImage}
       >
         {images.length > 0 ? (
@@ -93,10 +89,11 @@ const AnimalCard = ({
 
       <div className="w-full text-left mt-3 space-y-1">
         <h2 className="text-2xl font-bold">{name}</h2>
-        <p className="text-gray-600 text-sm">{gender}, {age}</p>
+        <p className="text-gray-600 text-sm">
+          {gender}, {age}
+        </p>
         <p className="text-gray-500 text-sm">{location}</p>
       </div>
-
 
       <div className="flex flex-wrap gap-2 mt-3 w-full">
         {traits.map((trait) => (
