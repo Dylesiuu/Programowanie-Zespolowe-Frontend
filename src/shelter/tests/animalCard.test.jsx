@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { act } from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
@@ -28,7 +28,7 @@ describe('AnimalCard Component', () => {
   const mockOnEdit = jest.fn();
   const mockAddToFavourites = jest.fn();
 
-  beforeEach(() => {
+  beforeEach(async () => {
     global.fetch = jest.fn(() =>
       Promise.resolve({
         ok: true,
@@ -36,14 +36,16 @@ describe('AnimalCard Component', () => {
       })
     );
 
-    render(
-      <AnimalCard
-        animalId={mockAnimal._id}
-        onEdit={mockOnEdit}
-        userContext={mockUserContext}
-        addToFavourite={mockAddToFavourites}
-      />
-    );
+    await act(async () => {
+      render(
+        <AnimalCard
+          animalId={mockAnimal._id}
+          onEdit={mockOnEdit}
+          userContext={mockUserContext}
+          addToFavourite={mockAddToFavourites}
+        />
+      );
+    });
   });
 
   afterEach(() => {
