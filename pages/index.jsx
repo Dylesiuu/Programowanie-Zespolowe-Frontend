@@ -89,12 +89,7 @@ const MainPage = () => {
             czasem stanie się centrum adopcji pełnym empatii, zaufania i radości
             ze wspólnego życia.
           </p>
-          <Link
-            href="/registerPage"
-            className="mt-20 bg-[#f98f48] hover:bg-[#e8803e] text-white px-6 py-3 rounded-2xl cursor-pointer text-lg transition duration-300"
-          >
-            Dołącz do Petfinity
-          </Link>
+
         </div>
 
         <div className="flex flex-col items-center md:items-start">

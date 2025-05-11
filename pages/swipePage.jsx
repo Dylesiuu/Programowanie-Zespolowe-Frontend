@@ -3,15 +3,10 @@ import React, { useState, useEffect, useContext, useCallback } from 'react';
 import Image from 'next/image';
 import AnimalCard from '../src/swiping/components/animalCard';
 import Buttons from '../src/swiping/components/buttons';
-import styles from '../src/styles/swipePage.module.css';
 import LocationBar from '../src/localization/components/locationBar';
 import { UserContext } from '@/context/userContext';
 import { useRouter } from 'next/router';
 
-const MapComponent = dynamic(
-  () => import('../src/localization/components/mapComponent'),
-  { ssr: false }
-);
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 const SwipePage = () => {
@@ -25,11 +20,9 @@ const SwipePage = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (userContext.isLoggedIn()) {
-      return;
+    if (!userContext.isLoggedIn()) {
+      router.replace('/');
     }
-
-    router.replace('/');
   }, [router, userContext]);
 
   useEffect(() => {
@@ -40,7 +33,7 @@ const SwipePage = () => {
       setError(null);
       try {
         const requestBody = {
-          userId: '65f4c8e9f0a5a4d3b4a54321', // Replace with actual user ID
+
           lat: location.lat,
           lng: location.lng,
           range: range,
@@ -82,10 +75,10 @@ const SwipePage = () => {
     fetchPets();
   }, [location, range, userContext.token]);
 
+
   const handleSwipe = useCallback(
     (decision) => {
       if (pets.length === 0) return;
-
       if (currentIndex < pets.length) {
         setCurrentIndex((prev) => prev + 1);
       }
@@ -93,70 +86,120 @@ const SwipePage = () => {
     [currentIndex, pets]
   );
 
+  const handleLike = async () => {
+    const petId = pets[currentIndex]._id;
+    const email = userContext.user.email; 
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/user/addfavourite/${email}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userContext.token}`,
+        },
+        body: JSON.stringify({
+          favourites: [petId],
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert('Zwierzę zostało dodane do ulubionych!');
+      } else if (response.status === 400) {
+        // Jeśli zwierzę jest już w ulubionych
+        setLikeError('Zwierzę jest już w Twoich ulubionych!');
+      } else {
+        alert(data.message || 'Błąd podczas dodawania do ulubionych');
+      }
+    } catch (error) {
+      console.error('Błąd przy dodawaniu do ulubionych:', error);
+      alert('Wystąpił błąd. Spróbuj ponownie.');
+    }
+  };
+
   useEffect(() => {
     const handleKeyDown = (event) => {
-      if (event.key === 'ArrowLeft') {
-        handleSwipe('dislike');
-      } else if (event.key === 'ArrowRight') {
-        handleSwipe('like');
-      }
+      if (event.key === 'ArrowLeft') handleSwipe('dislike');
+      else if (event.key === 'ArrowRight') handleSwipe('like');
     };
     window.addEventListener('keydown', handleKeyDown);
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleSwipe]);
 
+
   return (
-    <div className={styles.page}>
-      <div className={styles.container}>
-        <div className={styles.locationBarWrapper}>
-          <LocationBar
-            defaultLocation={location ? `${location.lat}, ${location.lng}` : ''}
-            onLocationChange={(position) => setLocation(position)}
-            onRangeChange={(newRange) => setRange(newRange)}
-          />
+    <div className="flex flex-col min-h-screen bg-gray-100">
+      {/* Pasek lokalizacji */}
+      <div className="flex justify-center px-4 mt-18">
+        <LocationBar
+          defaultLocation={location ? `${location.lat}, ${location.lng}` : ''}
+          onLocationChange={(position) => setLocation(position)}
+          onRangeChange={(newRange) => setRange(newRange)}
+        />
+      </div>
+  
+      {isLoading && <p className="text-center mt-4">Ładowanie zwierzaczków...</p>}
+  
+      {error && (
+        <div className="text-red-600 text-center my-5">
+          <p>{error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-800"
+          >
+            Odśwież
+          </button>
         </div>
-
-        {isLoading && <p>Ładowanie zwierzaczków...</p>}
-
-        {error && (
-          <div className={styles.error}>
-            <p>{error}</p>
-            <button onClick={() => window.location.reload()}>Odśwież</button>
-          </div>
-        )}
-
-        {!isLoading && !error && (
-          <>
-            {currentIndex < pets.length ? (
-              <div className={styles.cardModule}>
-                <div className={styles.cardWrapper}>
-                  <AnimalCard {...pets[currentIndex]} />
+      )}
+  
+      {!isLoading && !error && (
+        <>
+          {currentIndex < pets.length ? (
+            <div className="flex-1 flex flex-col items-center justify-center px-4 pb-6">
+              <div className="w-full max-w-md flex flex-col items-center">
+                {/* AnimalCard z proporcjami */}
+                <div className="w-full aspect-[3/4]">
+                  <AnimalCard
+                    id={pets[currentIndex]._id}
+                    images={pets[currentIndex].images}
+                    name={pets[currentIndex].name}
+                    gender={pets[currentIndex].gender}
+                    age={pets[currentIndex].age}
+                    location={pets[currentIndex].location}
+                    traits={pets[currentIndex].traits}
+                    shelter={pets[currentIndex].shelterName}
+                  />
                 </div>
+  
+                {/* Buttons bezpośrednio pod kartą */}
                 <Buttons
                   onDislike={() => handleSwipe('dislike')}
-                  onLike={() => handleSwipe('like')}
+                  onLike={() => {
+                    handleSwipe('like');
+                    handleLike();
+                  }}
                 />
               </div>
-            ) : (
-              <div className={styles.cardModule}>
-                <p>Koniec piesków i kotków :c</p>
-                <p>Zmień lokalizację lub zasięg, aby zobaczyć więcej!</p>
-                <Image
-                  src="https://media1.tenor.com/m/t7_iTN0iYekAAAAd/sad-sad-cat.gif"
-                  alt="Koniec pjesków i kotków"
-                  width={400}
-                  height={400}
-                  unoptimized
-                />
-              </div>
-            )}
-          </>
-        )}
-      </div>
+            </div>
+          ) : (
+            <div className="flex-1 flex flex-col items-center justify-center text-center px-4">
+              <p>Koniec piesków i kotków :c</p>
+              <p>Zmień lokalizację lub zasięg, aby zobaczyć więcej!</p>
+              <Image
+                src="https://media1.tenor.com/m/t7_iTN0iYekAAAAd/sad-sad-cat.gif"
+                alt="Koniec piesków i kotków"
+                width={400}
+                height={400}
+                unoptimized
+              />
+            </div>
+          )}
+        </>
+      )}
     </div>
   );
+  
 };
 
 export default SwipePage;
