@@ -33,7 +33,6 @@ const SwipePage = () => {
       setError(null);
       try {
         const requestBody = {
-
           lat: location.lat,
           lng: location.lng,
           range: range,
@@ -75,7 +74,6 @@ const SwipePage = () => {
     fetchPets();
   }, [location, range, userContext.token]);
 
-
   const handleSwipe = useCallback(
     (decision) => {
       if (pets.length === 0) return;
@@ -88,19 +86,22 @@ const SwipePage = () => {
 
   const handleLike = async () => {
     const petId = pets[currentIndex]._id;
-    const email = userContext.user.email; 
+    const email = userContext.user.email;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/user/addfavourite/${email}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${userContext.token}`,
-        },
-        body: JSON.stringify({
-          favourites: [petId],
-        }),
-      });
+      const response = await fetch(
+        `${API_BASE_URL}/user/addfavourite/${email}`,
+        {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${userContext.token}`,
+          },
+          body: JSON.stringify({
+            favourites: [petId],
+          }),
+        }
+      );
 
       const data = await response.json();
 
@@ -127,7 +128,6 @@ const SwipePage = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleSwipe]);
 
-
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
       {/* Pasek lokalizacji */}
@@ -138,9 +138,11 @@ const SwipePage = () => {
           onRangeChange={(newRange) => setRange(newRange)}
         />
       </div>
-  
-      {isLoading && <p className="text-center mt-4">Ładowanie zwierzaczków...</p>}
-  
+
+      {isLoading && (
+        <p className="text-center mt-4">Ładowanie zwierzaczków...</p>
+      )}
+
       {error && (
         <div className="text-red-600 text-center my-5">
           <p>{error}</p>
@@ -152,7 +154,7 @@ const SwipePage = () => {
           </button>
         </div>
       )}
-  
+
       {!isLoading && !error && (
         <>
           {currentIndex < pets.length ? (
@@ -171,7 +173,7 @@ const SwipePage = () => {
                     shelter={pets[currentIndex].shelterName}
                   />
                 </div>
-  
+
                 {/* Buttons bezpośrednio pod kartą */}
                 <Buttons
                   onDislike={() => handleSwipe('dislike')}
@@ -199,7 +201,6 @@ const SwipePage = () => {
       )}
     </div>
   );
-  
 };
 
 export default SwipePage;

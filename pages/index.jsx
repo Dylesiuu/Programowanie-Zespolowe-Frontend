@@ -89,7 +89,6 @@ const MainPage = () => {
             czasem stanie się centrum adopcji pełnym empatii, zaufania i radości
             ze wspólnego życia.
           </p>
-
         </div>
 
         <div className="flex flex-col items-center md:items-start">
