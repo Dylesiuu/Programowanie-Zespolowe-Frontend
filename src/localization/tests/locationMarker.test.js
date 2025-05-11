@@ -1,10 +1,14 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import LocationMarker from '../components/locationMarker';
 import { useMapEvents } from 'react-leaflet';
 
 jest.mock('react-leaflet', () => ({
   useMapEvents: jest.fn(),
+  useMap: () => ({
+    flyTo: jest.fn(),
+    getZoom: () => 13,
+  }),
 }));
 
 describe('LocationMarker', () => {
@@ -14,12 +18,10 @@ describe('LocationMarker', () => {
     mockSetPosition = jest.fn();
     mockReverseGeocode = jest.fn();
 
-    useMapEvents.mockImplementation((eventHandlers) => {
-      if (eventHandlers.click) {
-        const fakeEvent = { latlng: { lat: 52.52, lng: 13.405 } };
-        eventHandlers.click(fakeEvent);
-      }
-      return { click: jest.fn() };
+    useMapEvents.mockImplementation((handlers) => {
+      const fakeEvent = { latlng: { lat: 52.52, lng: 13.405 } };
+      handlers.click(fakeEvent);
+      return {};
     });
   });
 
