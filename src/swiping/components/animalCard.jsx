@@ -83,6 +83,7 @@ const AnimalCard = ({
       {isFullImage && (
         <div
           className="fixed inset-0 bg-black/80 z-[999] cursor-pointer"
+          data-testid="image-overlay"
           onClick={toggleFullImage}
         />
       )}

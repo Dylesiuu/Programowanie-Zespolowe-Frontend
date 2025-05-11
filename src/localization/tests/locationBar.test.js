@@ -36,7 +36,7 @@ describe('LocationBar Component', () => {
     });
 
     expect(
-      screen.getByRole('button', { name: /save location/i })
+      screen.getByRole('button', { name: /zapisz lokalizację/i })
     ).toBeInTheDocument();
   });
 

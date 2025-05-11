@@ -53,16 +53,19 @@ describe('AnimalCard Component', () => {
   test('toggles full image view on click', async () => {
     render(<AnimalCard {...mockProps} />);
 
-    const imageContainer = screen.getByAltText('Mike').parentElement;
     const image = screen.getByAltText('Mike');
-
-    expect(image).not.toHaveClass('fullImage');
-
-    await userEvent.click(imageContainer);
-    expect(image).toHaveClass('fullImage');
+    const imageContainer = image.closest('div');
 
     await userEvent.click(imageContainer);
-    expect(image).not.toHaveClass('fullImage');
+
+    expect(image).toHaveClass('fixed');
+    expect(screen.getByText('1 / 2')).toBeInTheDocument();
+
+    // Kliknij aby zamknąć (overlay)
+    const overlay = screen.getByTestId('image-overlay');
+    await userEvent.click(overlay);
+
+    expect(image).not.toHaveClass('fixed');
   });
   test('renders without traits', () => {
     const propsWithoutTraits = { ...mockProps, traits: [] };
