@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
-import styles from '../animalCard.module.css';
 
 const AnimalCard = ({
   images = [],
@@ -31,19 +30,31 @@ const AnimalCard = ({
   };
 
   return (
-    <div className={styles.card}>
-      <div className={styles.imageContainer} onClick={toggleFullImage}>
+    <div
+      className="w-[90%] max-w-[350px] bg-[#FEFEFE] border-[3px] border-[#AF6B6B] rounded-[22px] shadow-md px-[22px] pt-[15px] pb-[30px] mx-auto mb-5 relative flex flex-col items-center cursor-pointer hover:shadow-lg transition"
+    >
+
+      <div
+        className="w-full aspect-[9/10] max-h-[350px] border border-[#AF6B6B] rounded-[22px] overflow-hidden flex items-center justify-center relative cursor-pointer"
+
+        onClick={toggleFullImage}
+      >
         {images.length > 0 ? (
           <>
             <Image
               src={images[currentImageIndex]}
               alt={name}
-              className={`${styles.image} ${isFullImage ? styles.fullImage : ''}`}
               width={400}
               height={400}
               unoptimized
+              className={`transition-transform duration-300 rounded-[22px] ${
+                isFullImage
+                  ? 'fixed top-1/2 left-1/2 max-w-[60vw] max-h-[60vh] transform -translate-x-1/2 -translate-y-1/2 z-[1000] object-contain shadow-xl rounded-xl'
+                  : 'w-full h-full object-cover'
+              }`}
             />
-            <div className={styles.imageCounter}>
+
+            <div className="absolute bottom-2 right-2 bg-black/30 text-white text-xs px-2 py-1 rounded-md z-10">
               {currentImageIndex + 1} / {images.length}
             </div>
 
@@ -51,14 +62,17 @@ const AnimalCard = ({
               <>
                 <button
                   onClick={handlePrevImage}
-                  className={`${styles.prevButton} ${isFullImage ? styles.fullScreenButton : ''}`}
+                  className={`absolute top-1/2 left-2 -translate-y-1/2 bg-black/50 text-white p-2 text-xl rounded z-[1001] hover:opacity-100 opacity-70 ${
+                    isFullImage ? 'fixed left-[10%] px-6' : ''
+                  }`}
                 >
                   ‹
                 </button>
-
                 <button
                   onClick={handleNextImage}
-                  className={`${styles.nextButton} ${isFullImage ? styles.fullScreenButton : ''}`}
+                  className={`absolute top-1/2 right-2 -translate-y-1/2 bg-black/50 text-white p-2 text-xl rounded z-[1001] hover:opacity-100 opacity-70 ${
+                    isFullImage ? 'fixed right-[10%] px-6' : ''
+                  }`}
                 >
                   ›
                 </button>
@@ -66,30 +80,37 @@ const AnimalCard = ({
             )}
           </>
         ) : (
-          <div className={styles.noImageMessage}>No Image</div>
+          <div className="text-gray-500">No Image</div>
         )}
       </div>
 
       {isFullImage && (
-        <div className={styles.overlay} onClick={toggleFullImage} />
+        <div
+          className="fixed inset-0 bg-black/80 z-[999] cursor-pointer"
+          onClick={toggleFullImage}
+        />
       )}
 
-      <div className={styles.info}>
-        <h2>{name}</h2>
-        <p>{`${gender}, ${age}`}</p>
-        <p>{location}</p>
+      <div className="w-full text-left mt-3 space-y-1">
+        <h2 className="text-2xl font-bold">{name}</h2>
+        <p className="text-gray-600 text-sm">{gender}, {age}</p>
+        <p className="text-gray-500 text-sm">{location}</p>
       </div>
 
-      <div className={styles.traits}>
+
+      <div className="flex flex-wrap gap-2 mt-3 w-full">
         {traits.map((trait) => (
-          <span key={trait} className={styles.trait}>
+          <span
+            key={trait}
+            className="bg-[#f4a261] text-[#3a281c] text-xs font-medium px-3 py-1 rounded-full"
+          >
             {trait}
           </span>
         ))}
       </div>
 
-      <div className={styles.shelterInfo}>
-        <p>{shelter}</p>
+      <div className="w-full mt-3 text-sm italic text-gray-600 text-left">
+        {shelter}
       </div>
     </div>
   );
