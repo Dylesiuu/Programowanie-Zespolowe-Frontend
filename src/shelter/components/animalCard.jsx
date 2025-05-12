@@ -1,12 +1,18 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { useEffect } from 'react';
-import { FaHeart } from 'react-icons/fa';
+import { FaHeart, FaTimes } from 'react-icons/fa';
 import { BiLeftArrow, BiRightArrow } from 'react-icons/bi';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-const AnimalCard = ({ animalId, onEdit, userContext, addToFavourite }) => {
+const AnimalCard = ({
+  animalId,
+  onEdit,
+  userContext,
+  addToFavourite,
+  removeFromFavourite,
+}) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isDescriptionVisible, setIsDescriptionVisible] = useState(false);
   const [isTraitsVisible, setIsTraitsVisible] = useState(false);
@@ -101,7 +107,7 @@ const AnimalCard = ({ animalId, onEdit, userContext, addToFavourite }) => {
   return (
     <div className="flex flex-col w-full h-full p-6 rounded-3xl shadow-2xl bg-white">
       {/* Animal Image Carousel */}
-      <div className="w-full h-[40%] relative mb-4">
+      <div className="w-full h-[40%] relative pb-4">
         <Image
           src={animal.images[currentImageIndex]}
           alt={animal.name}
@@ -122,7 +128,7 @@ const AnimalCard = ({ animalId, onEdit, userContext, addToFavourite }) => {
             </button>
             <button
               data-testid="next-button"
-              className="absolute top-1/2 right-2 transform -translate-y-1/2 bg-[#CE8455] hover:bg-[#AA673C] text-[#fefaf7] p-1.5 pr-1 rounded-full shadow-lg cursor-pointer"
+              className="absolute top-1/2 right-2 transform -translate-y-1/2 bg-[#CE8455] hover:bg-[#AA673C] text-[#fefaf7] p-1.5 pr-1 rounded-full shadow-lg items-center justify-center cursor-pointer"
               onClick={handleNextImage}
             >
               <BiRightArrow className="h-4 w-4" />
@@ -165,7 +171,7 @@ const AnimalCard = ({ animalId, onEdit, userContext, addToFavourite }) => {
       {/* Traits */}
       <div className="flex flex-wrap items-center text-gray-600 mb-2 gap-1">
         <strong>Tagi: </strong>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-1 lg:gap-2">
           {(animal.traits.length > 3
             ? animal.traits.slice(0, 3)
             : animal.traits
@@ -188,31 +194,59 @@ const AnimalCard = ({ animalId, onEdit, userContext, addToFavourite }) => {
         )}
       </div>
       {/* Like Button */}
-      {!userContext.user?.favourites?.includes(animal._id) && (
-        <div className="flex justify-center mt-4 py-2">
+      {userContext.user?.favourites?.includes(animal._id) ? (
+        <div className="flex justify-center py-1 lg:py-2">
           <button
-            className="flex w-12 h-12 bg-[#4caf50] text-white rounded-full items-center justify-center text-2xl transition-all duration-300 ease-in-out hover:bg-[#45a049] hover:scale-110 cursor-pointer"
+            className="flex w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 bg-[#FF0000] text-white rounded-full items-center justify-center text-2xl transition-all duration-300 ease-in-out hover:bg-[#CC0000] hover:scale-110 cursor-pointer"
+            onClick={() => removeFromFavourite(animal._id)}
+            data-testid="remove-from-favourites-button"
+          >
+            <FaTimes className="w-[40%] h-[40%]" />
+          </button>
+        </div>
+      ) : (
+        <div className="flex justify-center py-1 lg:py-2">
+          <button
+            className="flex w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 bg-[#4caf50] text-white rounded-full items-center justify-center text-2xl transition-all duration-300 ease-in-out hover:bg-[#45a049] hover:scale-110 cursor-pointer"
             onClick={() => addToFavourite(animal._id)}
             data-testid="add-to-favourites-button"
           >
-            <FaHeart className="w-[50%] h-[50%]" />
+            <FaHeart className="w-[40%] h-[40%]" />
           </button>
         </div>
       )}
-      {/* Edit Button */}
+      {/* Edit and Adopted Buttons */}
       {userContext.user?.shelterId &&
         userContext.user.shelterId === animal.shelter && (
-          <button
-            className="mt-4 px-4 py-2 text-lg md:text-xl
-                     bg-[#CE8455] hover:bg-[#AA673C] text-[#fefaf7] rounded-full
-                     transition-all duration-300 transform hover:scale-105 shadow-lg
-                     w-full"
-            onClick={onEdit}
-          >
-            Edytuj
-          </button>
+          <div className="mt-4 flex gap-4">
+            <button
+              className="px-4 py-2 text-lg md:text-xl
+                   bg-[#CE8455] hover:bg-[#AA673C] text-[#fefaf7] rounded-full
+                   transition-all duration-300 transform hover:scale-105 shadow-lg
+                   w-full"
+              onClick={onEdit}
+            >
+              Edytuj
+            </button>
+            <button
+              className={`px-4 py-2 text-lg md:text-xl rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg w-full ${
+                animal.adopted
+                  ? 'bg-[#FF0000] hover:bg-[#CC0000] text-[#fefaf7]' // Red button for adopted
+                  : 'bg-[#4caf50] hover:bg-[#45a049] text-[#fefaf7]' // Green button for not adopted
+              }`}
+              onClick={() =>
+                alert(
+                  animal.adopted
+                    ? 'Zwierzę zostało już oznaczone jako zaadoptowane!'
+                    : 'Zwierzę zostało oznaczone jako zaadoptowane!'
+                )
+              }
+            >
+              Adopcja
+            </button>
+          </div>
         )}
-      {/* Model Section}
+      {/* Model Section */}
       {/* Description Card */}
       {isDescriptionVisible && (
         <div className="fixed inset-0 flex items-center justify-center backdrop-blur-sm z-50 transition-opacity duration-300 ease-in-out opacity-100">
@@ -270,6 +304,31 @@ const AnimalCard = ({ animalId, onEdit, userContext, addToFavourite }) => {
               height={600}
               className="w-full h-auto object-contain rounded-lg"
             />
+            {/* Navigation Buttons - Show only if more than one image */}
+            {animal.images.length > 1 && (
+              <>
+                <button
+                  data-testid="prev-button"
+                  className="absolute top-1/2 left-2 transform -translate-y-1/2 bg-[#CE8455] hover:bg-[#AA673C] text-[#fefaf7] p-1.5 pl-1 rounded-full shadow-lg items-center justify-center cursor-pointer"
+                  onClick={handlePreviousImage}
+                >
+                  <BiLeftArrow className="h-4 w-4" />
+                </button>
+                <button
+                  data-testid="next-button"
+                  className="absolute top-1/2 right-2 transform -translate-y-1/2 bg-[#CE8455] hover:bg-[#AA673C] text-[#fefaf7] p-1.5 pr-1 rounded-full shadow-lg items-center justify-center cursor-pointer"
+                  onClick={handleNextImage}
+                >
+                  <BiRightArrow className="h-4 w-4" />
+                </button>
+              </>
+            )}
+            {/* Image Counter - Show only if more than one image */}
+            {animal.images.length > 1 && (
+              <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-[#CE8455] text-[#fefaf7] text-sm px-3 py-1 rounded-full shadow-lg items-center justify-center">
+                {currentImageIndex + 1}/{animal.images.length}
+              </div>
+            )}
           </div>
         </div>
       )}
