@@ -101,6 +101,36 @@ const ShelterProfile = ({ shelterId, animalId }) => {
     }
   };
 
+  const removeFromFavourite = async (fav) => {
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/user/removefavourite/${userContext.user.email}`,
+        {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${userContext.token}`,
+          },
+          body: JSON.stringify({ favourites: [selectedAnimal._id] }),
+        }
+      );
+
+      if (!response.ok) {
+        console.error(`HTTP error! Status: ${response.status}`);
+        return;
+      }
+
+      const data = await response.json();
+      if (data.statusCode === 200) {
+        userContext.setUser(data.user);
+        return;
+      }
+      console.error('Failed to add to favourites: ', data.message);
+    } catch (error) {
+      console.error('Error fetching shelter data:', error.message);
+    }
+  };
+
   if (!shelter) {
     return <div>Ładowanie danych schroniska...</div>;
   }
@@ -172,6 +202,7 @@ const ShelterProfile = ({ shelterId, animalId }) => {
               onEdit={() => alert(`Edytujesz zwierzę: ${selectedAnimal.name}`)}
               userContext={userContext}
               addToFavourite={addToFavourite}
+              removeFromFavourite={removeFromFavourite}
             />
           </div>
         </div>
