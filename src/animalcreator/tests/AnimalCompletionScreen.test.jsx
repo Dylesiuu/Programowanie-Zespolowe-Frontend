@@ -3,8 +3,13 @@ import { render, screen, waitFor } from '@testing-library/react';
 import AnimalCompletionScreen from '../components/AnimalCompletionScreen';
 import { userEvent } from '@testing-library/user-event';
 
-jest.mock('next/image', () => ({ src, alt, width, height, ...props }) => {
-  return <img src={src} alt={alt} width={width} height={height} {...props} />;
+jest.mock('next/image', () => {
+  const MockNextImage = ({ src, alt, width, height, ...props }) => {
+    // eslint-disable-next-line @next/next/no-img-element
+    return <img src={src} alt={alt} width={width} height={height} {...props} />;
+  };
+  MockNextImage.displayName = 'MockNextImage';
+  return MockNextImage;
 });
 
 describe('AnimalCompletionScreen', () => {
@@ -14,7 +19,10 @@ describe('AnimalCompletionScreen', () => {
     gender: 'Samiec',
     tags: [1, 2],
     description: 'Fajny piesek',
-    photos: [{ preview: 'photo1.jpg', width: 500, height: 500 }, { preview: 'photo2.jpg', width: 500, height: 500 }],
+    photos: [
+      { preview: 'photo1.jpg', width: 500, height: 500 },
+      { preview: 'photo2.jpg', width: 500, height: 500 },
+    ],
   };
 
   const mockAnimalTags = [
