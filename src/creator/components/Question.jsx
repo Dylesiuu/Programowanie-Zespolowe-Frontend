@@ -5,8 +5,8 @@ const Question = ({ question, selectedTags, onOptionClick }) => {
     optionTags.some((tagId) => selectedTags.includes(tagId));
 
   return (
-    <div className="w-full bg-[#fefaf7] flex flex-col items-center px-4">
-      <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-6 sm:mb-6 md:mb-10 text-center">
+    <div className="w-full flex flex-col items-center px-4 sm:px-6 md:px-8 py-8 sm:py-10 md:py-12 bg-[#FFF9F5]/70 rounded-4xl shadow-lg">
+      <h1 className="text-[#C9590F] text-2xl sm:text-3xl md:text-4xl font-bold mb-6 sm:mb-6 md:mb-10 text-center">
         {question.text}
       </h1>
       <div className="flex flex-wrap justify-center gap-4 md:gap-6 w-full max-w-4xl mx-auto">
