@@ -3,6 +3,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import AnimalCreator from '../components/AnimalCreator';
 import { useRouter } from 'next/router';
+import { UserContext } from '@/context/userContext';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(),
@@ -32,21 +33,29 @@ jest.mock('../data/animalTags', () => [
   { id: 2, text: 'Option B', collectionId: 4 },
 ]);
 
-// jest.mock('../../context/userContext', () => ({
-//   useUserContext: () => ({
-//     user: { id: 'test-user' },
-//     isAuthenticated: true,
-//   }),
-// }));
-
-
 describe('AnimalCreator', () => {
   const mockPush = jest.fn();
+  const setUserMock = jest.fn();
+  const mockUserContext = {
+    token: 'mockToken',
+    user: {
+      shelterId: '1',
+      email: 'test@example.com',
+      favourites: [],
+    },
+    isLoggedIn: jest.fn(),
+    setUser: setUserMock,
+  };
   beforeEach(() => {
     useRouter.mockImplementation(() => ({
       push: mockPush,
     }));
     window.alert = jest.fn();
+    render(
+      <UserContext.Provider value={mockUserContext}>
+        <AnimalCreator />
+      </UserContext.Provider>
+    );
   });
 
   afterEach(() => {
@@ -54,99 +63,97 @@ describe('AnimalCreator', () => {
   });
 
   it('renders start screen initially', async () => {
-    render(<AnimalCreator />);
     expect(await screen.findByText('Dodaj nowe zwierzę')).toBeInTheDocument();
+    expect(await screen.findByText('Dodaj psa')).toBeInTheDocument();
+    expect(await screen.findByText('Dodaj kota')).toBeInTheDocument();
   });
 
-  it('navigates to basic info screen when animal type is selected', async () => {
-    render(<AnimalCreator />);
-
+  it('navigates through the form steps correctly', async () => {
     await userEvent.click(await screen.findByText('Dodaj psa'));
+
     expect(await screen.findByText('Ważna informacja')).toBeInTheDocument();
-    expect(
-      await screen.findByText(
-        'Jeśli nie znasz odpowiedzi na jakieś pytanie, możesz przejść dalej. Pamiętaj jednak, że im więcej informacji podasz, tym większa szansa na znalezienie idealnego domu dla zwierzęcia.'
-      )
-    ).toBeInTheDocument();
-
-    expect(await screen.findByText('Nie pokazuj ponownie')).toBeInTheDocument();
-    expect(await screen.findByText('Wróć')).toBeInTheDocument();
-    expect(await screen.findByText('Rozumiem')).toBeInTheDocument();
-
     await userEvent.click(await screen.findByText('Rozumiem'));
 
     expect(
       await screen.findByText('Podstawowe informacje')
     ).toBeInTheDocument();
+
+    await userEvent.type(
+      await screen.findByPlaceholderText('Wpisz imię zwierzęcia'),
+      'Testowy'
+    );
+    const dateInput = await screen.findByLabelText(
+      'Szacowana data urodzenia zwierzęcia'
+    );
+    await userEvent.clear(dateInput);
+    await userEvent.type(dateInput, '2020-01-01');
+    await userEvent.click(await screen.findByText('Samiec'));
+    await userEvent.click(await screen.findByText('Dalej'));
+    expect(await screen.findByText('Fourth test question')).toBeInTheDocument();
+
+    await userEvent.click(await screen.findByText('Option A'));
+
+    await userEvent.click(await screen.findByText('Zakończ'));
+    expect(await screen.findByText('+ Dodaj zdjęcia')).toBeInTheDocument();
+
+    await userEvent.click(await screen.findByText('Podsumowanie'));
+    expect(await screen.findByText('Podsumowanie')).toBeInTheDocument();
   });
 
-  it('shows alert when required fields are missing', async () => {
-    render(<AnimalCreator />);
-
+  it('shows alerts when required fields are missing', async () => {
     await userEvent.click(await screen.findByText('Dodaj kota'));
     await userEvent.click(await screen.findByText('Rozumiem'));
-
     await userEvent.click(await screen.findByText('Dalej'));
 
     expect(window.alert).toHaveBeenCalledWith('Proszę podać imię zwierzęcia');
   });
 
-  it('updates animal data and navigates to questions', async () => {
-    render(<AnimalCreator />);
-
+  it('handles navigation back correctly', async () => {
     await userEvent.click(await screen.findByText('Dodaj kota'));
     await userEvent.click(await screen.findByText('Rozumiem'));
 
     await userEvent.type(
-      screen.getByPlaceholderText('Wpisz imię zwierzęcia'),
+      await screen.findByPlaceholderText('Wpisz imię zwierzęcia'),
       'Testowy'
     );
-
-    const dateInput = screen.getByLabelText(
+    const dateInput = await screen.findByLabelText(
       'Szacowana data urodzenia zwierzęcia'
     );
     await userEvent.clear(dateInput);
     await userEvent.type(dateInput, '2020-01-01');
-
     await userEvent.click(await screen.findByText('Samiec'));
+
     await userEvent.click(await screen.findByText('Dalej'));
 
-    expect(await screen.findByText('Fourth test question')).toBeInTheDocument();
-  });
-
-  it('handles navigation back to start screen', async () => {
-    render(<AnimalCreator />);
-
-    await userEvent.click(await screen.findByText('Dodaj kota'));
-    await userEvent.click(await screen.findByText('Rozumiem'));
+    await userEvent.click(await screen.findByText('Wróć'));
+    expect(
+      await screen.findByText('Podstawowe informacje')
+    ).toBeInTheDocument();
 
     await userEvent.click(await screen.findByText('Wróć'));
-
     expect(await screen.findByText('Dodaj nowe zwierzę')).toBeInTheDocument();
   });
 
-  it('handles tag selection in questions screen', async () => {
-    render(<AnimalCreator />);
-
+  it('handles tag selection correctly', async () => {
     await userEvent.click(await screen.findByText('Dodaj kota'));
     await userEvent.click(await screen.findByText('Rozumiem'));
-
     await userEvent.type(
-      screen.getByPlaceholderText('Wpisz imię zwierzęcia'),
+      await screen.findByPlaceholderText('Wpisz imię zwierzęcia'),
       'Testowy'
     );
-
-    const dateInput = screen.getByLabelText(
+    const dateInput = await screen.findByLabelText(
       'Szacowana data urodzenia zwierzęcia'
     );
     await userEvent.clear(dateInput);
     await userEvent.type(dateInput, '2020-01-01');
-
     await userEvent.click(await screen.findByText('Samiec'));
     await userEvent.click(await screen.findByText('Dalej'));
 
-    await userEvent.click(await screen.findByText('Option A'));
+    const optionA = await screen.findByText('Option A');
+    await userEvent.click(optionA);
+    expect(optionA).toHaveClass('bg-[#CE8455]');
 
-    expect(await screen.findByText('Option A')).toHaveClass('bg-[#CE8455]');
+    await userEvent.click(optionA);
+    expect(optionA).not.toHaveClass('bg-[#CE8455]');
   });
 });

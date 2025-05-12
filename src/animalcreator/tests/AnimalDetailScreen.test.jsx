@@ -3,10 +3,16 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import AnimalDetailScreen from '../components/AnimalDetailScreen';
 
+// eslint-disable-next-line react/display-name
+jest.mock('next/image', () => ({ src, alt, width, height, ...props }) => {
+  // eslint-disable-next-line @next/next/no-img-element
+  return <img src={src} alt={alt} width={width} height={height} {...props} />;
+});
+
 describe('AnimalDetailScreen', () => {
   const mockAnimalData = {
     description: 'Test description',
-    photos: [{ preview: 'test.jpg' }],
+    photos: [{ preview: 'test.jpg', width: 100, height: 100 }],
   };
 
   it('renders correctly', async () => {

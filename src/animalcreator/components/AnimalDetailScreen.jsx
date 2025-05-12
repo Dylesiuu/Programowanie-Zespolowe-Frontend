@@ -25,7 +25,7 @@ const AnimalDetailScreen = ({
             <textarea
               value={animalData.description}
               onChange={onDescriptionChange}
-              className="w-full p-4 border border-[#CE8455] rounded-lg h-40 focus:outline-none focus:ring-2 focus:ring-[#CE8455] transition-all"
+              className="w-full p-4 border border-[#CE8455] rounded-lg h-40 focus:outline-none focus:ring-2 focus:ring-[#CE8455] transition-all resize-none"
               placeholder="Opisz charakter i zwyczaje zwierzęcia..."
             />
           </div>

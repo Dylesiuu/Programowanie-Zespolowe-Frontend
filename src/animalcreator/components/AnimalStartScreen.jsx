@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
-import { useRouter } from 'next/router';
 
 const AnimalStartScreen = ({ onStart, onSkip }) => {
   const [selectedAnimal, setSelectedAnimal] = useState(null);
   const [showWarning, setShowWarning] = useState(false);
   const [dontShowAgain, setDontShowAgain] = useState(false);
-  const router = useRouter();
 
   const handleAnimalSelect = (animalType) => {
     setSelectedAnimal(animalType);
@@ -55,7 +53,7 @@ const AnimalStartScreen = ({ onStart, onSkip }) => {
         </button>
       </div>
       {showWarning && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div className="fixed inset-0 backdrop-blur-sm  flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg p-6 max-w-md w-full">
             <h2 className="text-xl font-bold mb-4">Ważna informacja</h2>
             <p className="mb-4">
