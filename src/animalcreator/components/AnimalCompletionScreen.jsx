@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Image from 'next/image';
 
 const AnimalCompletionScreen = ({
   animalData,
@@ -21,9 +22,11 @@ const AnimalCompletionScreen = ({
               className="self-end text-white text-4xl mb-4 hover:text-gray-300"
               onClick={() => setSelectedImage(null)}
             >
-              &times;
+              ✕
             </button>
-            <img
+            <Image
+              width={500}
+              height={500}
               src={selectedImage}
               alt="Powiększone zdjęcie"
               className="max-w-full max-h-[80vh] object-contain mx-auto"
@@ -42,12 +45,14 @@ const AnimalCompletionScreen = ({
               className="self-end text-white text-4xl mb-4 hover:text-gray-300"
               onClick={() => setShowAllPhotos(false)}
             >
-              &times;
+              ✕
             </button>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4 overflow-y-auto">
               {animalData.photos.map((photo, index) => (
                 <div key={index} className="flex-shrink-0">
-                  <img
+                  <Image
+                    width={500}
+                    height={500}
                     src={photo.preview}
                     alt={`Preview ${index}`}
                     className="w-full h-48 md:h-64 object-cover rounded-lg cursor-pointer hover:opacity-80 transition-opacity"
@@ -96,7 +101,9 @@ const AnimalCompletionScreen = ({
                 <div className="flex overflow-x-auto pb-4 gap-4 scrollbar-hide max-h-48">
                   {animalData.photos.map((photo, index) => (
                     <div key={index} className="flex-shrink-0">
-                      <img
+                      <Image
+                        width={500}
+                        height={500}
                         src={photo.preview}
                         alt={`Preview ${index}`}
                         className="w-32 h-32 object-cover rounded-lg cursor-pointer hover:opacity-80 transition-opacity"

@@ -20,10 +20,9 @@ const AnimalCreator = () => {
 
   const [currentStep, setCurrentStep] = useState('start');
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [error, setError] = useState(null);
 
   const STARTING_QUESTION_INDEX = 3;
-  const MAX_PHOTOS = 10;
+  const MAX_PHOTOS = 50;
 
   const [animalData, setAnimalData] = useState({
     type: '',
@@ -152,7 +151,6 @@ const AnimalCreator = () => {
   const handlePhotoUpload = (e) => {
     const files = Array.from(e.target.files);
     if (files.length + animalData.photos.length > MAX_PHOTOS) {
-      setError('Możesz dodać maksymalnie 10 zdjęć');
       return;
     }
     const photosWithPreview = files.map((file) => ({
@@ -180,12 +178,6 @@ const AnimalCreator = () => {
 
   const handleSubmit = async () => {
     try {
-      if (!userContext.token || !userContext.user) {
-        setError('Musisz być zalogowany, aby dodać zwierzę');
-        router.push('/homePage');
-        return;
-      }
-
       const formData = new FormData();
       formData.append('type', animalData.type);
       formData.append('name', animalData.name);
@@ -200,15 +192,17 @@ const AnimalCreator = () => {
       const response = await fetch(`${API_BASE_URL}/animals`, {
         method: 'POST',
         headers: {
-          Authorization: `Bearer ${userContext.token}`, // Dodano
+          Authorization: `Bearer ${userContext.token}`,
         },
         body: formData,
       });
 
       if (response.ok) {
-        router.push('/shelterProfilePage');
+        router.push(
+          `/shelterProfilePage?shelterId=${userContext.user.shelterId}&animal=null`
+        );
       } else {
-        throw new Error('Wystąpił błąd');
+        console.error('Wystąpił błąd');
       }
     } catch (error) {
       console.error('Error submitting animal:', error);
@@ -220,7 +214,11 @@ const AnimalCreator = () => {
     return (
       <AnimalStartScreen
         onStart={handleStart}
-        onSkip={() => router.push('/')}
+        onSkip={() =>
+          router.push(
+            '/shelterProfilePage?shelterId=${userContext.user.shelterId}&animal=null'
+          )
+        }
       />
     );
   }

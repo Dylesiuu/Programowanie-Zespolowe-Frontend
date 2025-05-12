@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 
 const ImageUploader = ({ photos, onUpload, onRemove }) => {
   const fileInputRef = React.useRef();
@@ -16,7 +17,9 @@ const ImageUploader = ({ photos, onUpload, onRemove }) => {
       <div className="flex flex-wrap gap-4 mb-4">
         {photos.map((photo, index) => (
           <div key={index} className="relative">
-            <img
+            <Image
+              width={500}
+              height={500}
               src={photo.preview}
               alt={`Preview ${index}`}
               className="w-24 h-24 object-cover rounded-lg"
