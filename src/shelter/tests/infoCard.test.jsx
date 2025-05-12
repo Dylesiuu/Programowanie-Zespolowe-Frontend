@@ -38,9 +38,9 @@ describe('InfoCard Component', () => {
   it('renders the shelter information correctly', () => {
     expect(screen.getByText(mockShelter.name)).toBeInTheDocument();
 
-    expect(screen.getByText(/Location:/)).toBeInTheDocument();
+    expect(screen.getByText(/Adres:/)).toBeInTheDocument();
     expect(screen.getByText(mockShelter.location)).toBeInTheDocument();
-    expect(screen.getByText(/Phone:/)).toBeInTheDocument();
+    expect(screen.getByText(/Telefon:/)).toBeInTheDocument();
     expect(screen.getByText(mockShelter.phone)).toBeInTheDocument();
     expect(screen.getByText(/Email:/)).toBeInTheDocument();
     expect(screen.getByText(mockShelter.email)).toBeInTheDocument();

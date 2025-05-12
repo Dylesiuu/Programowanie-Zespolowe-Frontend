@@ -16,7 +16,7 @@ const MobileInfoCard = ({ shelter, onEdit, toggleCard, userContext }) => {
       {/* Shelter info */}
       <div className="flex flex-col w-full p-6 bg-white shadow-2xl rounded-3xl items-center justify-around">
         <h2
-          data-testid="desktop-shelter-name"
+          data-testid="mobile-shelter-name"
           className="text-lg md:text-xl lg:text-2xl font-bold text-gray-800 mb-6 md:mb-8"
         >
           {shelter.name}
@@ -57,7 +57,7 @@ const MobileInfoCard = ({ shelter, onEdit, toggleCard, userContext }) => {
                      transition-all duration-300 transform hover:scale-105 shadow-lg
                      w-full max-w-[200px] md:max-w-[240px] lg:max-w-[280px]"
               onClick={onEdit}
-              data-testid="infoCard-edit-button"
+              data-testid="mobile-edit-button"
             >
               Edytuj
             </button>

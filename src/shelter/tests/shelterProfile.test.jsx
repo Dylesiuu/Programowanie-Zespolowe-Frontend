@@ -231,8 +231,8 @@ describe('ShelterProfile Component', () => {
     const infoCard = editButton.closest('div[class*="flex flex-col"]');
     expect(infoCard).toBeInTheDocument();
     expect(infoCard).toHaveTextContent(mockShelter.name);
-    expect(infoCard).toHaveTextContent(`Location: ${mockShelter.location}`);
-    expect(infoCard).toHaveTextContent(`Phone: ${mockShelter.phone}`);
+    expect(infoCard).toHaveTextContent(`Adres: ${mockShelter.location}`);
+    expect(infoCard).toHaveTextContent(`Telefon: ${mockShelter.phone}`);
     expect(infoCard).toHaveTextContent(`Email: ${mockShelter.email}`);
   });
 
@@ -289,8 +289,8 @@ describe('ShelterProfile Component', () => {
     const mobileCard = closeButton.closest('div[class*="fixed flex"]');
 
     expect(mobileCard).toHaveTextContent(mockShelter.name);
-    expect(mobileCard).toHaveTextContent(`Location: ${mockShelter.location}`);
-    expect(mobileCard).toHaveTextContent(`Phone: ${mockShelter.phone}`);
+    expect(mobileCard).toHaveTextContent(`Adres: ${mockShelter.location}`);
+    expect(mobileCard).toHaveTextContent(`Telefon: ${mockShelter.phone}`);
     expect(mobileCard).toHaveTextContent(`Email: ${mockShelter.email}`);
   });
 
@@ -301,8 +301,8 @@ describe('ShelterProfile Component', () => {
       </UserContext.Provider>
     );
     window.alert = jest.fn();
-    const editButtons = await screen.findAllByText('Edit Info');
-    await userEvent.click(editButtons[0]);
+    const editButtons = await screen.findByTestId('mobile-edit-button');
+    await userEvent.click(editButtons);
     expect(window.alert).toHaveBeenCalledWith('Edit button clicked!');
   });
 
