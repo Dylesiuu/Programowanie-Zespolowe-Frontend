@@ -21,7 +21,11 @@ describe('InfoCard Component', () => {
 
   const mockOnEdit = jest.fn();
 
-  beforeEach(() => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('renders the shelter information correctly', () => {
     render(
       <InfoCard
         shelter={mockShelter}
@@ -29,13 +33,7 @@ describe('InfoCard Component', () => {
         userContext={mockUserContext}
       />
     );
-  });
 
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  it('renders the shelter information correctly', () => {
     expect(screen.getByText(mockShelter.name)).toBeInTheDocument();
 
     expect(screen.getByText(/Adres:/)).toBeInTheDocument();
@@ -47,11 +45,27 @@ describe('InfoCard Component', () => {
   });
 
   it('renders the Edit Info button', async () => {
+    render(
+      <InfoCard
+        shelter={mockShelter}
+        onEdit={mockOnEdit}
+        userContext={mockUserContext}
+      />
+    );
+
     const editButton = await screen.findByTestId('infoCard-edit-button');
     expect(editButton).toBeInTheDocument();
   });
 
   it('calls the onEdit function when the Edit Info button is clicked', async () => {
+    render(
+      <InfoCard
+        shelter={mockShelter}
+        onEdit={mockOnEdit}
+        userContext={mockUserContext}
+      />
+    );
+
     const editButton = await screen.findByTestId('infoCard-edit-button');
     await userEvent.click(editButton);
 
@@ -59,9 +73,37 @@ describe('InfoCard Component', () => {
   });
 
   it('renders with the correct structure and styles', () => {
+    render(
+      <InfoCard
+        shelter={mockShelter}
+        onEdit={mockOnEdit}
+        userContext={mockUserContext}
+      />
+    );
+
     const container = screen.getByText('Happy Paws Shelter').closest('div');
     expect(container).toHaveClass(
       'flex flex-col w-full p-6 bg-white rounded-3xl items-center justify-around'
     );
+  });
+
+  it('does not render the Edit Info button when user is not an employee', async () => {
+    const mockUserContextWithDifferentShelterId = {
+      ...mockUserContext,
+      user: {
+        ...mockUserContext.user,
+        shelterId: '2',
+      },
+    };
+
+    render(
+      <InfoCard
+        shelter={mockShelter}
+        onEdit={mockOnEdit}
+        userContext={mockUserContextWithDifferentShelterId}
+      />
+    );
+
+    expect(screen.queryByTestId('mobile-edit-button')).not.toBeInTheDocument();
   });
 });
