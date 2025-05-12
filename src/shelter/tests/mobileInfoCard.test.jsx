@@ -10,53 +10,112 @@ describe('MobileInfoCard Component', () => {
     location: '123 Main Street, Springfield',
     phone: '+1 555-123-4567',
     email: 'contact@happypaws.com',
+    _id: '1',
   };
 
   const mockOnEdit = jest.fn();
   const mockToggleCard = jest.fn();
+  const setUserMock = jest.fn();
 
-  beforeEach(() => {
-    render(
-      <MobileInfoCard
-        shelter={mockShelter}
-        onEdit={mockOnEdit}
-        toggleCard={mockToggleCard}
-      />
-    );
-  });
+  const mockUserContext = {
+    token: 'mockToken',
+    user: {
+      shelterId: '1',
+      email: 'test@example.com',
+      favourites: [],
+    },
+    isLoggedIn: jest.fn(),
+    setUser: setUserMock,
+  };
 
   afterEach(() => {
     jest.clearAllMocks();
   });
 
   it('renders the shelter information correctly', () => {
+    render(
+      <MobileInfoCard
+        shelter={mockShelter}
+        onEdit={mockOnEdit}
+        toggleCard={mockToggleCard}
+        userContext={mockUserContext}
+      />
+    );
+
     expect(screen.getByText(mockShelter.name)).toBeInTheDocument();
 
-    expect(screen.getByText(/Location:/)).toBeInTheDocument();
+    expect(screen.getByText(/Adres:/)).toBeInTheDocument();
     expect(screen.getByText(mockShelter.location)).toBeInTheDocument();
-    expect(screen.getByText(/Phone:/)).toBeInTheDocument();
+    expect(screen.getByText(/Telefon:/)).toBeInTheDocument();
     expect(screen.getByText(mockShelter.phone)).toBeInTheDocument();
     expect(screen.getByText(/Email:/)).toBeInTheDocument();
     expect(screen.getByText(mockShelter.email)).toBeInTheDocument();
   });
 
-  it('renders the close button with the BiMenu icon and Edit Info button', () => {
-    const closeButton = screen.getByTestId('close-button');
+  it('renders the close button with the BiMenu icon and Edit Info button', async () => {
+    render(
+      <MobileInfoCard
+        shelter={mockShelter}
+        onEdit={mockOnEdit}
+        toggleCard={mockToggleCard}
+        userContext={mockUserContext}
+      />
+    );
+
+    const closeButton = await screen.findByTestId('close-button');
     expect(closeButton).toBeInTheDocument();
 
     expect(closeButton).toContainElement(screen.getByTestId('bi-menu-icon'));
 
-    expect(screen.getByText('Edit Info')).toBeInTheDocument();
+    expect(await screen.findByTestId('mobile-edit-button')).toBeInTheDocument();
   });
 
+  it('does not render the Edit Info button when user.shelterId does not match shelter._id', async () => {
+    const mockUserContextWithDifferentShelterId = {
+      ...mockUserContext,
+      user: {
+        ...mockUserContext.user,
+        shelterId: '2',
+      },
+    };
+
+    render(
+      <MobileInfoCard
+        shelter={mockShelter}
+        onEdit={mockOnEdit}
+        toggleCard={mockToggleCard}
+        userContext={mockUserContextWithDifferentShelterId}
+      />
+    );
+
+    expect(screen.queryByTestId('mobile-edit-button')).not.toBeInTheDocument();
+  });
   it('calls the onEdit function when the Edit Info button is clicked', async () => {
-    const editButton = screen.getByText('Edit Info');
+    render(
+      <MobileInfoCard
+        shelter={mockShelter}
+        onEdit={mockOnEdit}
+        toggleCard={mockToggleCard}
+        userContext={mockUserContext}
+      />
+    );
+
+    const editButton = await screen.findByTestId('mobile-edit-button');
     await userEvent.click(editButton);
 
     expect(mockOnEdit).toHaveBeenCalledTimes(1);
   });
 
   it('calls the toggleCard function when the close button is clicked', async () => {
+    render(
+      <MobileInfoCard
+        shelter={mockShelter}
+        onEdit={mockOnEdit}
+        toggleCard={mockToggleCard}
+        userContext={mockUserContext}
+      />
+    );
+
     const closeButton = screen.getByTestId('close-button');
     await userEvent.click(closeButton);
 
