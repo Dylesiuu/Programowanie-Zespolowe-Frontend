@@ -16,7 +16,7 @@ const UserCreatorPage = () => {
   }, [router, userContext]);
 
   return (
-    <div className="m-0 p-0 min-h-screen bg-white">
+    <div className="m-0 p-0 max-h-[calc(100vh-3.75rem)] w-full h-full bg-white">
       <UserCreator />
     </div>
   );
