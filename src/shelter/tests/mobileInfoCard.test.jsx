@@ -70,7 +70,7 @@ describe('MobileInfoCard Component', () => {
     expect(await screen.findByTestId('mobile-edit-button')).toBeInTheDocument();
   });
 
-  it('does not render the Edit Info button when user.shelterId does not match shelter._id', async () => {
+  it('does not render the Edit Info button when user is not an employee', async () => {
     const mockUserContextWithDifferentShelterId = {
       ...mockUserContext,
       user: {
@@ -90,6 +90,7 @@ describe('MobileInfoCard Component', () => {
 
     expect(screen.queryByTestId('mobile-edit-button')).not.toBeInTheDocument();
   });
+
   it('calls the onEdit function when the Edit Info button is clicked', async () => {
     render(
       <MobileInfoCard
