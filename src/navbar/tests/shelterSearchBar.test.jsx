@@ -56,6 +56,13 @@ describe('ShelterSearchBar', () => {
           }, 500)
         )
     );
+
+    render(
+      <ShelterSearchBar
+        userContext={{ user: { token: 'mockToken' } }}
+        animalId={null}
+      />
+    );
   });
 
   afterEach(() => {
@@ -63,8 +70,6 @@ describe('ShelterSearchBar', () => {
   });
 
   it('renders the input field and range selector', () => {
-    render(<ShelterSearchBar userContext={{ user: { token: 'mockToken' } }} />);
-
     const inputField = screen.getByPlaceholderText(
       'Kliknij, aby wybrać lokalizację'
     );
@@ -75,8 +80,6 @@ describe('ShelterSearchBar', () => {
   });
 
   it('should display "Wyszukiwanie..." while waiting for a response and should set locations', async () => {
-    render(<ShelterSearchBar userContext={{ user: { token: 'mockToken' } }} />);
-
     const inputField = screen.getByPlaceholderText(
       'Kliknij, aby wybrać lokalizację'
     );
@@ -96,8 +99,6 @@ describe('ShelterSearchBar', () => {
   });
 
   it('displays results in the dropdown after loading', async () => {
-    render(<ShelterSearchBar userContext={{ user: { token: 'mockToken' } }} />);
-
     const inputField = await screen.findByPlaceholderText(
       'Kliknij, aby wybrać lokalizację'
     );
@@ -114,8 +115,6 @@ describe('ShelterSearchBar', () => {
   });
 
   it('displays "Brak wyników" when no results are found', async () => {
-    render(<ShelterSearchBar userContext={{ user: { token: 'mockToken' } }} />);
-
     global.fetch = jest.fn(() =>
       Promise.resolve({
         ok: true,
@@ -135,8 +134,6 @@ describe('ShelterSearchBar', () => {
   });
 
   it('closes the dropdown when clicking outside', async () => {
-    render(<ShelterSearchBar userContext={{ user: { token: 'mockToken' } }} />);
-
     const inputField = screen.getByPlaceholderText(
       'Kliknij, aby wybrać lokalizację'
     );
@@ -155,8 +152,6 @@ describe('ShelterSearchBar', () => {
   });
 
   it('handles selecting a result from the dropdown', async () => {
-    render(<ShelterSearchBar userContext={{ user: { token: 'mockToken' } }} />);
-
     window.alert = jest.fn();
 
     const inputField = screen.getByPlaceholderText(
@@ -170,6 +165,8 @@ describe('ShelterSearchBar', () => {
 
     await userEvent.click(await screen.findByText('Schronisko A'));
 
-    expect(mockPush).toHaveBeenCalledWith(`/shelterProfilePage?shelterId=1`);
+    expect(mockPush).toHaveBeenCalledWith(
+      `/shelterProfilePage?shelterId=1&animal=null`
+    );
   });
 });
