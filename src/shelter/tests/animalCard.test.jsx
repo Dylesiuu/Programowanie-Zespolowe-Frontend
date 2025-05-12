@@ -16,6 +16,7 @@ describe('AnimalCard Component', () => {
     type: 'Dog',
     traits: ['Friendly', 'Playful', 'Energetic', 'Loyal'],
     images: ['/image1.jpg', '/image2.jpg'],
+    adopted: false,
   };
 
   const mockUserContext = {
@@ -27,6 +28,7 @@ describe('AnimalCard Component', () => {
 
   const mockOnEdit = jest.fn();
   const mockAddToFavourites = jest.fn();
+  const mockRemoveFromFavourites = jest.fn();
 
   beforeEach(async () => {
     global.fetch = jest.fn(() =>
@@ -43,6 +45,7 @@ describe('AnimalCard Component', () => {
           onEdit={mockOnEdit}
           userContext={mockUserContext}
           addToFavourite={mockAddToFavourites}
+          removeFromFavourite={mockRemoveFromFavourites}
         />
       );
     });
@@ -128,5 +131,103 @@ describe('AnimalCard Component', () => {
 
     expect(mockAddToFavourites).toHaveBeenCalledTimes(1);
     expect(mockAddToFavourites).toHaveBeenCalledWith(mockAnimal._id);
+  });
+
+  it('calls the removeFromFavourite function when the remove-from-favourites button is clicked', async () => {
+    const mockUserContextWithFavourites = {
+      user: {
+        token: 'mockToken',
+        shelterId: '1',
+        favourites: [mockAnimal._id],
+      },
+    };
+
+    const mockRemoveFromFavourites = jest.fn();
+
+    await act(async () => {
+      render(
+        <AnimalCard
+          animalId={mockAnimal._id}
+          onEdit={mockOnEdit}
+          userContext={mockUserContextWithFavourites}
+          addToFavourite={mockAddToFavourites}
+          removeFromFavourite={mockRemoveFromFavourites}
+        />
+      );
+    });
+
+    const removeButton = await screen.findByTestId(
+      'remove-from-favourites-button'
+    );
+    await userEvent.click(removeButton);
+
+    expect(mockRemoveFromFavourites).toHaveBeenCalledTimes(1);
+    expect(mockRemoveFromFavourites).toHaveBeenCalledWith(mockAnimal._id);
+  });
+
+  it('shows the correct color and behavior for the "Adopcja" button based on adoption status', async () => {
+    const mockAlert = jest.spyOn(window, 'alert').mockImplementation(() => {});
+
+    const adoptionButton = await screen.findByText('Adopcja');
+    expect(adoptionButton).toHaveClass('bg-[#4caf50]');
+    await userEvent.click(adoptionButton);
+
+    expect(mockAlert).toHaveBeenCalledWith(
+      'Zwierzę zostało oznaczone jako zaadoptowane!'
+    );
+
+    const mockAnimalAdopted = { ...mockAnimal, adopted: true };
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve(mockAnimalAdopted),
+      })
+    );
+
+    await act(async () => {
+      render(
+        <AnimalCard
+          animalId={mockAnimalAdopted._id}
+          onEdit={mockOnEdit}
+          userContext={mockUserContext}
+          addToFavourite={mockAddToFavourites}
+          removeFromFavourite={mockRemoveFromFavourites}
+        />
+      );
+    });
+
+    const adoptionButtonAdopted = await screen.findAllByText('Adopcja');
+    expect(adoptionButtonAdopted[1]).toHaveClass('bg-[#FF0000]');
+    await userEvent.click(adoptionButtonAdopted[1]);
+
+    expect(mockAlert).toHaveBeenCalledWith(
+      'Zwierzę zostało już oznaczone jako zaadoptowane!'
+    );
+
+    mockAlert.mockRestore();
+  });
+
+  it('navigates through images and displays the correct image counter', async () => {
+    const image = await screen.findByAltText(mockAnimal.name);
+    expect(image).toHaveAttribute('src', expect.stringContaining('image1.jpg'));
+
+    const imageCounter = await screen.findByText('1/2');
+    expect(imageCounter).toBeInTheDocument();
+
+    const nextButton = await screen.findByTestId('next-button');
+    await userEvent.click(nextButton);
+
+    expect(image).toHaveAttribute('src', expect.stringContaining('image2.jpg'));
+
+    const updatedImageCounter = await screen.findByText('2/2');
+    expect(updatedImageCounter).toBeInTheDocument();
+
+    const prevButton = await screen.findByTestId('prev-button');
+    await userEvent.click(prevButton);
+
+    expect(image).toHaveAttribute('src', expect.stringContaining('image1.jpg'));
+
+    const resetImageCounter = await screen.findByText('1/2');
+    expect(resetImageCounter).toBeInTheDocument();
   });
 });
