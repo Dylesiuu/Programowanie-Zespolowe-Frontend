@@ -46,6 +46,25 @@ describe('UserSearchBar', () => {
     expect(await screen.findByText('Janek Wiśniewski')).toBeInTheDocument();
   });
 
+  it('displays no result message when no results are found', async () => {
+    fetch.mockImplementationOnce(() =>
+      Promise.resolve({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            data: [],
+          }),
+      })
+    );
+
+    const inputField = screen.getByPlaceholderText(
+      'Wpisz imię lub nazwisko użytkownika...'
+    );
+    await userEvent.type(inputField, 'Jan');
+
+    expect(await screen.findByText('Brak wyników')).toBeInTheDocument();
+  });
+
   it('closes the dropdown when clicking outside', async () => {
     const inputField = screen.getByPlaceholderText(
       'Wpisz imię lub nazwisko użytkownika...'

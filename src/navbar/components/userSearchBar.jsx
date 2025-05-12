@@ -17,46 +17,6 @@ const UserSearchBar = ({ userContext }) => {
     };
   };
 
-  // const debouncedSearch = useRef(
-  //   debounce(async (query) => {
-  //     if (query.length >= 2) {
-  //       setIsSearching(true);
-
-  //       // Mocked user data
-  //       const mockUsers = [
-  //         { id: 1, name: 'Jan Kowalski', email: 'jan@example.com' },
-  //         { id: 2, name: 'Anna Nowak', email: 'anna@example.com' },
-  //         { id: 3, name: 'Janek Wiśniewski', email: 'piotr@example.com' },
-  //         { id: 4, name: 'Maria Lewandowska', email: 'maria@example.com' },
-  //         { id: 5, name: 'Adam Mickiewicz', email: 'adam@example.com' },
-  //       ];
-
-  //       try {
-  //         // Simulate network delay
-  //         await new Promise((resolve) => setTimeout(resolve, 300));
-
-  //         // Filter mock users
-  //         const filteredUsers = mockUsers.filter(
-  //           (user) =>
-  //             user.name.toLowerCase().includes(query.toLowerCase()) ||
-  //             user.email.toLowerCase().includes(query.toLowerCase())
-  //         );
-
-  //         setSearchResults(filteredUsers);
-  //         setIsSearchDropdownOpen(true);
-  //       } catch (error) {
-  //         console.error('Error searching users:', error);
-  //         setSearchResults([]);
-  //       } finally {
-  //         setIsSearching(false);
-  //       }
-  //     } else {
-  //       setSearchResults([]);
-  //       setIsSearchDropdownOpen(false);
-  //     }
-  //   }, 300)
-  // ).current;
-
   const debouncedSearch = useRef(
     debounce(async (query) => {
       if (query.length >= 2) {
@@ -73,7 +33,11 @@ const UserSearchBar = ({ userContext }) => {
           });
           if (!response.ok) console.error('Network response was not ok');
           const data = await response.json();
-          setSearchResults(data.data);
+          if (data.data) {
+            setSearchResults(data.data);
+          } else {
+            setSearchResults([]);
+          }
           setIsSearchDropdownOpen(true);
         } catch (error) {
           console.error('Error searching users:', error);

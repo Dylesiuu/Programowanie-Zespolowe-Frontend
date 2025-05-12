@@ -48,7 +48,6 @@ const ShelterSearchBar = ({ userContext }) => {
       const data = await response.json();
 
       if (Array.isArray(data.shelters)) {
-        console.log('Received an array:', data);
         setResults(data.shelters);
       } else {
         console.log('Received a non-array response:', data);
