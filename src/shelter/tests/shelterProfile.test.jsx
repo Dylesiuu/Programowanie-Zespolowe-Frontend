@@ -6,17 +6,65 @@ import ShelterProfile from '../components/shelterProfile';
 import { UserContext } from '@/context/userContext';
 
 jest.mock('../components/animalCard', () => {
-  return function MockAnimalCard({ animalId, onEdit, addToFavourite }) {
+  return function MockAnimalCard({
+    animalId,
+    onEdit,
+    userContext,
+    addToFavourite,
+    removeFromFavourite,
+  }) {
+    const mockAnimal = {
+      _id: animalId,
+      name: 'Mock Animal',
+      age: 3,
+      description: 'This is a mock animal description.',
+      gender: 'Samiec',
+      type: 'Pies',
+      traits: ['Friendly', 'Playful'],
+      images: ['/mock-image.jpg'],
+      adopted: false,
+      shelter: userContext.user?.shelterId,
+    };
+
     return (
       <div data-testid="mock-animal-card">
-        Mock Animal Card for {animalId}
-        <p>Typ: Kot</p>
-        <p>Ciekawski i czuły kot rasy tabby.</p>
-        <p>Samica</p>
-        <button onClick={onEdit}>Edytuj</button>
-        <button onClick={addToFavourite} data-testid="add-to-favourites-button">
-          Add to Favourites
-        </button>
+        <h2>{mockAnimal.name}</h2>
+        <p>Wiek: {mockAnimal.age}</p>
+        <p>Opis: {mockAnimal.description}</p>
+        <p>Płeć: {mockAnimal.gender}</p>
+        <div>
+          {userContext.user?.favourites?.includes(mockAnimal._id) ? (
+            <button
+              data-testid="remove-from-favourites-button"
+              onClick={() => removeFromFavourite(mockAnimal._id)}
+            >
+              Remove from Favourites
+            </button>
+          ) : (
+            <button
+              data-testid="add-to-favourites-button"
+              onClick={() => addToFavourite(mockAnimal._id)}
+            >
+              Add to Favourites
+            </button>
+          )}
+        </div>
+        {userContext.user?.shelterId === mockAnimal.shelter && (
+          <div>
+            <button onClick={onEdit}>Edytuj</button>
+            <button
+              onClick={() =>
+                alert(
+                  mockAnimal.adopted
+                    ? 'Zwierzę zostało już oznaczone jako zaadoptowane!'
+                    : 'Zwierzę zostało oznaczone jako zaadoptowane!'
+                )
+              }
+            >
+              Adopcja
+            </button>
+          </div>
+        )}
       </div>
     );
   };
@@ -80,6 +128,20 @@ describe('ShelterProfile Component', () => {
         });
       }
 
+      if (url.includes(`/user/removefavourite/${mockUserContext.user.email}`)) {
+        return Promise.resolve({
+          ok: true,
+          json: () =>
+            Promise.resolve({
+              statusCode: 200,
+              user: {
+                email: 'test@example.com',
+                favourites: [],
+              },
+            }),
+        });
+      }
+
       return Promise.reject(new Error('Unexpected URL'));
     });
   });
@@ -117,9 +179,7 @@ describe('ShelterProfile Component', () => {
     await userEvent.click(buddyElement);
 
     expect(await screen.findByTestId('mock-animal-card')).toBeInTheDocument();
-    expect(
-      await screen.findByText('Mock Animal Card for 1')
-    ).toBeInTheDocument();
+    expect(await screen.findByText('Buddy')).toBeInTheDocument();
   });
 
   it('closes the animal modal when the close button is clicked', async () => {
@@ -154,11 +214,11 @@ describe('ShelterProfile Component', () => {
     const buddyCard = buddyElements[0];
     await userEvent.click(buddyCard);
 
-    expect(await screen.findByText('Typ: Kot')).toBeInTheDocument();
+    expect(await screen.findByText('Wiek: 3')).toBeInTheDocument();
+    expect(await screen.findByText('Płeć: Samiec')).toBeInTheDocument();
     expect(
-      await screen.findByText('Ciekawski i czuły kot rasy tabby.')
+      await screen.findByText('Opis: This is a mock animal description.')
     ).toBeInTheDocument();
-    expect(await screen.findByText('Samica')).toBeInTheDocument();
   });
 
   it('displays shelter information in InfoCard on desktop', async () => {
@@ -292,6 +352,39 @@ describe('ShelterProfile Component', () => {
     );
   });
 
+  it('calls removeFromFavourite and updates userContext on success', async () => {
+    const mockUserContext2 = {
+      token: 'mockToken',
+      user: {
+        shelterId: '1',
+        email: 'test@example.com',
+        favourites: ['1'],
+      },
+      isLoggedIn: jest.fn(),
+      setUser: setUserMock,
+    };
+
+    render(
+      <UserContext.Provider value={mockUserContext2}>
+        <ShelterProfile shelterId={1} animalId={null} />
+      </UserContext.Provider>
+    );
+    const animalCard = await screen.findByTestId('animal-card');
+    await userEvent.click(animalCard);
+
+    const removeFromFavouritesButton = await screen.findByTestId(
+      'remove-from-favourites-button'
+    );
+    await userEvent.click(removeFromFavouritesButton);
+
+    await waitFor(() =>
+      expect(setUserMock).toHaveBeenCalledWith({
+        email: 'test@example.com',
+        favourites: [],
+      })
+    );
+  });
+
   it('opens animal modal when animalId is provided', async () => {
     const mockHandleAnimalClick = jest.fn();
     render(
@@ -323,7 +416,6 @@ describe('ShelterProfile Component', () => {
       </UserContext.Provider>
     );
 
-    // Assert that handleAnimalClick is not called
     expect(mockHandleAnimalClick).not.toHaveBeenCalled();
   });
 
@@ -337,9 +429,8 @@ describe('ShelterProfile Component', () => {
       ],
     };
 
-    const mockAnimalId = null; // animalId is null
+    const mockAnimalId = null;
 
-    // Mock the ShelterProfile component with props
     render(
       <ShelterProfile
         shelterId="mockShelterId"
@@ -349,7 +440,6 @@ describe('ShelterProfile Component', () => {
       />
     );
 
-    // Assert that handleAnimalClick is not called
     expect(mockHandleAnimalClick).not.toHaveBeenCalled();
   });
 });
