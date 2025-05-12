@@ -8,7 +8,7 @@ import { useContext, useEffect } from 'react';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-const ShelterProfile = ({ shelterId }) => {
+const ShelterProfile = ({ shelterId, animalId }) => {
   const [shelter, setShelter] = useState(null);
   const [selectedAnimal, setSelectedAnimal] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -43,6 +43,15 @@ const ShelterProfile = ({ shelterId }) => {
       fetchShelterData();
     }
   }, [shelterId, userContext]);
+
+  useEffect(() => {
+    if (animalId) {
+      const animal = shelter?.animals.find((animal) => animal._id === animalId);
+      if (animal) {
+        handleAnimalClick(animal);
+      }
+    }
+  }, [animalId, shelter?.animals]);
 
   const handleEdit = () => {
     alert('Edit button clicked!');

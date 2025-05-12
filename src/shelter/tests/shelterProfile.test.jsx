@@ -82,11 +82,6 @@ describe('ShelterProfile Component', () => {
 
       return Promise.reject(new Error('Unexpected URL'));
     });
-    render(
-      <UserContext.Provider value={mockUserContext}>
-        <ShelterProfile shelterId={1} />
-      </UserContext.Provider>
-    );
   });
 
   afterEach(() => {
@@ -94,6 +89,12 @@ describe('ShelterProfile Component', () => {
   });
 
   it('renders the shelter profile with animals', async () => {
+    render(
+      <UserContext.Provider value={mockUserContext}>
+        <ShelterProfile shelterId={1} animalId={null} />
+      </UserContext.Provider>
+    );
+
     const desktopName = await screen.findByTestId('desktop-shelter-name');
     expect(desktopName).toHaveTextContent('Happy Paws Shelter');
 
@@ -106,6 +107,12 @@ describe('ShelterProfile Component', () => {
   });
 
   it('opens the animal modal when an animal card is clicked', async () => {
+    render(
+      <UserContext.Provider value={mockUserContext}>
+        <ShelterProfile shelterId={1} animalId={null} />
+      </UserContext.Provider>
+    );
+
     const buddyElement = await screen.findByText('Buddy');
     await userEvent.click(buddyElement);
 
@@ -116,6 +123,11 @@ describe('ShelterProfile Component', () => {
   });
 
   it('closes the animal modal when the close button is clicked', async () => {
+    render(
+      <UserContext.Provider value={mockUserContext}>
+        <ShelterProfile shelterId={1} animalId={null} />
+      </UserContext.Provider>
+    );
     const buddyElement = await screen.findByText('Buddy');
     await userEvent.click(buddyElement);
 
@@ -133,6 +145,11 @@ describe('ShelterProfile Component', () => {
   });
 
   it('displays the correct animal details in the modal', async () => {
+    render(
+      <UserContext.Provider value={mockUserContext}>
+        <ShelterProfile shelterId={1} animalId={null} />
+      </UserContext.Provider>
+    );
     const buddyElements = await screen.findAllByText('Buddy');
     const buddyCard = buddyElements[0];
     await userEvent.click(buddyCard);
@@ -145,6 +162,11 @@ describe('ShelterProfile Component', () => {
   });
 
   it('displays shelter information in InfoCard on desktop', async () => {
+    render(
+      <UserContext.Provider value={mockUserContext}>
+        <ShelterProfile shelterId={1} animalId={null} />
+      </UserContext.Provider>
+    );
     const editButton = await screen.findByTestId('infoCard-edit-button');
     const infoCard = editButton.closest('div[class*="flex flex-col"]');
     expect(infoCard).toBeInTheDocument();
@@ -155,6 +177,11 @@ describe('ShelterProfile Component', () => {
   });
 
   it('calls onEdit when Edit Info button is clicked in InfoCard', async () => {
+    render(
+      <UserContext.Provider value={mockUserContext}>
+        <ShelterProfile shelterId={1} animalId={null} />
+      </UserContext.Provider>
+    );
     window.alert = jest.fn();
     const editButton = await screen.findByTestId('infoCard-edit-button');
     await userEvent.click(editButton);
@@ -162,6 +189,11 @@ describe('ShelterProfile Component', () => {
   });
 
   it('toggles MobileInfoCard visibility when menu button is clicked', async () => {
+    render(
+      <UserContext.Provider value={mockUserContext}>
+        <ShelterProfile shelterId={1} animalId={null} />
+      </UserContext.Provider>
+    );
     const closeButton = await screen.findByTestId('close-button');
 
     const mobileCardContainer = closeButton.closest(
@@ -187,6 +219,11 @@ describe('ShelterProfile Component', () => {
   });
 
   it('displays shelter information in MobileInfoCard', async () => {
+    render(
+      <UserContext.Provider value={mockUserContext}>
+        <ShelterProfile shelterId={1} animalId={null} />
+      </UserContext.Provider>
+    );
     const closeButton = await screen.findByTestId('close-button');
 
     const mobileCard = closeButton.closest('div[class*="fixed flex"]');
@@ -198,6 +235,11 @@ describe('ShelterProfile Component', () => {
   });
 
   it('calls onEdit when Edit Info button is clicked in MobileInfoCard', async () => {
+    render(
+      <UserContext.Provider value={mockUserContext}>
+        <ShelterProfile shelterId={1} animalId={null} />
+      </UserContext.Provider>
+    );
     window.alert = jest.fn();
     const editButtons = await screen.findAllByText('Edit Info');
     await userEvent.click(editButtons[0]);
@@ -205,6 +247,11 @@ describe('ShelterProfile Component', () => {
   });
 
   it('shows backdrop blur when MobileInfoCard is visible', async () => {
+    render(
+      <UserContext.Provider value={mockUserContext}>
+        <ShelterProfile shelterId={1} animalId={null} />
+      </UserContext.Provider>
+    );
     const backdrop = await screen.findByTestId('mobile-backdrop');
     expect(backdrop).not.toHaveClass('backdrop-blur-md');
 
@@ -224,6 +271,11 @@ describe('ShelterProfile Component', () => {
   });
 
   it('calls addToFavourite and updates userContext on success', async () => {
+    render(
+      <UserContext.Provider value={mockUserContext}>
+        <ShelterProfile shelterId={1} animalId={null} />
+      </UserContext.Provider>
+    );
     const animalCard = await screen.findByTestId('animal-card');
     await userEvent.click(animalCard);
 
@@ -238,5 +290,66 @@ describe('ShelterProfile Component', () => {
         favourites: ['123'],
       })
     );
+  });
+
+  it('opens animal modal when animalId is provided', async () => {
+    const mockHandleAnimalClick = jest.fn();
+    render(
+      <UserContext.Provider value={mockUserContext}>
+        <ShelterProfile
+          shelterId="shelter123"
+          animalId="animal1"
+          handleAnimalClick={mockHandleAnimalClick}
+        />
+      </UserContext.Provider>
+    );
+
+    const backdrop = await screen.findByTestId('mobile-backdrop');
+    expect(backdrop).toBeInTheDocument();
+    waitFor(() => {
+      expect(backdrop).toHaveClass('opacity-100');
+    });
+
+    expect(await screen.findByTestId('animal-card')).toBeInTheDocument();
+  });
+
+  it('does not call handleAnimalClick when animalId does not match any animal', () => {
+    const mockHandleAnimalClick = jest.fn();
+
+    render(
+      <UserContext.Provider value={mockUserContext}>
+        <ShelterProfile shelterId={1} animalId={2} />
+        handleAnimalClick={mockHandleAnimalClick}
+      </UserContext.Provider>
+    );
+
+    // Assert that handleAnimalClick is not called
+    expect(mockHandleAnimalClick).not.toHaveBeenCalled();
+  });
+
+  it('does not call handleAnimalClick when animalId is null', () => {
+    const mockHandleAnimalClick = jest.fn();
+
+    const mockShelter = {
+      animals: [
+        { _id: '1', name: 'Animal 1' },
+        { _id: '2', name: 'Animal 2' },
+      ],
+    };
+
+    const mockAnimalId = null; // animalId is null
+
+    // Mock the ShelterProfile component with props
+    render(
+      <ShelterProfile
+        shelterId="mockShelterId"
+        animalId={mockAnimalId}
+        shelter={mockShelter}
+        handleAnimalClick={mockHandleAnimalClick}
+      />
+    );
+
+    // Assert that handleAnimalClick is not called
+    expect(mockHandleAnimalClick).not.toHaveBeenCalled();
   });
 });

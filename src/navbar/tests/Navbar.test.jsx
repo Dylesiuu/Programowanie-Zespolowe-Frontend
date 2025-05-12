@@ -82,7 +82,7 @@ describe('Navbar Component', () => {
     const homeButton = screen.getByRole('button', { name: /Schronisko/i });
     await userEvent.click(homeButton);
     expect(mockPush).toHaveBeenCalledWith(
-      `/shelterProfilePage?shelterId=${mockUserContextValue.user.shelterId}`
+      `/shelterProfilePage?shelterId=${mockUserContextValue.user.shelterId}&animal=null`
     );
   });
 

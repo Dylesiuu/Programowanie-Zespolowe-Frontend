@@ -94,7 +94,7 @@ const Navbar = () => {
                 className="flex cursor-pointer items-center space-x-1"
                 onClick={() =>
                   router.push(
-                    `/shelterProfilePage?shelterId=${userContext.user.shelterId}`
+                    `/shelterProfilePage?shelterId=${userContext.user.shelterId}&animal=null`
                   )
                 }
               >

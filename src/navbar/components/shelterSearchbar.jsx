@@ -122,7 +122,7 @@ const ShelterSearchBar = ({ userContext }) => {
                       className="px-4 py-2 bg-[#CE8455] hover:bg-[#AA673C] cursor-pointer text-white"
                       onClick={() => {
                         router.push(
-                          `/shelterProfilePage?shelterId=${result.id}`
+                          `/shelterProfilePage?shelterId=${result.id}&animal=null`
                         );
                         setIsDropdownOpen(false);
                       }}
