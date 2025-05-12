@@ -157,6 +157,7 @@ const ShelterProfile = ({ shelterId, animalId }) => {
           shelter={shelter}
           onEdit={handleEdit}
           toggleCard={toggleMobileCard}
+          userContext={userContext}
         />
       </div>
 

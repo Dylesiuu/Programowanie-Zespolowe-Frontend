@@ -4,7 +4,7 @@ const InfoCard = ({ shelter, onEdit, userContext }) => {
   return (
     <div className="flex flex-col w-full h-full rounded-3xl shadow-2xl p-4 bg-[#fefaf7]/80 max-w-md md:max-w-lg lg:max-w-xl mx-auto space-y-6 justify-between items-center">
       {/* Shelter info */}
-      <div className="flex flex-col w-full p-6 bg-white rounded-3xl items-center justify-around">
+      <div className="flex flex-col w-full p-6 bg-white shadow-2xl rounded-3xl items-center justify-around">
         <h2
           data-testid="desktop-shelter-name"
           className="text-lg md:text-xl lg:text-2xl font-bold text-gray-800 mb-6 md:mb-8"
@@ -13,13 +13,27 @@ const InfoCard = ({ shelter, onEdit, userContext }) => {
         </h2>
         <div className="flex flex-col w-full space-y-4 px-2 md:px-4">
           <p className="text-sm md:text-base lg:text-lg text-gray-600">
-            <strong>Location:</strong> {shelter.location}
+            <strong>Adres:</strong> {shelter.location}
           </p>
           <p className="text-sm md:text-base lg:text-lg text-gray-600">
-            <strong>Phone:</strong> {shelter.phone}
+            <strong>Telefon:</strong> {shelter.phone}
           </p>
           <p className="text-sm md:text-base lg:text-lg text-gray-600">
             <strong>Email:</strong> {shelter.email}
+          </p>
+          <p className="text-sm md:text-base lg:text-lg text-gray-600">
+            <strong>Strona:</strong>{' '}
+            <a
+              href={shelter.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#d46622] hover:underline"
+            >
+              {shelter.link}
+            </a>
+          </p>
+          <p className="text-sm md:text-base lg:text-lg text-gray-600">
+            <strong>O schronisku:</strong> {shelter.shortNote}
           </p>
         </div>
       </div>
