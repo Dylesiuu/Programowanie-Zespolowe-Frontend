@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { useEffect } from 'react';
-import { FaHeart, FaTimes } from 'react-icons/fa';
+import { FaHeart, FaTimes, FaRegTrashAlt } from 'react-icons/fa';
 import { BiLeftArrow, BiRightArrow } from 'react-icons/bi';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -12,6 +12,7 @@ const AnimalCard = ({
   userContext,
   addToFavourite,
   removeFromFavourite,
+  setRefreshShelter,
 }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isDescriptionVisible, setIsDescriptionVisible] = useState(false);
@@ -19,6 +20,7 @@ const AnimalCard = ({
   const [animal, setAnimal] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isImageModalVisible, setIsImageModalVisible] = useState(false);
+  const [isWarningVisible, setIsWarningVisible] = useState(false);
 
   const fetchAnimalData = async (id) => {
     try {
@@ -42,6 +44,27 @@ const AnimalCard = ({
       console.error('Error fetching animal data:', error.message);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const removeAnimal = async (id) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/animals/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userContext.token}`,
+        },
+      });
+      if (!response.ok) {
+        console.error(`HTTP error! Status: ${response.status}`);
+        return;
+      }
+      const data = await response.json();
+      console.warn(data.message);
+      setRefreshShelter((prev) => !prev);
+    } catch (error) {
+      console.error('Error deleting animal:', error.message);
     }
   };
 
@@ -88,6 +111,14 @@ const AnimalCard = ({
     setIsImageModalVisible(false);
   };
 
+  const showWarning = () => {
+    setIsWarningVisible(true);
+  };
+
+  const hideWarning = () => {
+    setIsWarningVisible(false);
+  };
+
   if (isLoading) {
     return (
       <div className="flex flex-col w-full h-full p-6 rounded-3xl shadow-2xl bg-white items-center justify-center">
@@ -106,6 +137,44 @@ const AnimalCard = ({
 
   return (
     <div className="flex flex-col w-full h-full p-6 rounded-3xl shadow-2xl bg-white">
+      {/* Trash Button */}
+      <div className="absolute top-2 left-2">
+        <button
+          className="flex w-7 h-7 sm:w-9 sm:h-9 lg:w-11 lg:h-11 bg-[#FF0000] text-white rounded-full items-center justify-center text-2xl transition-all duration-300 ease-in-out hover:bg-[#CC0000] hover:scale-110 cursor-pointer"
+          onClick={showWarning}
+          data-testid="delete-animal-button"
+        >
+          <FaRegTrashAlt className="w-[60%] h-[60%]" />
+        </button>
+      </div>
+      {/* Warning Window */}
+      {isWarningVisible && (
+        <div className="fixed inset-0 flex items-center justify-center backdrop-blur-sm z-50">
+          <div className="bg-white p-6 rounded-3xl shadow-2xl w-[90%] max-w-md">
+            <p className="text-gray-800 text-lg mb-4">
+              Czy na pewno chcesz usunąć to zwierzę?
+            </p>
+            <div className="flex justify-end gap-4">
+              <button
+                className="px-4 py-2 bg-[#FF0000] text-white rounded-lg hover:bg-[#CC0000] transition-all cursor-pointer"
+                onClick={() => {
+                  removeAnimal(animalId);
+                  hideWarning();
+                }}
+              >
+                Tak
+              </button>
+              <button
+                className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 transition-all cursor-pointer"
+                onClick={hideWarning}
+              >
+                Nie
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Animal Image Carousel */}
       <div className="w-full h-[40%] relative pb-4">
         <Image
@@ -292,7 +361,7 @@ const AnimalCard = ({
         >
           <div className="relative w-[90%] max-w-4xl bg-white p-6 rounded-3xl shadow-2xl">
             <button
-              className="absolute top-2 right-2 bg-[#CE8455] hover:bg-[#AA673C] text-[#fefaf7] w-8 h-8 flex items-center justify-center rounded-full shadow-md cursor-pointer"
+              className="absolute top-2 right-2 w-8 h-8 bg-[#CE8455] hover:bg-[#AA673C] text-[#fefaf7] flex items-center justify-center rounded-full shadow-md cursor-pointer"
               onClick={hideImageModal}
             >
               ✕
