@@ -14,6 +14,7 @@ const ShelterProfile = ({ shelterId, animalId }) => {
   const [showModal, setShowModal] = useState(false);
   const [isMobileCardVisible, setIsMobileCardVisible] = useState(false);
   const userContext = useContext(UserContext);
+  const [refreshShelter, setRefreshShelter] = useState(false);
 
   useEffect(() => {
     const fetchShelterData = async () => {
@@ -41,8 +42,9 @@ const ShelterProfile = ({ shelterId, animalId }) => {
 
     if (shelterId) {
       fetchShelterData();
+      closeAnimalCard();
     }
-  }, [shelterId, userContext]);
+  }, [shelterId, userContext, refreshShelter]);
 
   useEffect(() => {
     if (animalId) {
@@ -204,6 +206,7 @@ const ShelterProfile = ({ shelterId, animalId }) => {
               userContext={userContext}
               addToFavourite={addToFavourite}
               removeFromFavourite={removeFromFavourite}
+              setRefreshShelter={setRefreshShelter}
             />
           </div>
         </div>

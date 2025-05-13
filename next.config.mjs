@@ -21,6 +21,16 @@ const nextConfig = {
       },
       {
         protocol: 'https',
+        hostname: 'schronisko-torun.oinfo.pl', // HTTPS for this hostname
+        pathname: '/**',
+      },
+      {
+        protocol: 'http', // Add HTTP for this hostname
+        hostname: 'schronisko-torun.oinfo.pl',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
         hostname: 'pettownsendvet.com',
         pathname: '/wp-content/uploads/**',
       },
