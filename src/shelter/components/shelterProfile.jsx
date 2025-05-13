@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import InfoCard from './infoCard';
 import AnimalsField from './animalsField';
 import AnimalCard from './animalCard';
 import MobileInfoCard from './mobileInfoCard';
 import { UserContext } from '@/context/userContext';
-import { useContext, useEffect } from 'react';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -178,6 +177,8 @@ const ShelterProfile = ({ shelterId, animalId }) => {
           <AnimalsField
             animals={shelter.animals}
             onAnimalClick={handleAnimalClick}
+            userContext={userContext}
+            shelterId={shelter._id}
           />
         </div>
       </div>

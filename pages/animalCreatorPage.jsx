@@ -17,6 +17,7 @@ export async function getStaticProps() {
 const AnimalCreatorPage = () => {
   const router = useRouter();
   const userContext = useContext(UserContext);
+  const { animalId } = router.query;
 
   useEffect(() => {
     if (userContext.isLoggedIn()) {
@@ -28,7 +29,7 @@ const AnimalCreatorPage = () => {
 
   return (
     <div className="min-h-screen bg-[#FFF0E9] bg-[url('/Union.svg')] bg-repeat bg-[length:150rem_100rem] bg-fixed">
-      <AnimalCreator />
+      <AnimalCreator givenAnimalId={animalId} />
     </div>
   );
 };

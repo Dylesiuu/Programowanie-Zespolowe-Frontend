@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext } from 'react';
+import React, { useState, useRef, useContext, useEffect } from 'react';
 import AnimalStartScreen from './AnimalStartScreen';
 import AnimalCompletionScreen from './AnimalCompletionScreen';
 import animalQuestions from '../data/animalQuestions';
@@ -11,7 +11,7 @@ import { UserContext } from '@/context/userContext';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-const AnimalCreator = () => {
+const AnimalCreator = (givenAnimalId) => {
   const router = useRouter();
   const fileInputRef = useRef();
   const userContext = useContext(UserContext);
@@ -210,13 +210,43 @@ const AnimalCreator = () => {
     }
   };
 
+  const fetchAnimalData = async (id) => {
+    try {
+      setIsLoading(true);
+      const response = await fetch(`${API_BASE_URL}/animals/${id}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userContext.token}`,
+        },
+      });
+
+      if (!response.ok) {
+        console.error(`HTTP error! Status: ${response.status}`);
+        return;
+      }
+
+      const data = await response.json();
+      setAnimalData(data);
+    } catch (error) {
+      console.error('Error fetching animal data:', error.message);
+    }
+  };
+
+  useEffect(() => {
+    if (givenAnimalId) {
+      fetchAnimalData(givenAnimalId);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [givenAnimalId]);
+
   if (currentStep === 'start') {
     return (
       <AnimalStartScreen
         onStart={handleStart}
         onSkip={() =>
           router.push(
-            '/shelterProfilePage?shelterId=${userContext.user.shelterId}&animal=null'
+            `/shelterProfilePage?shelterId=${userContext.user.shelterId}&animal=null`
           )
         }
       />
