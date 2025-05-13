@@ -3,6 +3,11 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import AnimalsField from '../components/animalsField';
 import userEvent from '@testing-library/user-event';
+import { useRouter } from 'next/router';
+
+jest.mock('next/router', () => ({
+  useRouter: jest.fn(),
+}));
 
 describe('AnimalsCard Component', () => {
   const mockAnimals = [
@@ -23,10 +28,39 @@ describe('AnimalsCard Component', () => {
     },
   ];
   const mockOnAnimalClick = jest.fn();
+  const setUserMock = jest.fn();
+
+  const mockUserContext = {
+    token: 'mockToken',
+    user: {
+      shelterId: '1',
+      email: 'test@example.com',
+      favourites: [],
+    },
+    isLoggedIn: jest.fn(),
+    setUser: setUserMock,
+  };
+
+  const mockShelterId = '1';
+  const mockPush = jest.fn();
+  beforeEach(() => {
+    useRouter.mockReturnValue({
+      push: mockPush,
+    });
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
 
   it('renders the AnimalsCard component with a list of animals', () => {
     render(
-      <AnimalsField animals={mockAnimals} onAnimalClick={mockOnAnimalClick} />
+      <AnimalsField
+        animals={mockAnimals}
+        onAnimalClick={mockOnAnimalClick}
+        userContext={mockUserContext}
+        shelterId={mockShelterId}
+      />
     );
 
     mockAnimals.forEach((animal) => {
@@ -45,7 +79,12 @@ describe('AnimalsCard Component', () => {
 
   it('calls the onAnimalClick function when an animal card is clicked', () => {
     render(
-      <AnimalsField animals={mockAnimals} onAnimalClick={mockOnAnimalClick} />
+      <AnimalsField
+        animals={mockAnimals}
+        onAnimalClick={mockOnAnimalClick}
+        userContext={mockUserContext}
+        shelterId={mockShelterId}
+      />
     );
 
     fireEvent.click(screen.getByText('Bella'));
@@ -56,7 +95,12 @@ describe('AnimalsCard Component', () => {
 
   it('applies hover effects when an animal card is hovered', async () => {
     render(
-      <AnimalsField animals={mockAnimals} onAnimalClick={mockOnAnimalClick} />
+      <AnimalsField
+        animals={mockAnimals}
+        onAnimalClick={mockOnAnimalClick}
+        userContext={mockUserContext}
+        shelterId={mockShelterId}
+      />
     );
 
     const animalElement = await screen.findByText('Bella');
@@ -68,7 +112,14 @@ describe('AnimalsCard Component', () => {
   });
 
   it('renders an empty state when no animals are provided', async () => {
-    render(<AnimalsField animals={[]} onAnimalClick={mockOnAnimalClick} />);
+    render(
+      <AnimalsField
+        animals={[]}
+        onAnimalClick={mockOnAnimalClick}
+        userContext={mockUserContext}
+        shelterId={mockShelterId}
+      />
+    );
 
     expect(screen.queryByText('Bella')).not.toBeInTheDocument();
     expect(screen.queryByText('Max')).not.toBeInTheDocument();
@@ -77,5 +128,48 @@ describe('AnimalsCard Component', () => {
     expect(
       await screen.findByText('Brak zwierzaków w schronisku.')
     ).toBeInTheDocument();
+  });
+
+  it('renders the "Dodaj zwierzę" button only when the shelterId matches the user\'s shelterId', () => {
+    const differentShelterId = '2';
+
+    const { rerender } = render(
+      <AnimalsField
+        animals={mockAnimals}
+        onAnimalClick={mockOnAnimalClick}
+        userContext={mockUserContext}
+        shelterId={mockShelterId}
+      />
+    );
+
+    expect(screen.getByTestId('add-animal-button')).toBeInTheDocument();
+
+    rerender(
+      <AnimalsField
+        animals={mockAnimals}
+        onAnimalClick={mockOnAnimalClick}
+        userContext={mockUserContext}
+        shelterId={differentShelterId}
+      />
+    );
+
+    expect(screen.queryByTestId('add-animal-button')).not.toBeInTheDocument();
+  });
+
+  it('navigates to the animal creator page when the "Dodaj zwierzę" button is clicked', async () => {
+    render(
+      <AnimalsField
+        animals={mockAnimals}
+        onAnimalClick={mockOnAnimalClick}
+        userContext={mockUserContext}
+        shelterId={mockShelterId}
+      />
+    );
+
+    const addAnimalButton = screen.getByTestId('add-animal-button');
+
+    await userEvent.click(addAnimalButton);
+
+    expect(mockPush).toHaveBeenCalledWith('/animalCreatorPage?animalId=null');
   });
 });

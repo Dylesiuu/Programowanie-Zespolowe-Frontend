@@ -1,8 +1,10 @@
 import React from 'react';
 import Image from 'next/image';
 import style from '../scrollbar.module.css';
+import { useRouter } from 'next/router';
 
-const AnimalsField = ({ animals, onAnimalClick }) => {
+const AnimalsField = ({ animals, onAnimalClick, userContext, shelterId }) => {
+  const router = useRouter();
   return (
     <div className="flex flex-col w-full h-full px-2 rounded-3xl shadow-2xl bg-[#fefaf7]/80 justify-center items-center">
       <div
@@ -37,6 +39,24 @@ const AnimalsField = ({ animals, onAnimalClick }) => {
           </div>
         )}
       </div>
+      {/* Add Animal Button */}
+      {userContext.user?.shelterId &&
+        userContext.user.shelterId === shelterId && (
+          <div className="flex justify-center items-center w-full h-[10%]">
+            <button
+              className="px-4 py-2 text-sm md:text-lg lg:text-xl
+                 bg-[#CE8455] hover:bg-[#AA673C] text-[#fefaf7] rounded-full
+                 transition-all duration-300 transform hover:scale-105 shadow-lg 
+                 w-full max-w-[12.5rem] md:max-w-[15rem] lg:max-w-[17.5rem] cursor-pointer"
+              onClick={() => {
+                router.push(`/animalCreatorPage?animalId=null`);
+              }}
+              data-testid="add-animal-button"
+            >
+              Dodaj zwierzę
+            </button>
+          </div>
+        )}
     </div>
   );
 };

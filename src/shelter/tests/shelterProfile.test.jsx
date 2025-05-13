@@ -1,9 +1,13 @@
 import React from 'react';
-import { findByTestId, render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import ShelterProfile from '../components/shelterProfile';
 import { UserContext } from '@/context/userContext';
+
+jest.mock('next/router', () => ({
+  useRouter: jest.fn(),
+}));
 
 jest.mock('../components/animalCard', () => {
   return function MockAnimalCard({
@@ -78,8 +82,6 @@ jest.mock('../components/animalCard', () => {
     );
   };
 });
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 describe('ShelterProfile Component', () => {
   const mockShelter = {

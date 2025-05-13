@@ -6,6 +6,12 @@
   font-style: normal;
 }
 
+@layer base {
+  button {
+    @apply cursor-pointer;
+  }
+}
+
 .page {
   font-family: 'MyFont', sans-serif;
   /* display: flex; */
