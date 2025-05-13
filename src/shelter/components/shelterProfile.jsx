@@ -203,7 +203,6 @@ const ShelterProfile = ({ shelterId, animalId }) => {
             </button>
             <AnimalCard
               animalId={selectedAnimal._id}
-              onEdit={() => alert(`Edytujesz zwierzę: ${selectedAnimal.name}`)}
               userContext={userContext}
               addToFavourite={addToFavourite}
               removeFromFavourite={removeFromFavourite}

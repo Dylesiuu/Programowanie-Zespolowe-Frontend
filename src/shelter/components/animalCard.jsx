@@ -3,12 +3,12 @@ import Image from 'next/image';
 import { useEffect } from 'react';
 import { FaHeart, FaTimes, FaRegTrashAlt } from 'react-icons/fa';
 import { BiLeftArrow, BiRightArrow } from 'react-icons/bi';
+import { useRouter } from 'next/router';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 const AnimalCard = ({
   animalId,
-  onEdit,
   userContext,
   addToFavourite,
   removeFromFavourite,
@@ -21,6 +21,7 @@ const AnimalCard = ({
   const [isLoading, setIsLoading] = useState(true);
   const [isImageModalVisible, setIsImageModalVisible] = useState(false);
   const [isWarningVisible, setIsWarningVisible] = useState(false);
+  const router = useRouter();
 
   const fetchAnimalData = async (id) => {
     try {
@@ -293,7 +294,9 @@ const AnimalCard = ({
                    bg-[#CE8455] hover:bg-[#AA673C] text-[#fefaf7] rounded-full
                    transition-all duration-300 transform hover:scale-105 shadow-lg
                    w-full"
-              onClick={onEdit}
+              onClick={() => {
+                router.push(`/animalCreatorPage?animalId=${animal._id}`);
+              }}
             >
               Edytuj
             </button>

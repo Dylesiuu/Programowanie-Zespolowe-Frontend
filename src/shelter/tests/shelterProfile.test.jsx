@@ -12,7 +12,6 @@ jest.mock('next/router', () => ({
 jest.mock('../components/animalCard', () => {
   return function MockAnimalCard({
     animalId,
-    onEdit,
     userContext,
     addToFavourite,
     removeFromFavourite,
@@ -56,7 +55,6 @@ jest.mock('../components/animalCard', () => {
         </div>
         {userContext.user?.shelterId === mockAnimal.shelter && (
           <div>
-            <button onClick={onEdit}>Edytuj</button>
             <button
               data-testid="delete-animal-button"
               onClick={() => {
