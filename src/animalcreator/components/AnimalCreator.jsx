@@ -11,7 +11,7 @@ import { UserContext } from '@/context/userContext';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-const AnimalCreator = (givenAnimalId) => {
+const AnimalCreator = ({ givenAnimalId }) => {
   const router = useRouter();
   const fileInputRef = useRef();
   const userContext = useContext(UserContext);
@@ -50,7 +50,10 @@ const AnimalCreator = (givenAnimalId) => {
   });
 
   const handleStart = (animalType) => {
-    setAnimalData((prev) => ({ ...prev, type: animalType }));
+    setAnimalData((prev) => ({
+      ...prev,
+      type: animalType == 'pies' ? true : false,
+    }));
     setCurrentStep('basicInfo');
   };
 
@@ -178,16 +181,20 @@ const AnimalCreator = (givenAnimalId) => {
 
   const handleSubmit = async () => {
     try {
-      const formData = new FormData();
-      formData.append('type', animalData.type);
-      formData.append('name', animalData.name);
-      formData.append('birthDate', animalData.birthDate);
-      formData.append('gender', animalData.gender);
-      formData.append('description', animalData.description);
-      animalData.tags.forEach((tag) => formData.append('tags[]', tag));
-      animalData.photos.forEach((photo) =>
-        formData.append('photos', photo.file)
-      );
+      const formData = {
+        type: animalData.type,
+        name: animalData.name,
+        birthYear: new Date(animalData.birthDate).getFullYear(),
+        birthMonth: new Date(animalData.birthDate).getMonth() + 1,
+        gender: animalData.gender,
+        description: animalData.description,
+        traits: animalData.tags,
+        images: animalData.photos.map((photo) => photo.file),
+      };
+
+      if (givenAnimalId) {
+        //Tu będzie fetch na edytowanie zwierząt
+      }
 
       const response = await fetch(`${API_BASE_URL}/animals`, {
         method: 'POST',
@@ -212,7 +219,7 @@ const AnimalCreator = (givenAnimalId) => {
 
   const fetchAnimalData = async (id) => {
     try {
-      setIsLoading(true);
+      setCurrentStep('basicInfo');
       const response = await fetch(`${API_BASE_URL}/animals/${id}`, {
         method: 'GET',
         headers: {
@@ -227,7 +234,16 @@ const AnimalCreator = (givenAnimalId) => {
       }
 
       const data = await response.json();
-      setAnimalData(data);
+
+      setAnimalData({
+        type: data.type,
+        name: data.name,
+        birthDate: `${data.birthYear}-${String(data.birthMonth).padStart(2, '0')}-01`,
+        gender: data.gender,
+        tags: data.traits,
+        description: data.description,
+        photos: data.images,
+      });
     } catch (error) {
       console.error('Error fetching animal data:', error.message);
     }

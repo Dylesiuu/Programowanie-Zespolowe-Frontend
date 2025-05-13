@@ -1,5 +1,5 @@
-import React from 'react';
-import { render, screen } from '@testing-library/react';
+import React, { act } from 'react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import AnimalCreator from '../components/AnimalCreator';
 import { useRouter } from 'next/router';
@@ -53,7 +53,7 @@ describe('AnimalCreator', () => {
     window.alert = jest.fn();
     render(
       <UserContext.Provider value={mockUserContext}>
-        <AnimalCreator />
+        <AnimalCreator givenAnimalId={null} />
       </UserContext.Provider>
     );
   });
@@ -155,5 +155,47 @@ describe('AnimalCreator', () => {
 
     await userEvent.click(optionA);
     expect(optionA).not.toHaveClass('bg-[#CE8455]');
+  });
+
+  it('displays animal data when givenAnimalId is provided', async () => {
+    const mockAnimalData = {
+      type: true,
+      name: 'Testowy',
+      birthYear: 2020,
+      birthMonth: 1,
+      gender: 'Samiec',
+      traits: [1, 2],
+      description: 'Testowy opis',
+      images: [
+        { file: 'image1.jpg', preview: 'preview1.jpg' },
+        { file: 'image2.jpg', preview: 'preview2.jpg' },
+      ],
+    };
+
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve(mockAnimalData),
+      })
+    );
+
+    render(
+      <UserContext.Provider value={mockUserContext}>
+        <AnimalCreator givenAnimalId="123" />
+      </UserContext.Provider>
+    );
+
+    expect(await screen.findByDisplayValue('Testowy')).toBeInTheDocument();
+    expect(await screen.findByDisplayValue('2020-01-01')).toBeInTheDocument();
+
+    expect(global.fetch).toHaveBeenCalledWith(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/animals/123`,
+      expect.objectContaining({
+        method: 'GET',
+        headers: expect.objectContaining({
+          Authorization: `Bearer ${mockUserContext.token}`,
+        }),
+      })
+    );
   });
 });

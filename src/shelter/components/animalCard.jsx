@@ -295,7 +295,7 @@ const AnimalCard = ({
                    transition-all duration-300 transform hover:scale-105 shadow-lg
                    w-full"
               onClick={() => {
-                router.push(`/animalCreatorPage?animalId=${animal._id}`);
+                router.push(`/animalCreatorPage?animalId=${animalId}`);
               }}
             >
               Edytuj
