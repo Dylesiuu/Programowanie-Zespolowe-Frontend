@@ -12,6 +12,7 @@ jest.mock('../components/animalCard', () => {
     userContext,
     addToFavourite,
     removeFromFavourite,
+    setRefreshShelter,
   }) {
     const mockAnimal = {
       _id: animalId,
@@ -52,6 +53,14 @@ jest.mock('../components/animalCard', () => {
         {userContext.user?.shelterId === mockAnimal.shelter && (
           <div>
             <button onClick={onEdit}>Edytuj</button>
+            <button
+              data-testid="delete-animal-button"
+              onClick={() => {
+                setRefreshShelter && setRefreshShelter((prev) => !prev);
+              }}
+            >
+              Delete Animal
+            </button>
             <button
               onClick={() =>
                 alert(
@@ -441,5 +450,29 @@ describe('ShelterProfile Component', () => {
     );
 
     expect(mockHandleAnimalClick).not.toHaveBeenCalled();
+  });
+
+  describe('setRefreshShelter functionality', () => {
+    it('calls setRefreshShelter when animal is deleted', async () => {
+      const setRefreshShelterMock = jest.fn();
+
+      render(
+        <UserContext.Provider value={mockUserContext}>
+          <ShelterProfile shelterId={1} animalId={null} />
+        </UserContext.Provider>
+      );
+
+      const animalCard = await screen.findByTestId('animal-card');
+      await userEvent.click(animalCard);
+
+      const deleteButton = await screen.findByTestId('delete-animal-button');
+      await userEvent.click(deleteButton);
+
+      await waitFor(() => {
+        expect(setRefreshShelterMock).not.toHaveBeenCalled();
+
+        expect(fetch).toHaveBeenCalledTimes(2); // Initial fetch + refetch
+      });
+    });
   });
 });

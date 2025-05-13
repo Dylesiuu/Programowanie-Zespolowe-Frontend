@@ -29,6 +29,7 @@ describe('AnimalCard Component', () => {
   const mockOnEdit = jest.fn();
   const mockAddToFavourites = jest.fn();
   const mockRemoveFromFavourites = jest.fn();
+  const mockSetRefreshShelter = jest.fn();
 
   beforeEach(async () => {
     global.fetch = jest.fn(() =>
@@ -46,6 +47,7 @@ describe('AnimalCard Component', () => {
           userContext={mockUserContext}
           addToFavourite={mockAddToFavourites}
           removeFromFavourite={mockRemoveFromFavourites}
+          setRefreshShelter={mockSetRefreshShelter}
         />
       );
     });
@@ -229,5 +231,38 @@ describe('AnimalCard Component', () => {
 
     const resetImageCounter = await screen.findByText('1/2');
     expect(resetImageCounter).toBeInTheDocument();
+  });
+
+  it('shows the warning modal when the trash button is clicked', async () => {
+    // Find and click the trash button
+    const trashButton = await screen.findByTestId('delete-animal-button');
+    await userEvent.click(trashButton);
+
+    // Verify that the warning modal is displayed
+    expect(
+      await screen.findByText('Czy na pewno chcesz usunąć to zwierzę?')
+    ).toBeInTheDocument();
+  });
+
+  it('calls the removeAnimal function when "Tak" is clicked in the warning modal', async () => {
+    const trashButton = await screen.findByTestId('delete-animal-button');
+    await userEvent.click(trashButton);
+
+    const confirmButton = await screen.findByText('Tak');
+    await userEvent.click(confirmButton);
+
+    expect(mockSetRefreshShelter).toHaveBeenCalledTimes(1);
+  });
+
+  it('hides the warning modal when "Nie" is clicked', async () => {
+    const trashButton = await screen.findByTestId('delete-animal-button');
+    await userEvent.click(trashButton);
+
+    const cancelButton = await screen.findByText('Nie');
+    await userEvent.click(cancelButton);
+
+    expect(
+      screen.queryByText('Czy na pewno chcesz usunąć to zwierzę?')
+    ).not.toBeInTheDocument();
   });
 });
