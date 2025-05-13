@@ -3,6 +3,11 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import AnimalCard from '../components/animalCard';
+import { useRouter } from 'next/router';
+
+jest.mock('next/router', () => ({
+  useRouter: jest.fn(),
+}));
 
 describe('AnimalCard Component', () => {
   const mockAnimal = {
@@ -26,12 +31,16 @@ describe('AnimalCard Component', () => {
     },
   };
 
-  const mockOnEdit = jest.fn();
   const mockAddToFavourites = jest.fn();
   const mockRemoveFromFavourites = jest.fn();
   const mockSetRefreshShelter = jest.fn();
+  const mockPush = jest.fn();
 
   beforeEach(async () => {
+    useRouter.mockReturnValue({
+      push: mockPush,
+    });
+
     global.fetch = jest.fn(() =>
       Promise.resolve({
         ok: true,
@@ -43,7 +52,6 @@ describe('AnimalCard Component', () => {
       render(
         <AnimalCard
           animalId={mockAnimal._id}
-          onEdit={mockOnEdit}
           userContext={mockUserContext}
           addToFavourite={mockAddToFavourites}
           removeFromFavourite={mockRemoveFromFavourites}
@@ -72,7 +80,9 @@ describe('AnimalCard Component', () => {
   it('calls the onEdit function when the "Edytuj" button is clicked', async () => {
     const editButton = await screen.findByText('Edytuj');
     await userEvent.click(editButton);
-    expect(mockOnEdit).toHaveBeenCalledTimes(1);
+    expect(mockPush).toHaveBeenCalledWith(
+      `/animalCreatorPage?animalId=${mockAnimal._id}`
+    );
   });
 
   it('shows the description modal when "Więcej..." is clicked', async () => {
@@ -150,7 +160,6 @@ describe('AnimalCard Component', () => {
       render(
         <AnimalCard
           animalId={mockAnimal._id}
-          onEdit={mockOnEdit}
           userContext={mockUserContextWithFavourites}
           addToFavourite={mockAddToFavourites}
           removeFromFavourite={mockRemoveFromFavourites}
@@ -190,7 +199,6 @@ describe('AnimalCard Component', () => {
       render(
         <AnimalCard
           animalId={mockAnimalAdopted._id}
-          onEdit={mockOnEdit}
           userContext={mockUserContext}
           addToFavourite={mockAddToFavourites}
           removeFromFavourite={mockRemoveFromFavourites}
@@ -234,11 +242,9 @@ describe('AnimalCard Component', () => {
   });
 
   it('shows the warning modal when the trash button is clicked', async () => {
-    // Find and click the trash button
     const trashButton = await screen.findByTestId('delete-animal-button');
     await userEvent.click(trashButton);
 
-    // Verify that the warning modal is displayed
     expect(
       await screen.findByText('Czy na pewno chcesz usunąć to zwierzę?')
     ).toBeInTheDocument();
