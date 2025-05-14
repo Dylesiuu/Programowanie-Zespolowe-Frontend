@@ -43,6 +43,7 @@ const ImageUploader = ({ photos, onUpload, onRemove }) => {
       </button>
 
       <input
+        data-testid="file-input"
         type="file"
         ref={fileInputRef}
         onChange={onUpload}
