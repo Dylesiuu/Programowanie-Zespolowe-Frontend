@@ -25,6 +25,7 @@ const ImageUploader = ({ photos, onUpload, onRemove }) => {
               className="w-24 h-24 object-cover rounded-lg"
             />
             <button
+            data-testid="remove-photo-button"
               onClick={() => onRemove(index)}
               className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center transform translate-x-1/2 -translate-y-1/2"
             >

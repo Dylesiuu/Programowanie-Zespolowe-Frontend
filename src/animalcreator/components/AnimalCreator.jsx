@@ -167,6 +167,13 @@ const AnimalCreator = ({ givenAnimalId }) => {
   };
 
   const removePhoto = async (index) => {
+    setAnimalData((prev) => {
+      const newPhotos = [...prev.photos];
+      const removedPhoto = newPhotos[index];
+      URL.revokeObjectURL(removedPhoto.preview);
+      newPhotos.splice(index, 1);
+      return { ...prev, photos: newPhotos };
+    });
     const photoToRemove = animalData.photos[index];
     if (photoToRemove && photoToRemove.publicId) {
       try {
@@ -179,14 +186,6 @@ const AnimalCreator = ({ givenAnimalId }) => {
             },
           }
         );
-
-        setAnimalData((prev) => {
-          const newPhotos = [...prev.photos];
-          const removedPhoto = newPhotos[index];
-          URL.revokeObjectURL(removedPhoto.preview);
-          newPhotos.splice(index, 1);
-          return { ...prev, photos: newPhotos };
-        });
 
         if (response.ok) {
           console.log('Photo removed successfully');
