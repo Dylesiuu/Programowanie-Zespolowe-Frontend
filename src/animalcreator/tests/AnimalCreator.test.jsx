@@ -205,27 +205,27 @@ describe('AnimalCreator', () => {
       type: 'image/png',
     });
 
-    await userEvent.click(screen.getByText('Dodaj psa'));
-    await userEvent.click(screen.getByText('Rozumiem'));
+    await userEvent.click(await screen.findByText('Dodaj psa'));
+    await userEvent.click(await screen.findByText('Rozumiem'));
 
     await userEvent.type(
-      screen.getByPlaceholderText('Wpisz imię zwierzęcia'),
+      await screen.findByPlaceholderText('Wpisz imię zwierzęcia'),
       'Testowy'
     );
 
-    const dateInput = screen.getByLabelText(
+    const dateInput = await screen.findByLabelText(
       'Szacowana data urodzenia zwierzęcia'
     );
     await userEvent.clear(dateInput);
     await userEvent.type(dateInput, '2020-01-01');
 
-    await userEvent.click(screen.getByText('Samiec'));
-    await userEvent.click(screen.getByText('Dalej'));
+    await userEvent.click(await screen.findByText('Samiec'));
+    await userEvent.click(await screen.findByText('Dalej'));
 
-    await userEvent.click(screen.getByText('Option A'));
-    await userEvent.click(screen.getByText('Zakończ'));
+    await userEvent.click(await screen.findByText('Option A'));
+    await userEvent.click(await screen.findByText('Zakończ'));
 
-    const input = screen.getByTestId('file-input');
+    const input = await screen.findByTestId('file-input');
     await act(async () => {
       await userEvent.upload(input, file);
     });
@@ -234,5 +234,55 @@ describe('AnimalCreator', () => {
       const img = screen.getByRole('img');
       expect(img).toBeInTheDocument();
     });
+  });
+
+  it('removes photo correctly when clicking remove button', async () => {
+    global.URL.createObjectURL = jest.fn(
+      () => 'http://localhost/mock-preview-url'
+    );
+    global.URL.revokeObjectURL = jest.fn();
+
+    const file = new File(['dummy content'], 'photo.png', {
+      type: 'image/png',
+    });
+
+    await userEvent.click(await screen.findByText('Dodaj psa'));
+    await userEvent.click(await screen.findByText('Rozumiem'));
+
+    await userEvent.type(
+      await screen.findByPlaceholderText('Wpisz imię zwierzęcia'),
+      'Testowy'
+    );
+
+    const dateInput = await screen.findByLabelText(
+      'Szacowana data urodzenia zwierzęcia'
+    );
+    await userEvent.clear(dateInput);
+    await userEvent.type(dateInput, '2020-01-01');
+
+    await userEvent.click(await screen.findByText('Samiec'));
+    await userEvent.click(await screen.findByText('Dalej'));
+
+    await userEvent.click(await screen.findByText('Option A'));
+    await userEvent.click(await screen.findByText('Zakończ'));
+
+    const input = await screen.findByTestId('file-input');
+    await act(async () => {
+      await userEvent.upload(input, file);
+    });
+
+    const image = await screen.findByRole('img');
+    expect(image).toBeInTheDocument();
+
+    const removeButton = await screen.findByTestId('remove-photo-button');
+    await userEvent.click(removeButton);
+
+    await waitFor(() => {
+      expect(screen.queryByRole('img')).not.toBeInTheDocument();
+    });
+
+    expect(URL.revokeObjectURL).toHaveBeenCalledWith(
+      'http://localhost/mock-preview-url'
+    );
   });
 });
