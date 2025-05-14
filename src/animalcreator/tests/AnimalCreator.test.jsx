@@ -230,7 +230,6 @@ describe('AnimalCreator', () => {
       await userEvent.upload(input, file);
     });
 
-    // Czekamy na pojawienie się elementu podglądu zdjęcia
     await waitFor(() => {
       const img = screen.getByRole('img');
       expect(img).toBeInTheDocument();
