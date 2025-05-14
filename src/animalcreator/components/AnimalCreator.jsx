@@ -166,13 +166,35 @@ const AnimalCreator = ({ givenAnimalId }) => {
     }));
   };
 
-  const removePhoto = (index) => {
-    setAnimalData((prev) => {
-      const newPhotos = [...prev.photos];
-      URL.revokeObjectURL(newPhotos[index].preview);
-      newPhotos.splice(index, 1);
-      return { ...prev, photos: newPhotos };
-    });
+  const removePhoto = async (index) => {
+    const photoToRemove = animalData.photos[index];
+    if (photoToRemove && photoToRemove.publicId) {
+      try {
+        const response = await fetch(
+          `${API_BASE_URL}/images?publicId=${photoToRemove.publicId}`,
+          {
+            method: 'DELETE',
+            headers: {
+              Authorization: `Bearer ${userContext.token}`,
+            },
+          }
+        );
+
+        setAnimalData((prev) => {
+          const newPhotos = [...prev.photos];
+          const removedPhoto = newPhotos[index];
+          URL.revokeObjectURL(removedPhoto.preview);
+          newPhotos.splice(index, 1);
+          return { ...prev, photos: newPhotos };
+        });
+
+        if (response.ok) {
+          console.log('Photo removed successfully');
+        } else console.error('Failed to remove photo from backend');
+      } catch (error) {
+        console.error('Error removing photo from backend:', error);
+      }
+    }
   };
 
   const handleDescriptionChange = (e) => {
@@ -189,7 +211,7 @@ const AnimalCreator = ({ givenAnimalId }) => {
         gender: animalData.gender,
         description: animalData.description,
         traits: animalData.tags,
-        images: animalData.photos.map((photo) => photo.file),
+        images: uploadPhotos(animalData.photos),
       };
 
       if (givenAnimalId) {
@@ -219,7 +241,6 @@ const AnimalCreator = ({ givenAnimalId }) => {
 
   const fetchAnimalData = async (id) => {
     try {
-      setCurrentStep('basicInfo');
       const response = await fetch(`${API_BASE_URL}/animals/${id}`, {
         method: 'GET',
         headers: {
@@ -244,17 +265,46 @@ const AnimalCreator = ({ givenAnimalId }) => {
         description: data.description,
         photos: data.images,
       });
+      setCurrentStep('basicInfo');
     } catch (error) {
       console.error('Error fetching animal data:', error.message);
     }
   };
 
   useEffect(() => {
-    if (givenAnimalId) {
+    if (givenAnimalId && givenAnimalId !== 'null') {
       fetchAnimalData(givenAnimalId);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [givenAnimalId]);
+
+  const uploadPhotos = async (photos) => {
+    const formData = new FormData();
+    photos.forEach((photo) => {
+      formData.append('files', photo.file);
+    });
+    try {
+      const response = await fetch(`${API_BASE_URL}/images/uploadAnimal`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${userContext.token}`,
+        },
+        body: formData,
+      });
+      if (!response.ok) {
+        console.err('Failed to upload photos');
+      }
+      const data = await response.json();
+      return data.map((photo) => ({
+        publicId: photo.publicId,
+        preview: photo.url,
+      }));
+    } catch (error) {
+      console.error('Error uploading photos:', error);
+      alert('Wystąpił błąd podczas przesyłania zdjęć');
+      return [];
+    }
+  };
 
   if (currentStep === 'start') {
     return (

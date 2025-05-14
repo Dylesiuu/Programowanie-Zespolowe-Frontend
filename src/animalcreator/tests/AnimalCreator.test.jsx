@@ -51,6 +51,8 @@ describe('AnimalCreator', () => {
       push: mockPush,
     }));
     window.alert = jest.fn();
+    // Mock URL.createObjectURL to prevent errors in tests
+    global.URL.createObjectURL = jest.fn(() => 'http://localhost/mock-url');
     render(
       <UserContext.Provider value={mockUserContext}>
         <AnimalCreator givenAnimalId={null} />
@@ -197,5 +199,41 @@ describe('AnimalCreator', () => {
         }),
       })
     );
+  });
+  it('handles photo upload correctly', async () => {
+    const file = new File(['dummy content'], 'photo.png', {
+      type: 'image/png',
+    });
+
+    await userEvent.click(screen.getByText('Dodaj psa'));
+    await userEvent.click(screen.getByText('Rozumiem'));
+
+    await userEvent.type(
+      screen.getByPlaceholderText('Wpisz imię zwierzęcia'),
+      'Testowy'
+    );
+
+    const dateInput = screen.getByLabelText(
+      'Szacowana data urodzenia zwierzęcia'
+    );
+    await userEvent.clear(dateInput);
+    await userEvent.type(dateInput, '2020-01-01');
+
+    await userEvent.click(screen.getByText('Samiec'));
+    await userEvent.click(screen.getByText('Dalej'));
+
+    await userEvent.click(screen.getByText('Option A'));
+    await userEvent.click(screen.getByText('Zakończ'));
+
+    const input = screen.getByTestId('file-input');
+    await act(async () => {
+      await userEvent.upload(input, file);
+    });
+
+    // Czekamy na pojawienie się elementu podglądu zdjęcia
+    await waitFor(() => {
+      const img = screen.getByRole('img');
+      expect(img).toBeInTheDocument();
+    });
   });
 });
