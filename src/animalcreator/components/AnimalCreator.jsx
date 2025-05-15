@@ -8,6 +8,7 @@ import NavigationButton from '../../creator/components/NavigationButton';
 import { useRouter } from 'next/router';
 import AnimalDetailScreen from './AnimalDetailScreen';
 import { UserContext } from '@/context/userContext';
+import { useAuthFetch } from '@/lib/authFetch';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -15,6 +16,7 @@ const AnimalCreator = ({ givenAnimalId }) => {
   const router = useRouter();
   const fileInputRef = useRef();
   const userContext = useContext(UserContext);
+  const fetchData = useAuthFetch();
 
   const currentDate = new Date().toISOString().split('T')[0];
 
@@ -177,7 +179,7 @@ const AnimalCreator = ({ givenAnimalId }) => {
     const photoToRemove = animalData.photos[index];
     if (photoToRemove && photoToRemove.publicId) {
       try {
-        const response = await fetch(
+        const response = await fetchData(
           `${API_BASE_URL}/images?publicId=${photoToRemove.publicId}`,
           {
             method: 'DELETE',
@@ -217,7 +219,7 @@ const AnimalCreator = ({ givenAnimalId }) => {
         //Tu będzie fetch na edytowanie zwierząt
       }
 
-      const response = await fetch(`${API_BASE_URL}/animals`, {
+      const response = await fetchData(`${API_BASE_URL}/animals`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${userContext.token}`,
@@ -240,7 +242,7 @@ const AnimalCreator = ({ givenAnimalId }) => {
 
   const fetchAnimalData = async (id) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/animals/${id}`, {
+      const response = await fetchData(`${API_BASE_URL}/animals/${id}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -283,7 +285,7 @@ const AnimalCreator = ({ givenAnimalId }) => {
       formData.append('files', photo.file);
     });
     try {
-      const response = await fetch(`${API_BASE_URL}/images/uploadAnimal`, {
+      const response = await fetchData(`${API_BASE_URL}/images/uploadAnimal`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${userContext.token}`,
