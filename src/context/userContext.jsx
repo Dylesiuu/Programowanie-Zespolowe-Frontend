@@ -16,7 +16,7 @@ export const UserProvider = ({ children }) => {
   const [token, setToken] = useState(null);
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
   const refreshIntervalRef = useRef(null);
-  const refreshTime = 600; //10 min
+  const refreshTime = 300; //5 min
 
   useEffect(() => {
     if (!token) return;
