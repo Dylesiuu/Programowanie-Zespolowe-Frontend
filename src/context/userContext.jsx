@@ -51,7 +51,7 @@ export const UserProvider = ({ children }) => {
           logout();
         }
       } else {
-        console.log('Token still valid...');
+        console.log('Token still valid.');
       }
     };
 
