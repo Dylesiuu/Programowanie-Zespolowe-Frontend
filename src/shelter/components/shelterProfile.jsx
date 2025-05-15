@@ -1,9 +1,10 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect, useRef } from 'react';
 import InfoCard from './infoCard';
 import AnimalsField from './animalsField';
 import AnimalCard from './animalCard';
 import MobileInfoCard from './mobileInfoCard';
 import { UserContext } from '@/context/userContext';
+import { useAuthFetch } from '@/lib/authFetch';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -14,11 +15,13 @@ const ShelterProfile = ({ shelterId, animalId }) => {
   const [isMobileCardVisible, setIsMobileCardVisible] = useState(false);
   const userContext = useContext(UserContext);
   const [refreshShelter, setRefreshShelter] = useState(false);
+  const fetchData = useAuthFetch();
+  const lastFetchRef = useRef(0);
 
   useEffect(() => {
     const fetchShelterData = async () => {
       try {
-        const response = await fetch(`${API_BASE_URL}/shelter/find-by-id`, {
+        const response = await fetchData(`${API_BASE_URL}/shelter/find-by-id`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -39,11 +42,12 @@ const ShelterProfile = ({ shelterId, animalId }) => {
       }
     };
 
-    if (shelterId) {
+    if (shelterId && shelterId !== 'null') {
       fetchShelterData();
       closeAnimalCard();
     }
-  }, [shelterId, userContext, refreshShelter]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [shelterId, refreshShelter]);
 
   useEffect(() => {
     if (animalId) {
