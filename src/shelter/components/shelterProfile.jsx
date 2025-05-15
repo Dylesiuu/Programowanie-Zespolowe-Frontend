@@ -77,7 +77,7 @@ const ShelterProfile = ({ shelterId, animalId }) => {
 
   const addToFavourite = async (fav) => {
     try {
-      const response = await fetch(
+      const response = await fetchData(
         `${API_BASE_URL}/user/addfavourite/${userContext.user.email}`,
         {
           method: 'PATCH',
@@ -107,7 +107,7 @@ const ShelterProfile = ({ shelterId, animalId }) => {
 
   const removeFromFavourite = async (fav) => {
     try {
-      const response = await fetch(
+      const response = await fetchData(
         `${API_BASE_URL}/user/removefavourite/${userContext.user.email}`,
         {
           method: 'PATCH',

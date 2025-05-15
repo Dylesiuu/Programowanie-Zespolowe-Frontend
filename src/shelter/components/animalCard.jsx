@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { FaHeart, FaTimes, FaRegTrashAlt } from 'react-icons/fa';
 import { BiLeftArrow, BiRightArrow } from 'react-icons/bi';
 import { useRouter } from 'next/router';
+import { useAuthFetch } from '@/lib/authFetch';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -22,11 +23,12 @@ const AnimalCard = ({
   const [isImageModalVisible, setIsImageModalVisible] = useState(false);
   const [isWarningVisible, setIsWarningVisible] = useState(false);
   const router = useRouter();
+  const fetchData = useAuthFetch();
 
   const fetchAnimalData = async (id) => {
     try {
       setIsLoading(true);
-      const response = await fetch(`${API_BASE_URL}/animals/${id}`, {
+      const response = await fetchData(`${API_BASE_URL}/animals/${id}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -50,7 +52,7 @@ const AnimalCard = ({
 
   const removeAnimal = async (id) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/animals/${id}`, {
+      const response = await fetchData(`${API_BASE_URL}/animals/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
