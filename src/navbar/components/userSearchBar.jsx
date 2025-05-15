@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useAuthFetch } from '@/lib/authFetch';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -8,6 +9,7 @@ const UserSearchBar = ({ userContext }) => {
   const [isSearching, setIsSearching] = useState(false);
   const [isSearchDropdownOpen, setIsSearchDropdownOpen] = useState(false);
   const searchDropdownRef = useRef(null);
+  const fetchData = useAuthFetch();
 
   const debounce = (func, delay) => {
     let timer;
@@ -23,7 +25,7 @@ const UserSearchBar = ({ userContext }) => {
         setIsSearching(true);
         try {
           console.log('Searching for users:', query);
-          const response = await fetch(`${API_BASE_URL}/user/searchUser`, {
+          const response = await fetchData(`${API_BASE_URL}/user/searchUser`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

@@ -16,7 +16,6 @@ const ShelterProfile = ({ shelterId, animalId }) => {
   const userContext = useContext(UserContext);
   const [refreshShelter, setRefreshShelter] = useState(false);
   const fetchData = useAuthFetch();
-  const lastFetchRef = useRef(0);
 
   useEffect(() => {
     const fetchShelterData = async () => {
