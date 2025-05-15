@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from 'react';
+import { createContext, useEffect, useState, useRef } from 'react';
 
 const initialState = {
   user: null,
@@ -15,6 +15,56 @@ export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+  const refreshIntervalRef = useRef(null);
+  const refreshTime = 600; //10 min
+
+  useEffect(() => {
+    if (!token) return;
+
+    const isTokenExpiredSoon = (token) => {
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        const now = Math.floor(Date.now() / 1000);
+        return payload.exp < now + refreshTime;
+      } catch {
+        return true;
+      }
+    };
+
+    const checkAndRefresh = async () => {
+      if (isTokenExpiredSoon(token)) {
+        try {
+          const res = await fetch(`${API_BASE_URL}/auth/refresh`, {
+            method: 'POST',
+            credentials: 'include',
+          });
+
+          if (!res.ok) {
+            console.error('Refresh failed');
+            userContext.logout();
+          }
+
+          const data = await res.json();
+          setToken(data.token);
+        } catch (err) {
+          console.error('Background refresh failed', err);
+          logout();
+        }
+      } else {
+        console.log('Token still valid...');
+      }
+    };
+
+    refreshIntervalRef.current = setInterval(
+      checkAndRefresh,
+      refreshTime * 1000
+    );
+
+    return () => {
+      clearInterval(refreshIntervalRef.current);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token]);
 
   const isLoggedIn = () => {
     // if (process.env.NODE_ENV === 'development') {
