@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
+import { useAuthFetch } from '@/lib/authFetch';
 
 const MapComponent = dynamic(
   () => import('../../localization/components/mapComponent'),
@@ -22,24 +23,28 @@ const ShelterSearchBar = ({ userContext }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const router = useRouter();
+  const fetchData = useAuthFetch();
 
   const sendLocationData = async (position, range) => {
     try {
       setIsLoading(true);
       setResults([]);
       setIsDropdownOpen(true);
-      const response = await fetch(`${API_BASE_URL}/shelter/find-in-range`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${userContext.token}`,
-        },
-        body: JSON.stringify({
-          lat: position.lat,
-          lng: position.lng,
-          range,
-        }),
-      });
+      const response = await fetchData(
+        `${API_BASE_URL}/shelter/find-in-range`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${userContext.token}`,
+          },
+          body: JSON.stringify({
+            lat: position.lat,
+            lng: position.lng,
+            range,
+          }),
+        }
+      );
 
       if (!response.ok) {
         console.error(`HTTP error! Status: ${response.status}`);
