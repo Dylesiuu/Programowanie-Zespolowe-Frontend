@@ -41,7 +41,7 @@ export const UserProvider = ({ children }) => {
 
           if (!res.ok) {
             console.error('Refresh failed');
-            userContext.logout();
+            logout();
           }
 
           const data = await res.json();
@@ -67,29 +67,29 @@ export const UserProvider = ({ children }) => {
   }, [token]);
 
   const isLoggedIn = () => {
-    // if (process.env.NODE_ENV === 'development') {
-    //   if (!token) {
-    //     setToken(
-    //       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsInN1YiI6IjY3ZTM1MzRmMWYyNTJlMjM5MzNkNTY4NCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc0Njc3MzYwMiwiZXhwIjoxNzQ2Nzc0NTAyfQ.Dl1NLVZr_iVIA22BY8ZC7VucRj1nBuQH1bXF6aBLX-A'
-    //     ); // Set a dummy token in development mode
-    //   }
-    //   if (!user) {
-    //     setUser({
-    //       location: [],
-    //       _id: '67e3534f1f252e23933d5684',
-    //       name: 'admin',
-    //       lastname: 'admin',
-    //       email: 'admin@gmail.com',
-    //       favourites: [],
-    //       role: 'admin',
-    //       traits: [],
-    //       __v: 0,
-    //       shelterId: '6818dedeb73fd00332e3518e',
-    //     }); //Set a dummy user in development mode
-    //   }
+    if (process.env.NODE_ENV === 'development') {
+      if (!token) {
+        setToken(
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsInN1YiI6IjY3ZTM1MzRmMWYyNTJlMjM5MzNkNTY4NCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc0Njc3MzYwMiwiZXhwIjoxNzQ2Nzc0NTAyfQ.Dl1NLVZr_iVIA22BY8ZC7VucRj1nBuQH1bXF6aBLX-A'
+        ); // Set a dummy token in development mode
+      }
+      if (!user) {
+        setUser({
+          location: [],
+          _id: '67e3534f1f252e23933d5684',
+          name: 'admin',
+          lastname: 'admin',
+          email: 'admin@gmail.com',
+          favourites: [],
+          role: 'admin',
+          traits: [],
+          __v: 0,
+          shelterId: '6818dedeb73fd00332e3518e',
+        }); //Set a dummy user in development mode
+      }
 
-    //   return true; // Always return true in development mode
-    // }
+      return true; // Always return true in development mode
+    }
     return Boolean(user && token); // Normal behavior in production
   };
 

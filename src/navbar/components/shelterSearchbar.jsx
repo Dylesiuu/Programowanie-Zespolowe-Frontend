@@ -15,6 +15,7 @@ const ShelterSearchBar = ({ userContext }) => {
   const [locationName, setLocationName] = useState(
     location ? `${location.lat}, ${location.lng}` : ''
   );
+  const [prevLocation, setPrevLocation] = useState(null);
   const [isMapOpen, setIsMapOpen] = useState(false);
   const mapRef = useRef(null);
   const [range, setRange] = useState(30000);
@@ -73,6 +74,11 @@ const ShelterSearchBar = ({ userContext }) => {
     sendLocationData(position, range);
   };
 
+  const handleMapCancel = () => {
+    setLocationName(prevLocation);
+    setIsMapOpen(false);
+  };
+
   const handleRangeChange = (event) => {
     const newRange = event.target.value;
     setRange(newRange);
@@ -104,7 +110,10 @@ const ShelterSearchBar = ({ userContext }) => {
             value={locationName}
             readOnly
             placeholder="Kliknij, aby wybrać lokalizację"
-            onClick={() => setIsMapOpen(true)}
+            onClick={() => {
+              setPrevLocation(locationName);
+              setIsMapOpen(true);
+            }}
             className="px-2 py-2 w-full h-full rounded-lg border bg-[#fefaf7] border-[#FFD1DC] text-black focus:outline-none focus:ring-2 focus:ring-[#AA673C] cursor-pointer"
           />
           {/* Dropdown for results */}
@@ -167,6 +176,7 @@ const ShelterSearchBar = ({ userContext }) => {
             <MapComponent
               onLocationSelect={handleLocationSelect}
               setLocationName={setLocationName}
+              onCancel={handleMapCancel}
             />
           </div>
         </div>

@@ -1,7 +1,13 @@
 import Image from 'next/image';
-import { BiHome, BiDesktop, BiClipboard } from 'react-icons/bi';
+import {
+  BiHome,
+  BiDesktop,
+  BiClipboard,
+  BiGroup,
+  BiHomeHeart,
+} from 'react-icons/bi';
 import { useRouter } from 'next/router';
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { UserContext } from '@/context/userContext';
 import { useContext } from 'react';
 import UserSearchBar from './userSearchBar';
@@ -37,7 +43,7 @@ const Navbar = () => {
         <div>Logo</div>
         <div className="flex h-full w-full items-center justify-center space-x-2">
           <div className="flex flex-col items-start space-y-1">
-            <div className="flex items-center">
+            <div className="flex items-center justify-center">
               <input
                 type="radio"
                 id="userSearch"
@@ -47,9 +53,15 @@ const Navbar = () => {
                 onChange={() => setIsUserSearch(true)}
                 className="mr-2 cursor-pointer accent-[#ba6c3b] focus:ring-[#FFD1DC]"
               />
-              <label htmlFor="userSearch" className="text-sm cursor-pointer">
+              <label
+                htmlFor="userSearch"
+                className="text-sm cursor-pointer hidden md:block"
+              >
                 Użytkownicy
               </label>
+              <span className="block md:hidden">
+                <BiGroup className="text-lg" />
+              </span>
             </div>
             <div className="flex items-center">
               <input
@@ -61,9 +73,15 @@ const Navbar = () => {
                 onChange={() => setIsUserSearch(false)}
                 className="mr-2 cursor-pointer accent-[#ba6c3b] focus:ring-[#FFD1DC]"
               />
-              <label htmlFor="shelterSearch" className="text-sm cursor-pointer">
+              <label
+                htmlFor="shelterSearch"
+                className="text-sm cursor-pointer hidden md:block"
+              >
                 Schroniska
               </label>
+              <span className="block md:hidden">
+                <BiHomeHeart className="text-lg" />
+              </span>
             </div>
           </div>
           {/* Search bar */}
@@ -140,13 +158,13 @@ const Navbar = () => {
                 className="px-4 py-2 hover:bg-[#AA673C] cursor-pointer"
                 onClick={() => alert('/profile')}
               >
-                Profile
+                Profil
               </li>
               <li
                 className="px-4 py-2 hover:bg-[#AA673C] cursor-pointer"
                 onClick={() => alert('/settings')}
               >
-                Settings
+                Ustawienia
               </li>
               <li
                 className="px-4 py-2 hover:bg-[#AA673C] hover:rounded-b-lg cursor-pointer"
@@ -154,7 +172,7 @@ const Navbar = () => {
                   userContext.logout();
                 }}
               >
-                Logout
+                Wyloguj
               </li>
             </ul>
           </div>
