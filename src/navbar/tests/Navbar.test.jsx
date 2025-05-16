@@ -57,19 +57,19 @@ describe('Navbar Component', () => {
     const profileButton = screen.getByAltText('User Profile').closest('button');
     await userEvent.click(profileButton);
 
-    expect(await screen.findByText('Profile')).toBeInTheDocument();
-    expect(await screen.findByText('Settings')).toBeInTheDocument();
-    expect(await screen.findByText('Logout')).toBeInTheDocument();
+    expect(await screen.findByText('Profil')).toBeInTheDocument();
+    expect(await screen.findByText('Ustawienia')).toBeInTheDocument();
+    expect(await screen.findByText('Wyloguj')).toBeInTheDocument();
   });
 
   it('close profile dropdown when clicking outside', async () => {
     const profileButton = screen.getByAltText('User Profile').closest('button');
     await userEvent.click(profileButton);
 
-    expect(await screen.findByText('Profile')).toBeInTheDocument();
+    expect(await screen.findByText('Profil')).toBeInTheDocument();
 
     await userEvent.click(await screen.findByText('Logo'));
-    expect(screen.queryByText('Profile')).not.toBeInTheDocument();
+    expect(screen.queryByText('Profil')).not.toBeInTheDocument();
   });
 
   it('navigate to home page when home button is clicked', async () => {
