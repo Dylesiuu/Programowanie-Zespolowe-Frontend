@@ -171,7 +171,7 @@ const ShelterSearchBar = ({ userContext }) => {
       {/* Map modal */}
       {isMapOpen && (
         <div className="absolute top-0 left-0 w-full h-full z-50 bg-white">
-          <div ref={mapRef} className="relative w-full h-full">
+          <div ref={mapRef} className="relative w-full h-full text-black  ">
             {/* Pass the correct callback to MapComponent */}
             <MapComponent
               onLocationSelect={handleLocationSelect}
