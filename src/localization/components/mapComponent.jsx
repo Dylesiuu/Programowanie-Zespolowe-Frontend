@@ -15,7 +15,7 @@ const LocationMarker = dynamic(() => import('./locationMarker'), {
   ssr: false,
 });
 
-const MapComponent = ({ onLocationSelect, onCancel, setLocationName }) => {
+const MapComponent = ({ onLocationSelect, onCancel, setLocationName, detailLevel = 'city' }) => {
   const [position, setPosition] = useState(null);
   const [locationName, setLocationNameState] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
@@ -45,14 +45,22 @@ const MapComponent = ({ onLocationSelect, onCancel, setLocationName }) => {
       const data = await response.json();
       const result = data.results[0];
       const components = result.components;
-      const city =
-        components.city ||
-        components.town ||
-        components.village ||
-        components.hamlet;
 
-      setLocationName(city);
-      setLocationNameState(city);
+      let locationString = '';
+
+      if (detailLevel === 'full') {
+        locationString = result.formatted; // pełny adres
+      } else if (detailLevel === 'city') {
+        locationString =
+          components.city ||
+          components.town ||
+          components.village ||
+          components.hamlet ||
+          components.county;
+      }
+
+      setLocationName(locationString);
+      setLocationNameState(locationString);
     } catch (error) {
       console.error('Reverse geocode error:', error);
     }
