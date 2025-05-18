@@ -13,6 +13,13 @@ export function useAuthFetch() {
       if (!tokenFromHeaders || isTokenExpired(tokenFromHeaders)) {
         try {
           console.log('Token expired, refreshing...');
+          console.log('Time now:', Math.floor(Date.now() / 1000));
+          console.log(
+            'Token expiration time:',
+            JSON.parse(atob(tokenFromHeaders.split('.')[1])).exp
+          );
+          console.log('Token:', tokenFromHeaders);
+          console.log('User context token:', userContext.token);
           const res = await fetch(`${API_BASE_URL}/auth/refresh`, {
             method: 'POST',
             credentials: 'include',
