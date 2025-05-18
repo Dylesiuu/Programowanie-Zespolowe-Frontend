@@ -16,7 +16,7 @@ export const UserProvider = ({ children }) => {
   const [token, setToken] = useState(null);
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
   const refreshIntervalRef = useRef(null);
-  const refreshTime = 300; //5 min
+  const refreshTime = 270; //4.5 min
 
   useEffect(() => {
     if (!token) return;
@@ -25,6 +25,7 @@ export const UserProvider = ({ children }) => {
       try {
         const payload = JSON.parse(atob(token.split('.')[1]));
         const now = Math.floor(Date.now() / 1000);
+        console.log('Token payload:', payload);
         return payload.exp < now + refreshTime;
       } catch {
         return true;
@@ -34,9 +35,18 @@ export const UserProvider = ({ children }) => {
     const checkAndRefresh = async () => {
       if (isTokenExpiredSoon(token)) {
         try {
+          console.log('Time now:', Math.floor(Date.now() / 1000));
+          console.log(
+            'Token expiration time:',
+            JSON.parse(atob(token.split('.')[1])).exp
+          );
           const res = await fetch(`${API_BASE_URL}/auth/refresh`, {
             method: 'POST',
             credentials: 'include',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
           });
 
           if (!res.ok) {
@@ -45,7 +55,9 @@ export const UserProvider = ({ children }) => {
           }
 
           const data = await res.json();
+          console.log('Token refreshed successfully');
           setToken(data.token);
+          console.log('New token:', data.token);
         } catch (err) {
           console.error('Background refresh failed', err);
           logout();
