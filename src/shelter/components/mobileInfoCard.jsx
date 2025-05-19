@@ -1,7 +1,29 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BiMenu } from 'react-icons/bi';
 
 const MobileInfoCard = ({ shelter, onEdit, toggleCard, userContext }) => {
+  const [locationName, setLocationName] = React.useState('');
+
+  const reverseGeocode = async (latlng) => {
+    const { lat, lng } = latlng;
+    const apiKey = process.env.NEXT_PUBLIC_MAP_TRANSLATE;
+    const url = `https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lng}&key=${apiKey}`;
+
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      const result = data.results[0];
+
+      setLocationName(result.formatted);
+    } catch (error) {
+      console.error('Reverse geocode error:', error);
+    }
+  };
+
+  useEffect(() => {
+    reverseGeocode({ lat: shelter.location[0], lng: shelter.location[1] });
+  }, [shelter.location]);
+
   return (
     <div className="fixed flex flex-col inset-y-0 left-0 z-50 w-[80vw] mt-[3.75rem] bg-[#fefaf7]/80 shadow-2xl p-4 space-y-6 rounded-r-3xl justify-between items-center">
       {/* Close Button */}
@@ -23,7 +45,7 @@ const MobileInfoCard = ({ shelter, onEdit, toggleCard, userContext }) => {
         </h2>
         <div className="flex flex-col w-full space-y-4 px-2 md:px-4 overflow-x-auto">
           <p className="text-sm md:text-base lg:text-lg text-gray-600">
-            <strong>Adres:</strong> {shelter.location}
+            <strong>Adres:</strong> {locationName}
           </p>
           <p className="text-sm md:text-base lg:text-lg text-gray-600">
             <strong>Telefon:</strong> {shelter.phone}
