@@ -1,6 +1,24 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { reverseCoordinates } from '@/lib/reverseCoordinates';
 
 const InfoCard = ({ shelter, onEdit, userContext }) => {
+  const [locationName, setLocationName] = React.useState('');
+  useEffect(() => {
+    const fetchLocationName = async () => {
+      const city = await reverseCoordinates({
+        lat: shelter.location[0],
+        lng: shelter.location[1],
+      });
+      if (city) {
+        setLocationName(city);
+      } else {
+        console.error('Reverse geocode error:', error);
+      }
+    };
+
+    fetchLocationName();
+  }, [shelter.location]);
+
   return (
     <div className="flex flex-col w-full h-full rounded-3xl shadow-2xl p-4 bg-[#fefaf7]/80 max-w-md md:max-w-lg lg:max-w-xl mx-auto space-y-6 justify-between items-center">
       {/* Shelter info */}
@@ -13,7 +31,7 @@ const InfoCard = ({ shelter, onEdit, userContext }) => {
         </h2>
         <div className="flex flex-col w-full space-y-4 px-2 md:px-4">
           <p className="text-sm md:text-base lg:text-lg text-gray-600">
-            <strong>Adres:</strong> {shelter.location}
+            <strong>Adres:</strong> {locationName}
           </p>
           <p className="text-sm md:text-base lg:text-lg text-gray-600">
             <strong>Telefon:</strong> {shelter.phone}
