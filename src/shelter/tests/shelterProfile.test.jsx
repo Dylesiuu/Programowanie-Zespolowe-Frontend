@@ -87,7 +87,7 @@ describe('ShelterProfile Component', () => {
     _id: '1',
     name: 'Happy Paws Shelter',
     location: [252.2297, 21.0122],
-    phone: '+1 555-123-4567',
+    phoneNumber: '+1 555-123-4567',
     email: 'contact@happypaws.com',
     animals: [
       {
@@ -261,7 +261,7 @@ describe('ShelterProfile Component', () => {
     await waitFor(() => {
       expect(infoCard).toHaveTextContent('Adres: Warsaw, Poland');
     });
-    expect(infoCard).toHaveTextContent(`Telefon: ${mockShelter.phone}`);
+    expect(infoCard).toHaveTextContent(`Telefon: ${mockShelter.phoneNumber}`);
     expect(infoCard).toHaveTextContent(`Email: ${mockShelter.email}`);
   });
 
@@ -321,7 +321,7 @@ describe('ShelterProfile Component', () => {
     await waitFor(() => {
       expect(mobileCard).toHaveTextContent('Adres: Warsaw, Poland');
     });
-    expect(mobileCard).toHaveTextContent(`Telefon: ${mockShelter.phone}`);
+    expect(mobileCard).toHaveTextContent(`Telefon: ${mockShelter.phoneNumber}`);
     expect(mobileCard).toHaveTextContent(`Email: ${mockShelter.email}`);
   });
 
