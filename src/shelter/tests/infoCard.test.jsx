@@ -8,7 +8,7 @@ describe('InfoCard Component', () => {
     _id: '1',
     name: 'Happy Paws Shelter',
     location: [52.2297, 21.0122],
-    phone: '+1 555-123-4567',
+    phoneNumber: '+1 555-123-4567',
     email: 'contact@happypaws.com',
   };
 
@@ -58,7 +58,9 @@ describe('InfoCard Component', () => {
     expect(await screen.findByText(/Adres:/)).toBeInTheDocument();
     expect(await screen.findByText('Warsaw, Poland')).toBeInTheDocument();
     expect(await screen.findByText(/Telefon:/)).toBeInTheDocument();
-    expect(await screen.findByText(mockShelter.phone)).toBeInTheDocument();
+    expect(
+      await screen.findByText(mockShelter.phoneNumber)
+    ).toBeInTheDocument();
     expect(await screen.findByText(/Email:/)).toBeInTheDocument();
     expect(await screen.findByText(mockShelter.email)).toBeInTheDocument();
   });

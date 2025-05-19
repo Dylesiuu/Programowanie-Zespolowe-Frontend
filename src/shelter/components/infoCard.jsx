@@ -38,7 +38,7 @@ const InfoCard = ({ shelter, onEdit, userContext }) => {
             <strong>Adres:</strong> {locationName}
           </p>
           <p className="text-sm md:text-base lg:text-lg text-gray-600">
-            <strong>Telefon:</strong> {shelter.phone}
+            <strong>Telefon:</strong> {shelter.phoneNumber}
           </p>
           <p className="text-sm md:text-base lg:text-lg text-gray-600">
             <strong>Email:</strong> {shelter.email}

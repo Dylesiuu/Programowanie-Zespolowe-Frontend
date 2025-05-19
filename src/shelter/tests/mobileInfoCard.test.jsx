@@ -7,7 +7,7 @@ describe('MobileInfoCard Component', () => {
   const mockShelter = {
     name: 'Happy Paws Shelter',
     location: [23.4567, 45.6789],
-    phone: '+1 555-123-4567',
+    phoneNumber: '+1 555-123-4567',
     email: 'contact@happypaws.com',
     _id: '1',
   };
@@ -65,7 +65,9 @@ describe('MobileInfoCard Component', () => {
     expect(await screen.findByText(/Adres:/)).toBeInTheDocument();
     expect(await screen.findByText('Warsaw, Poland')).toBeInTheDocument();
     expect(await screen.findByText(/Telefon:/)).toBeInTheDocument();
-    expect(await screen.findByText(mockShelter.phone)).toBeInTheDocument();
+    expect(
+      await screen.findByText(mockShelter.phoneNumber)
+    ).toBeInTheDocument();
     expect(await screen.findByText(/Email:/)).toBeInTheDocument();
     expect(await screen.findByText(mockShelter.email)).toBeInTheDocument();
   });
