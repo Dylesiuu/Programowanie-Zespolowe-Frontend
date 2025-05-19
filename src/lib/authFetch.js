@@ -23,6 +23,10 @@ export function useAuthFetch() {
           const res = await fetch(`${API_BASE_URL}/auth/refresh`, {
             method: 'POST',
             credentials: 'include',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${userContext.token}`,
+            },
           });
 
           if (!res.ok) {
