@@ -7,6 +7,7 @@ const initialState = {
   setUser: () => {},
   isLoggedIn: () => false,
   logout: () => {},
+  loading: true,
 };
 
 export const UserContext = createContext(initialState);
@@ -16,6 +17,7 @@ export const UserProvider = ({ children }) => {
   const [token, setToken] = useState(null);
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
   const refreshIntervalRef = useRef(null);
+  const [loading, setLoading] = useState(true);
   const refreshTime = 270; //4.5 min
 
   useEffect(() => {
@@ -102,6 +104,11 @@ export const UserProvider = ({ children }) => {
 
     //   return true; // Always return true in development mode
     // }
+    if (loading) {
+      console.log('Loading user context...');
+      return true;
+    }
+
     return Boolean(user && token); // Normal behavior in production
   };
 
@@ -161,11 +168,13 @@ export const UserProvider = ({ children }) => {
     } else {
       console.warn('No token found in localStorage.');
     }
+
+    setLoading(false);
   }, []);
 
   return (
     <UserContext.Provider
-      value={{ user, token, setToken, setUser, isLoggedIn, logout }}
+      value={{ user, token, setToken, setUser, isLoggedIn, logout, loading }}
     >
       {children}
     </UserContext.Provider>
