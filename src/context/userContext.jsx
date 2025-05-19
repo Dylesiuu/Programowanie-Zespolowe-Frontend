@@ -104,7 +104,7 @@ export const UserProvider = ({ children }) => {
 
     //   return true; // Always return true in development mode
     // }
-    if (loading) {
+    if ((!user || !token) && loading) {
       console.log('Loading user context...');
       return true;
     }
