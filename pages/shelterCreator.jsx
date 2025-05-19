@@ -32,9 +32,8 @@ const ShelterCreator = () => {
     if (!position) newErrors.position = 'Wymagana lokalizacja na mapie';
     if (!formData.email) newErrors.email = 'Wymagany email';
     if (!formData.phone) newErrors.phone = 'Wymagany telefon';
-    if (!formData.description) newErrors.description = 'Wymagany opis';
-
-
+    if (!formData.description || formData.description.length < 10)
+      newErrors.description = 'Wymagany opis, min 10 znaków';
 
     return newErrors;
   };
@@ -67,14 +66,17 @@ const ShelterCreator = () => {
           phoneNumber: formData.phone,
           email: formData.email,
           description: formData.description,
-          location: position, 
+          location: position,
         }),
       });
 
       const data = await res.json();
 
       if (res.ok) {
-        router.push('/thank-you');
+        router.push({
+          pathname: '/swipePage',
+          query: { created: 'true' },
+        });
       } else {
         alert(data.message || 'Wystąpił błąd podczas tworzenia schroniska.');
       }
@@ -92,7 +94,9 @@ const ShelterCreator = () => {
         onSubmit={handleSubmit}
         className="mx-auto p-6 w-full max-w-2xl bg-white rounded-2xl shadow-md"
       >
-        <h1 className="text-3xl font-bold mb-6 text-center">Zarejestruj schronisko</h1>
+        <h1 className="text-3xl font-bold mb-6 text-center">
+          Zarejestruj schronisko
+        </h1>
 
         {[
           { label: 'Nazwa schroniska', name: 'name', type: 'text' },
@@ -108,12 +112,16 @@ const ShelterCreator = () => {
               onChange={handleChange}
               className="w-full border border-gray-300 rounded-xl p-2"
             />
-            {errors[name] && <p className="text-red-500 text-sm">{errors[name]}</p>}
+            {errors[name] && (
+              <p className="text-red-500 text-sm">{errors[name]}</p>
+            )}
           </div>
         ))}
 
         <div className="mb-4">
-          <label className="block text-sm font-semibold mb-1">Opis schroniska</label>
+          <label className="block text-sm font-semibold mb-1">
+            Opis schroniska
+          </label>
           <textarea
             name="description"
             rows={4}
@@ -121,11 +129,16 @@ const ShelterCreator = () => {
             onChange={handleChange}
             className="w-full border border-gray-300 rounded-xl p-2"
           />
+          {errors.description && (
+            <p className="text-red-500 text-sm">{errors.description}</p>
+          )}
         </div>
 
         {/* Lokalizacja */}
         <div className="mb-4">
-          <label className="block text-sm font-semibold mb-1">Lokalizacja</label>
+          <label className="block text-sm font-semibold mb-1">
+            Lokalizacja
+          </label>
           <button
             type="button"
             onClick={() => setShowMap(true)}
@@ -133,8 +146,14 @@ const ShelterCreator = () => {
           >
             Wybierz na mapie
           </button>
-          {locationName && <p>Wybrana lokalizacja: <strong>{locationName}</strong></p>}
-          {errors.position && <p className="text-red-500 text-sm">{errors.position}</p>}
+          {locationName && (
+            <p>
+              Wybrana lokalizacja: <strong>{locationName}</strong>
+            </p>
+          )}
+          {errors.position && (
+            <p className="text-red-500 text-sm">{errors.position}</p>
+          )}
         </div>
 
         <button

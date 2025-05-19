@@ -15,7 +15,12 @@ const LocationMarker = dynamic(() => import('./locationMarker'), {
   ssr: false,
 });
 
-const MapComponent = ({ onLocationSelect, onCancel, setLocationName, detailLevel = 'city' }) => {
+const MapComponent = ({
+  onLocationSelect,
+  onCancel,
+  setLocationName,
+  detailLevel = 'city',
+}) => {
   const [position, setPosition] = useState(null);
   const [locationName, setLocationNameState] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
