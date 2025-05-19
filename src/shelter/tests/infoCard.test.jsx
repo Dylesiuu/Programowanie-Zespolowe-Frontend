@@ -7,7 +7,7 @@ describe('InfoCard Component', () => {
   const mockShelter = {
     _id: '1',
     name: 'Happy Paws Shelter',
-    location: '123 Main Street, Springfield',
+    location: [52.2297, 21.0122],
     phone: '+1 555-123-4567',
     email: 'contact@happypaws.com',
   };
@@ -21,11 +21,30 @@ describe('InfoCard Component', () => {
 
   const mockOnEdit = jest.fn();
 
+  beforeEach(() => {
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            results: [
+              {
+                formatted: 'Warsaw, Poland',
+                components: {
+                  city: 'Warsaw',
+                },
+              },
+            ],
+          }),
+      })
+    );
+  });
+
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it('renders the shelter information correctly', () => {
+  it('renders the shelter information correctly', async () => {
     render(
       <InfoCard
         shelter={mockShelter}
@@ -34,14 +53,14 @@ describe('InfoCard Component', () => {
       />
     );
 
-    expect(screen.getByText(mockShelter.name)).toBeInTheDocument();
+    expect(await screen.findByText(mockShelter.name)).toBeInTheDocument();
 
-    expect(screen.getByText(/Adres:/)).toBeInTheDocument();
-    expect(screen.getByText(mockShelter.location)).toBeInTheDocument();
-    expect(screen.getByText(/Telefon:/)).toBeInTheDocument();
-    expect(screen.getByText(mockShelter.phone)).toBeInTheDocument();
-    expect(screen.getByText(/Email:/)).toBeInTheDocument();
-    expect(screen.getByText(mockShelter.email)).toBeInTheDocument();
+    expect(await screen.findByText(/Adres:/)).toBeInTheDocument();
+    expect(await screen.findByText('Warsaw, Poland')).toBeInTheDocument();
+    expect(await screen.findByText(/Telefon:/)).toBeInTheDocument();
+    expect(await screen.findByText(mockShelter.phone)).toBeInTheDocument();
+    expect(await screen.findByText(/Email:/)).toBeInTheDocument();
+    expect(await screen.findByText(mockShelter.email)).toBeInTheDocument();
   });
 
   it('renders the Edit Info button', async () => {
@@ -72,7 +91,7 @@ describe('InfoCard Component', () => {
     expect(mockOnEdit).toHaveBeenCalledTimes(1);
   });
 
-  it('renders with the correct structure and styles', () => {
+  it('renders with the correct structure and styles', async () => {
     render(
       <InfoCard
         shelter={mockShelter}
@@ -81,8 +100,8 @@ describe('InfoCard Component', () => {
       />
     );
 
-    const container = screen.getByText('Happy Paws Shelter').closest('div');
-    expect(container).toHaveClass(
+    const container = await screen.findByText('Happy Paws Shelter');
+    expect(container.closest('div')).toHaveClass(
       'flex flex-col w-full p-6 bg-white rounded-3xl items-center justify-around'
     );
   });
