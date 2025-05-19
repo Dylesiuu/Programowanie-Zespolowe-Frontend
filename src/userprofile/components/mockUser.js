@@ -20,7 +20,7 @@ const mockUser = {
   ],
   preferences: {
     animalType: ['Koty', 'Małe psy'],
-    locationRadius: 50, 
+    locationRadius: 50,
   },
 };
 

@@ -1,153 +1,145 @@
 const mockAnimals = [
   {
     id: 1,
-    name: "Burek",
-    type: "Pies",
-    breed: "Mieszaniec",
-    gender: "Samiec",
-    age: "3 lata",
-    size: "Średni",
+    name: 'Burek',
+    type: 'Pies',
+    breed: 'Mieszaniec',
+    gender: 'Samiec',
+    age: '3 lata',
+    size: 'Średni',
     location: "Schronisko 'Przytul Pieska', Warszawa",
-    description: "Burek to przyjacielski pies, który uwielbia spacery i zabawę. Jest bardzo towarzyski i dobrze dogaduje się z innymi psami. Potrzebuje aktywnego opiekuna, który zapewni mu regularne ćwiczenia.",
-    images: [
-      "/animals/dog1.jpg",
-      "/animals/dog1_2.jpg"
-    ],
+    description:
+      'Burek to przyjacielski pies, który uwielbia spacery i zabawę. Jest bardzo towarzyski i dobrze dogaduje się z innymi psami. Potrzebuje aktywnego opiekuna, który zapewni mu regularne ćwiczenia.',
+    images: ['/animals/dog1.jpg', '/animals/dog1_2.jpg'],
     shelter: "Schronisko 'Przytul Pieska'",
     traits: [
-      "Spacerowicz",
-      "Przyjazny",
-      "Akceptuje psy",
-      "Akceptuje dzieci",
-      "Nie boi się hałasu"
+      'Spacerowicz',
+      'Przyjazny',
+      'Akceptuje psy',
+      'Akceptuje dzieci',
+      'Nie boi się hałasu',
     ],
     tags: [
-      { id: 1, text: "Spacerowicz" },
-      { id: 5, text: "Przyjazny" },
-      { id: 11, text: "Akceptuje psy" },
-      { id: 9, text: "Akceptuje dzieci" },
-      { id: 16, text: "Nie boi się hałasu" }
+      { id: 1, text: 'Spacerowicz' },
+      { id: 5, text: 'Przyjazny' },
+      { id: 11, text: 'Akceptuje psy' },
+      { id: 9, text: 'Akceptuje dzieci' },
+      { id: 16, text: 'Nie boi się hałasu' },
     ],
-    status: "Poszukuje domu na stałe"
+    status: 'Poszukuje domu na stałe',
   },
   {
     id: 2,
-    name: "Mruczek",
-    type: "Kot",
-    breed: "Europejski",
-    gender: "Samiec",
-    age: "5 lat",
-    size: "Mały",
+    name: 'Mruczek',
+    type: 'Kot',
+    breed: 'Europejski',
+    gender: 'Samiec',
+    age: '5 lat',
+    size: 'Mały',
     location: "Fundacja 'Kocia Przystań', Kraków",
-    description: "Mruczek to spokojny kot, który preferuje ciche otoczenie. Lubi się bawić, ale w swoim tempie. Dobrze dogaduje się z innymi kotami, ale nie toleruje psów. Idealny dla osób, które szukają niezależnego towarzysza.",
-    images: [
-      "/animals/cat1.jpg"
-    ],
+    description:
+      'Mruczek to spokojny kot, który preferuje ciche otoczenie. Lubi się bawić, ale w swoim tempie. Dobrze dogaduje się z innymi kotami, ale nie toleruje psów. Idealny dla osób, które szukają niezależnego towarzysza.',
+    images: ['/animals/cat1.jpg'],
     shelter: "Fundacja 'Kocia Przystań'",
     traits: [
-      "Leniuch",
-      "Zdystansowany",
-      "Akceptuje koty",
-      "Nie akceptuje psów",
-      "Boi się hałasu"
+      'Leniuch',
+      'Zdystansowany',
+      'Akceptuje koty',
+      'Nie akceptuje psów',
+      'Boi się hałasu',
     ],
     tags: [
-      { id: 3, text: "Leniuch" },
-      { id: 19, text: "Zdystansowany" },
-      { id: 13, text: "Akceptuje koty" },
-      { id: 12, text: "Nie akceptuje psów" },
-      { id: 17, text: "Boi się hałasu" }
+      { id: 3, text: 'Leniuch' },
+      { id: 19, text: 'Zdystansowany' },
+      { id: 13, text: 'Akceptuje koty' },
+      { id: 12, text: 'Nie akceptuje psów' },
+      { id: 17, text: 'Boi się hałasu' },
     ],
-    status: "Poszukuje domu na stałe"
+    status: 'Poszukuje domu na stałe',
   },
   {
     id: 3,
-    name: "Luna",
-    type: "Pies",
-    breed: "Labrador",
-    gender: "Samica",
-    age: "1 rok",
-    size: "Duży",
+    name: 'Luna',
+    type: 'Pies',
+    breed: 'Labrador',
+    gender: 'Samica',
+    age: '1 rok',
+    size: 'Duży',
     location: "Schronisko 'Psia Ostoja', Wrocław",
-    description: "Luna to młoda, energiczna suczka, która uwielbia biegać. Wymaga doświadczonego opiekuna, który zapewni jej dużo ruchu i konsekwentne szkolenie. Nie nadaje się do mieszkania w bloku - potrzebuje domu z ogrodem.",
-    images: [
-      "/animals/dog2.jpg",
-      "/animals/dog2_2.jpg",
-      "/animals/dog2_3.jpg"
-    ],
+    description:
+      'Luna to młoda, energiczna suczka, która uwielbia biegać. Wymaga doświadczonego opiekuna, który zapewni jej dużo ruchu i konsekwentne szkolenie. Nie nadaje się do mieszkania w bloku - potrzebuje domu z ogrodem.',
+    images: ['/animals/dog2.jpg', '/animals/dog2_2.jpg', '/animals/dog2_3.jpg'],
     shelter: "Schronisko 'Psia Ostoja'",
     traits: [
-      "Biegacz",
-      "Energiczny",
-      "Wymaga ogrodu",
-      "Źle znosi samotność",
-      "Akceptuje dzieci"
+      'Biegacz',
+      'Energiczny',
+      'Wymaga ogrodu',
+      'Źle znosi samotność',
+      'Akceptuje dzieci',
     ],
     tags: [
-      { id: 2, text: "Biegacz" },
-      { id: 7, text: "Energiczny" },
-      { id: 30, text: "Wymaga ogrodu" },
-      { id: 8, text: "Źle znosi samotność" },
-      { id: 9, text: "Akceptuje dzieci" }
+      { id: 2, text: 'Biegacz' },
+      { id: 7, text: 'Energiczny' },
+      { id: 30, text: 'Wymaga ogrodu' },
+      { id: 8, text: 'Źle znosi samotność' },
+      { id: 9, text: 'Akceptuje dzieci' },
     ],
-    status: "Poszukuje domu na stałe"
+    status: 'Poszukuje domu na stałe',
   },
   {
     id: 4,
-    name: "Filemon",
-    type: "Kot",
-    breed: "Dachowiec",
-    gender: "Samiec",
-    age: "2 lata",
-    size: "Mały",
+    name: 'Filemon',
+    type: 'Kot',
+    breed: 'Dachowiec',
+    gender: 'Samiec',
+    age: '2 lata',
+    size: 'Mały',
     location: "Fundacja 'Koci Azyl', Gdańsk",
-    description: "Filemon to kot z traumą - został znaleziony na ulicy w złym stanie. Potrzebuje cierpliwego opiekuna, który da mu czas na zaaklimatyzowanie się. Nie nadaje się dla rodzin z małymi dziećmi.",
-    images: [
-      "/animals/cat2.jpg"
-    ],
+    description:
+      'Filemon to kot z traumą - został znaleziony na ulicy w złym stanie. Potrzebuje cierpliwego opiekuna, który da mu czas na zaaklimatyzowanie się. Nie nadaje się dla rodzin z małymi dziećmi.',
+    images: ['/animals/cat2.jpg'],
     shelter: "Fundacja 'Koci Azyl'",
     traits: [
-      "Z traumą",
-      "Nie chce dotyku",
-      "Nie akceptuje dzieci",
-      "Boi się hałasu"
+      'Z traumą',
+      'Nie chce dotyku',
+      'Nie akceptuje dzieci',
+      'Boi się hałasu',
     ],
     tags: [
-      { id: 23, text: "Z traumą" },
-      { id: 18, text: "Nie chce dotyku" },
-      { id: 10, text: "Nie akceptuje dzieci" },
-      { id: 17, text: "Boi się hałasu" }
+      { id: 23, text: 'Z traumą' },
+      { id: 18, text: 'Nie chce dotyku' },
+      { id: 10, text: 'Nie akceptuje dzieci' },
+      { id: 17, text: 'Boi się hałasu' },
     ],
-    status: "Poszukuje domu tymczasowego"
+    status: 'Poszukuje domu tymczasowego',
   },
   {
     id: 5,
-    name: "Kazik",
-    type: "Kot",
-    breed: "Dachowiec",
-    gender: "Samiec",
-    age: "2 lata",
-    size: "Mały",
+    name: 'Kazik',
+    type: 'Kot',
+    breed: 'Dachowiec',
+    gender: 'Samiec',
+    age: '2 lata',
+    size: 'Mały',
     location: "Fundacja 'Koci Azyl', Gdańsk",
-    description: "Filemon to kot z traumą - został znaleziony na ulicy w złym stanie. Potrzebuje cierpliwego opiekuna, który da mu czas na zaaklimatyzowanie się. Nie nadaje się dla rodzin z małymi dziećmi.",
-    images: [
-      "/animals/cat2.jpg"
-    ],
+    description:
+      'Filemon to kot z traumą - został znaleziony na ulicy w złym stanie. Potrzebuje cierpliwego opiekuna, który da mu czas na zaaklimatyzowanie się. Nie nadaje się dla rodzin z małymi dziećmi.',
+    images: ['/animals/cat2.jpg'],
     shelter: "Fundacja 'Koci Azyl'",
     traits: [
-      "Z traumą",
-      "Nie chce dotyku",
-      "Nie akceptuje dzieci",
-      "Boi się hałasu"
+      'Z traumą',
+      'Nie chce dotyku',
+      'Nie akceptuje dzieci',
+      'Boi się hałasu',
     ],
     tags: [
-      { id: 23, text: "Z traumą" },
-      { id: 18, text: "Nie chce dotyku" },
-      { id: 10, text: "Nie akceptuje dzieci" },
-      { id: 17, text: "Boi się hałasu" }
+      { id: 23, text: 'Z traumą' },
+      { id: 18, text: 'Nie chce dotyku' },
+      { id: 10, text: 'Nie akceptuje dzieci' },
+      { id: 17, text: 'Boi się hałasu' },
     ],
-    status: "Poszukuje domu tymczasowego"
-  }
+    status: 'Poszukuje domu tymczasowego',
+  },
 ];
 
 export default mockAnimals;

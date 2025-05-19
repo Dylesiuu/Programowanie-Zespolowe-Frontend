@@ -11,7 +11,6 @@ const UserProfilePage = () => {
     <div className="min-h-screen bg-[#FFF0E9] bg-[url('/cats.svg')] bg-repeat bg-[length:150rem_100rem] bg-fixed pt-12">
       <div className="container mx-auto py-8 px-4">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-
           <div className="lg:col-span-1 space-y-6">
             <div className="bg-white rounded-lg shadow-md p-6">
               <ProfilePersonalInfo user={mockUser} />
@@ -23,15 +22,14 @@ const UserProfilePage = () => {
 
           <div className="lg:col-span-2">
             <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-2xl font-bold mb-6">Zaserduszkowane zwierzęta</h2>
+              <h2 className="text-2xl font-bold mb-6">
+                Zaserduszkowane zwierzęta
+              </h2>
 
               {mockAnimals.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-h-[calc(100vh-200px)] overflow-y-auto">
                   {mockAnimals.map((animal) => (
-                    <AnimalCard
-                      key={animal.id}
-                      {...animal}
-                    />
+                    <AnimalCard key={animal.id} {...animal} />
                   ))}
                 </div>
               ) : (
