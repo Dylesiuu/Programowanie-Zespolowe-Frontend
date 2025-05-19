@@ -1,4 +1,5 @@
 import React from 'react';
+import * as ReactModule from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
@@ -85,7 +86,7 @@ describe('ShelterProfile Component', () => {
   const mockShelter = {
     _id: '1',
     name: 'Happy Paws Shelter',
-    location: '123 Main Street, Springfield',
+    location: [252.2297, 21.0122],
     phone: '+1 555-123-4567',
     email: 'contact@happypaws.com',
     animals: [
@@ -147,6 +148,23 @@ describe('ShelterProfile Component', () => {
                 email: 'test@example.com',
                 favourites: [],
               },
+            }),
+        });
+      }
+
+      if (url.includes('api.opencagedata.com/geocode/v1/json')) {
+        return Promise.resolve({
+          ok: true,
+          json: () =>
+            Promise.resolve({
+              results: [
+                {
+                  formatted: 'Warsaw, Poland',
+                  components: {
+                    city: 'Warsaw',
+                  },
+                },
+              ],
             }),
         });
       }
@@ -240,7 +258,9 @@ describe('ShelterProfile Component', () => {
     const infoCard = editButton.closest('div[class*="flex flex-col"]');
     expect(infoCard).toBeInTheDocument();
     expect(infoCard).toHaveTextContent(mockShelter.name);
-    expect(infoCard).toHaveTextContent(`Adres: ${mockShelter.location}`);
+    await waitFor(() => {
+      expect(infoCard).toHaveTextContent('Adres: Warsaw, Poland');
+    });
     expect(infoCard).toHaveTextContent(`Telefon: ${mockShelter.phone}`);
     expect(infoCard).toHaveTextContent(`Email: ${mockShelter.email}`);
   });
@@ -298,7 +318,9 @@ describe('ShelterProfile Component', () => {
     const mobileCard = closeButton.closest('div[class*="fixed flex"]');
 
     expect(mobileCard).toHaveTextContent(mockShelter.name);
-    expect(mobileCard).toHaveTextContent(`Adres: ${mockShelter.location}`);
+    await waitFor(() => {
+      expect(mobileCard).toHaveTextContent('Adres: Warsaw, Poland');
+    });
     expect(mobileCard).toHaveTextContent(`Telefon: ${mockShelter.phone}`);
     expect(mobileCard).toHaveTextContent(`Email: ${mockShelter.email}`);
   });
@@ -454,8 +476,6 @@ describe('ShelterProfile Component', () => {
 
   describe('setRefreshShelter functionality', () => {
     it('calls setRefreshShelter when animal is deleted', async () => {
-      const setRefreshShelterMock = jest.fn();
-
       render(
         <UserContext.Provider value={mockUserContext}>
           <ShelterProfile shelterId={1} animalId={null} />
@@ -469,9 +489,7 @@ describe('ShelterProfile Component', () => {
       await userEvent.click(deleteButton);
 
       await waitFor(() => {
-        expect(setRefreshShelterMock).not.toHaveBeenCalled();
-
-        expect(fetch).toHaveBeenCalledTimes(2); // Initial fetch + refetch
+        expect(fetch).toHaveBeenCalledTimes(4); // Initial fetch + refetch
       });
     });
   });

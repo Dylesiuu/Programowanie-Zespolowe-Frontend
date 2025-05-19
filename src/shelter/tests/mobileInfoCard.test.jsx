@@ -2,12 +2,11 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import MobileInfoCard from '../components/mobileInfoCard';
 import { userEvent } from '@testing-library/user-event';
-import { BiMenu } from 'react-icons/bi';
 
 describe('MobileInfoCard Component', () => {
   const mockShelter = {
     name: 'Happy Paws Shelter',
-    location: '123 Main Street, Springfield',
+    location: [23.4567, 45.6789],
     phone: '+1 555-123-4567',
     email: 'contact@happypaws.com',
     _id: '1',
@@ -28,11 +27,30 @@ describe('MobileInfoCard Component', () => {
     setUser: setUserMock,
   };
 
+  beforeEach(() => {
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            results: [
+              {
+                formatted: 'Warsaw, Poland',
+                components: {
+                  city: 'Warsaw',
+                },
+              },
+            ],
+          }),
+      })
+    );
+  });
+
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it('renders the shelter information correctly', () => {
+  it('renders the shelter information correctly', async () => {
     render(
       <MobileInfoCard
         shelter={mockShelter}
@@ -42,14 +60,14 @@ describe('MobileInfoCard Component', () => {
       />
     );
 
-    expect(screen.getByText(mockShelter.name)).toBeInTheDocument();
+    expect(await screen.findByText(mockShelter.name)).toBeInTheDocument();
 
-    expect(screen.getByText(/Adres:/)).toBeInTheDocument();
-    expect(screen.getByText(mockShelter.location)).toBeInTheDocument();
-    expect(screen.getByText(/Telefon:/)).toBeInTheDocument();
-    expect(screen.getByText(mockShelter.phone)).toBeInTheDocument();
-    expect(screen.getByText(/Email:/)).toBeInTheDocument();
-    expect(screen.getByText(mockShelter.email)).toBeInTheDocument();
+    expect(await screen.findByText(/Adres:/)).toBeInTheDocument();
+    expect(await screen.findByText('Warsaw, Poland')).toBeInTheDocument();
+    expect(await screen.findByText(/Telefon:/)).toBeInTheDocument();
+    expect(await screen.findByText(mockShelter.phone)).toBeInTheDocument();
+    expect(await screen.findByText(/Email:/)).toBeInTheDocument();
+    expect(await screen.findByText(mockShelter.email)).toBeInTheDocument();
   });
 
   it('renders the close button with the BiMenu icon and Edit Info button', async () => {

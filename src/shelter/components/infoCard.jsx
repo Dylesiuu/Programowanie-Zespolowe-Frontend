@@ -12,12 +12,6 @@ const InfoCard = ({ shelter, onEdit, userContext }) => {
       const response = await fetch(url);
       const data = await response.json();
       const result = data.results[0];
-      const components = result.components;
-      const city =
-        components.city ||
-        components.town ||
-        components.village ||
-        components.hamlet;
 
       setLocationName(result.formatted);
     } catch (error) {
