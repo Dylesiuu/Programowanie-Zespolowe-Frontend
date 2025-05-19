@@ -2,7 +2,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
 import 'leaflet/dist/leaflet.css';
-import { reverseCoordinates } from '@/lib/reverseCoordinates';
 
 const MapContainer = dynamic(
   () => import('react-leaflet').then((mod) => mod.MapContainer),
@@ -37,34 +36,26 @@ const MapComponent = ({ onLocationSelect, onCancel, setLocationName }) => {
   }, []);
 
   const reverseGeocode = async (latlng) => {
-    const city = await reverseCoordinates(latlng);
-    if (city) {
+    const { lat, lng } = latlng;
+    const apiKey = process.env.NEXT_PUBLIC_MAP_TRANSLATE;
+    const url = `https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lng}&key=${apiKey}`;
+
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      const result = data.results[0];
+      const components = result.components;
+      const city =
+        components.city ||
+        components.town ||
+        components.village ||
+        components.hamlet;
+
       setLocationName(city);
       setLocationNameState(city);
-    } else {
+    } catch (error) {
       console.error('Reverse geocode error:', error);
     }
-
-    // const { lat, lng } = latlng;
-    // const apiKey = process.env.NEXT_PUBLIC_MAP_TRANSLATE;
-    // const url = `https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lng}&key=${apiKey}`;
-
-    // try {
-    //   const response = await fetch(url);
-    //   const data = await response.json();
-    //   const result = data.results[0];
-    //   const components = result.components;
-    //   const city =
-    //     components.city ||
-    //     components.town ||
-    //     components.village ||
-    //     components.hamlet;
-
-    //   setLocationName(city);
-    //   setLocationNameState(city);
-    // } catch (error) {
-    //   console.error('Reverse geocode error:', error);
-    // }
   };
 
   const handleSearchLocation = async () => {

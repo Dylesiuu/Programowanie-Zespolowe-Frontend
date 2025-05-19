@@ -1,22 +1,32 @@
 import React, { useEffect } from 'react';
-import { reverseCoordinates } from '@/lib/reverseCoordinates';
 
 const InfoCard = ({ shelter, onEdit, userContext }) => {
   const [locationName, setLocationName] = React.useState('');
-  useEffect(() => {
-    const fetchLocationName = async () => {
-      const city = await reverseCoordinates({
-        lat: shelter.location[0],
-        lng: shelter.location[1],
-      });
-      if (city) {
-        setLocationName(city);
-      } else {
-        console.error('Reverse geocode error:', error);
-      }
-    };
 
-    fetchLocationName();
+  const reverseGeocode = async (latlng) => {
+    const { lat, lng } = latlng;
+    const apiKey = process.env.NEXT_PUBLIC_MAP_TRANSLATE;
+    const url = `https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lng}&key=${apiKey}`;
+
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      const result = data.results[0];
+      const components = result.components;
+      const city =
+        components.city ||
+        components.town ||
+        components.village ||
+        components.hamlet;
+
+      setLocationName(result.formatted);
+    } catch (error) {
+      console.error('Reverse geocode error:', error);
+    }
+  };
+
+  useEffect(() => {
+    reverseGeocode({ lat: shelter.location[0], lng: shelter.location[1] });
   }, [shelter.location]);
 
   return (

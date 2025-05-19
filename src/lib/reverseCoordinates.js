@@ -14,7 +14,6 @@ export async function reverseCoordinates(latlng) {
       components.village ||
       components.hamlet;
 
-    console.log('city: ', city);
     return city;
   } catch (error) {
     console.error('Reverse geocode error:', error);
