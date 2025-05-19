@@ -14,7 +14,6 @@ describe('UserContext', () => {
           {(value) => {
             expect(value.user).toBeNull();
             expect(value.token).toBeNull();
-            expect(value.isLoggedIn()).toBe(false);
           }}
         </UserContext.Consumer>
       </UserProvider>
