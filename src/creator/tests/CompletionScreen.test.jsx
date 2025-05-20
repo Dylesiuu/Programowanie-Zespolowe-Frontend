@@ -2,26 +2,22 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import CompletionScreen from '../components/CompletionScreen';
-import { useRouter } from 'next/router';
-
-jest.mock('next/router', () => ({
-  useRouter: jest.fn(),
-}));
 
 describe('CompletionScreen', () => {
-  const mockPush = jest.fn();
-  beforeEach(() => {
-    useRouter.mockImplementation(() => ({
-      push: mockPush,
-    }));
-  });
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
+  const mockAllTraits = [
+    { _id: '1', text: 'Dom' },
+    { _id: '2', text: 'Mieszkanie wielopokojowe' },
+  ];
 
   it('renders completion message and selected tags', async () => {
-    const selectedTags = [1, 2];
-    render(<CompletionScreen selectedTags={selectedTags} />);
+    const selectedTags = ['1', '2'];
+    render(
+      <CompletionScreen
+        selectedTags={selectedTags}
+        allTraits={mockAllTraits}
+        onSubmit={jest.fn()}
+      />
+    );
 
     expect(
       await screen.findByText('Twój profil został utworzony!')
@@ -35,11 +31,19 @@ describe('CompletionScreen', () => {
     ).toBeInTheDocument();
   });
 
-  it('navigates to swipe page when continue button is clicked', async () => {
-    render(<CompletionScreen selectedTags={[]} />);
+  it('calls onSubmit when continue button is clicked', async () => {
+    const mockSubmit = jest.fn();
+    render(
+      <CompletionScreen
+        selectedTags={[]}
+        allTraits={[]}
+        onSubmit={mockSubmit}
+      />
+    );
+
     const continueButton = await screen.findByText('Przejdź do przeglądania');
     await userEvent.click(continueButton);
 
-    expect(mockPush).toHaveBeenCalledWith('/swipePage');
+    expect(mockSubmit).toHaveBeenCalled();
   });
 });
