@@ -38,9 +38,9 @@ export const UserProvider = ({ children }) => {
       if (isTokenExpiredSoon(token)) {
         try {
           if (
-            tokenFromHeaders &&
-            typeof tokenFromHeaders === 'string' &&
-            tokenFromHeaders.split('.').length === 3
+            token &&
+            typeof token === 'string' &&
+            token.split('.').length === 3
           ) {
             console.log('Time now:', Math.floor(Date.now() / 1000));
             console.log(
