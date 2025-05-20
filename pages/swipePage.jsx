@@ -6,6 +6,7 @@ import Buttons from '../src/swiping/components/buttons';
 import LocationBar from '../src/localization/components/locationBar';
 import { UserContext } from '@/context/userContext';
 import { useRouter } from 'next/router';
+import { useAuthFetch } from '@/lib/authFetch';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -17,6 +18,7 @@ const SwipePage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const userContext = useContext(UserContext);
+  const fetchData = useAuthFetch();
   const router = useRouter();
   const { created } = router.query;
   const [showSuccess, setShowSuccess] = useState(false);
@@ -51,7 +53,7 @@ const SwipePage = () => {
           range: range,
         };
 
-        const response = await fetch(`${API_BASE_URL}/scrolling/match`, {
+        const response = await fetchData(`${API_BASE_URL}/scrolling/match`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -108,16 +110,19 @@ const SwipePage = () => {
     const email = userContext.user.email;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/user/addfavourite`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${userContext.token}`,
-        },
-        body: JSON.stringify({
-          favourites: [petId],
-        }),
-      });
+      const response = await fetch(
+        `${API_BASE_URL}/user/addfavourite/${email}`,
+        {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${userContext.token}`,
+          },
+          body: JSON.stringify({
+            favourites: [petId],
+          }),
+        }
+      );
 
       const data = await response.json();
 
