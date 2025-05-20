@@ -11,7 +11,7 @@ import { useAuthFetch } from '@/lib/authFetch';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-const UserCreator = ({ givenUserId }) => {
+const UserCreator = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedTags, setSelectedTags] = useState([]);
   const [allTraits, setAllTraits] = useState([]);
@@ -76,12 +76,12 @@ const UserCreator = ({ givenUserId }) => {
   }, []);
 
   useEffect(() => {
-    if (givenUserId && givenUserId !== 'null' && allTraits.length > 0) {
-      fetchUserData(givenUserId);
+    if (userContext.user?._id && allTraits.length > 0) {
+      mapTag();
     }
-  }, [givenUserId, allTraits]);
+  }, [userContext.user?._id, allTraits]);
 
-  const fetchUserData = async () => {
+  const mapTag = async () => {
     try {
       const userTags = userContext.user.traits
         .map((traitId) => allTraits.find((trait) => trait._id === traitId._id))
@@ -96,7 +96,7 @@ const UserCreator = ({ givenUserId }) => {
 
   const saveUserTraits = async () => {
     try {
-      if (givenUserId || userContext.user?._id) {
+      if (userContext.user?._id) {
         const response = await fetchData(`${API_BASE_URL}/user/removetrait`, {
           method: 'DELETE',
           headers: {
@@ -113,7 +113,7 @@ const UserCreator = ({ givenUserId }) => {
         }
       }
 
-      if (givenUserId || userContext.user?._id) {
+      if (userContext.user?._id) {
         const response = await fetchData(`${API_BASE_URL}/user/addtraits`, {
           method: 'PATCH',
           headers: {

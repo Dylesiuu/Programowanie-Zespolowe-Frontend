@@ -87,7 +87,6 @@ const UserProfilePage = () => {
     };
 
     if (userContext.user?._id && userId) {
-      console.log('sprawdzamy');
       fetchUserData();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
