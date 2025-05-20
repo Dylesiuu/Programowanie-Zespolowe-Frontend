@@ -212,20 +212,25 @@ const AnimalCreator = ({ givenAnimalId }) => {
         gender: animalData.gender,
         description: animalData.description,
         traits: animalData.tags,
-        images: uploadPhotos(animalData.photos),
+        images: await uploadPhotos(animalData.photos),
       };
 
       if (givenAnimalId) {
         //Tu będzie fetch na edytowanie zwierząt
       }
 
+      console.log('Form data:', formData);
+      console.log('Form data images:', formData.images);
+      console.log('Form data stringified:', JSON.stringify(formData));
       const response = await fetchData(`${API_BASE_URL}/animals`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${userContext.token}`,
         },
-        body: formData,
+        body: JSON.stringify(formData),
       });
+
+      console.log('Response:', response);
 
       if (response.ok) {
         router.push(
