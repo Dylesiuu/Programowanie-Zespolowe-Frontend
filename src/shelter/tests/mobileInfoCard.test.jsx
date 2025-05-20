@@ -3,6 +3,10 @@ import { render, screen } from '@testing-library/react';
 import MobileInfoCard from '../components/mobileInfoCard';
 import { userEvent } from '@testing-library/user-event';
 
+jest.mock('next/router', () => ({
+  useRouter: jest.fn(),
+}));
+
 describe('MobileInfoCard Component', () => {
   const mockShelter = {
     name: 'Happy Paws Shelter',
@@ -141,5 +145,48 @@ describe('MobileInfoCard Component', () => {
     await userEvent.click(closeButton);
 
     expect(mockToggleCard).toHaveBeenCalledTimes(1);
+  });
+
+  it('renders the delete button only when user is an employee of the shelter', async () => {
+    const mockUserContextWithDifferentShelterId = {
+      ...mockUserContext,
+      user: {
+        ...mockUserContext.user,
+        shelterId: '2',
+      },
+    };
+    render(
+      <MobileInfoCard
+        shelter={mockShelter}
+        onEdit={mockOnEdit}
+        toggleCard={mockToggleCard}
+        userContext={mockUserContextWithDifferentShelterId}
+      />
+    );
+    expect(
+      screen.queryByTestId('mobile-delete-button')
+    ).not.toBeInTheDocument();
+  });
+
+  it('calls removeShelter and closes warning when delete is confirmed', async () => {
+    render(
+      <MobileInfoCard
+        shelter={mockShelter}
+        onEdit={mockOnEdit}
+        toggleCard={mockToggleCard}
+        userContext={mockUserContext}
+      />
+    );
+
+    const deleteButton = await screen.findByTestId('mobile-delete-button');
+    await userEvent.click(deleteButton);
+
+    const confirmButton = screen.getByText('Tak');
+    await userEvent.click(confirmButton);
+
+    expect(global.fetch).toHaveBeenCalled();
+    expect(
+      screen.queryByText('Czy na pewno chcesz usunąć swoje schronisko?')
+    ).not.toBeInTheDocument();
   });
 });

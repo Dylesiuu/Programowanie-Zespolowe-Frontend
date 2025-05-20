@@ -121,6 +121,19 @@ const MobileInfoCard = ({ shelter, onEdit, toggleCard, userContext }) => {
               Edytuj
             </button>
           )}
+        {userContext.user?.shelterId &&
+          userContext.user.shelterId === shelter._id && (
+            <button
+              className="mt-4 px-4 py-2 text-sm md:text-lg lg:text-xl
+                      bg-[#FF0000] text-white hover:bg-[#CC0000] rounded-full
+                     transition-all duration-300 transform hover:scale-105 shadow-lg
+                     w-full max-w-[200px] md:max-w-[240px] lg:max-w-[280px]"
+              onClick={showWarning}
+              data-testid="mobile-delete-button"
+            >
+              Usuń
+            </button>
+          )}
       </div>
       {/* Warning Window */}
       {isWarningVisible && (
