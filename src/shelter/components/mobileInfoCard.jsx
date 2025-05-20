@@ -1,8 +1,15 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BiMenu } from 'react-icons/bi';
+import { useAuthFetch } from '@/lib/authFetch';
+import { useRouter } from 'next/router';
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 const MobileInfoCard = ({ shelter, onEdit, toggleCard, userContext }) => {
   const [locationName, setLocationName] = React.useState('');
+  const [isWarningVisible, setIsWarningVisible] = useState(false);
+  const fetchData = useAuthFetch();
+  const router = useRouter();
 
   const reverseGeocode = async (latlng) => {
     const { lat, lng } = latlng;
@@ -23,6 +30,36 @@ const MobileInfoCard = ({ shelter, onEdit, toggleCard, userContext }) => {
   useEffect(() => {
     reverseGeocode({ lat: shelter.location[0], lng: shelter.location[1] });
   }, [shelter.location]);
+
+  const showWarning = () => {
+    setIsWarningVisible(true);
+  };
+
+  const hideWarning = () => {
+    setIsWarningVisible(false);
+  };
+
+  const removeShelter = async () => {
+    try {
+      const response = await fetchData(`${API_BASE_URL}/shelter/remove`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userContext.token}`,
+        },
+      });
+      if (!response.ok) {
+        console.error(`HTTP error! Status: ${response.status}`);
+        return;
+      }
+      const data = await response.json();
+      console.warn(data.message);
+      userContext.setUser(data.updatedUser);
+      router.push('/swipePage?created=false');
+    } catch (error) {
+      console.error('Error deleting animal:', error.message);
+    }
+  };
 
   return (
     <div className="fixed flex flex-col inset-y-0 left-0 z-50 w-[80vw] mt-[3.75rem] bg-[#fefaf7]/80 shadow-2xl p-4 space-y-6 rounded-r-3xl justify-between items-center">
@@ -65,7 +102,7 @@ const MobileInfoCard = ({ shelter, onEdit, toggleCard, userContext }) => {
             </a>
           </p>
           <p className="text-sm md:text-base lg:text-lg text-gray-600">
-            <strong>O schronisku:</strong> {shelter.shortNote}
+            <strong>O schronisku:</strong> {shelter.description}
           </p>
         </div>
       </div>
@@ -85,6 +122,33 @@ const MobileInfoCard = ({ shelter, onEdit, toggleCard, userContext }) => {
             </button>
           )}
       </div>
+      {/* Warning Window */}
+      {isWarningVisible && (
+        <div className="fixed inset-0 flex items-center justify-center backdrop-blur-sm z-50">
+          <div className="bg-white p-6 rounded-3xl shadow-2xl w-[90%] max-w-md">
+            <p className="text-gray-800 text-lg mb-4">
+              Czy na pewno chcesz usunąć swoje schronisko?
+            </p>
+            <div className="flex justify-end gap-4">
+              <button
+                className="px-4 py-2 bg-[#FF0000] text-white rounded-lg hover:bg-[#CC0000] transition-all cursor-pointer"
+                onClick={() => {
+                  removeShelter();
+                  hideWarning();
+                }}
+              >
+                Tak
+              </button>
+              <button
+                className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 transition-all cursor-pointer"
+                onClick={hideWarning}
+              >
+                Nie
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

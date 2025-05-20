@@ -1,8 +1,14 @@
 import React, { useEffect, useState } from 'react';
+import { useAuthFetch } from '@/lib/authFetch';
+import { useRouter } from 'next/router';
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 const InfoCard = ({ shelter, onEdit, userContext }) => {
   const [locationName, setLocationName] = React.useState('');
   const [isWarningVisible, setIsWarningVisible] = useState(false);
+  const fetchData = useAuthFetch();
+  const router = useRouter();
 
   const reverseGeocode = async (latlng) => {
     const { lat, lng } = latlng;
@@ -34,6 +40,7 @@ const InfoCard = ({ shelter, onEdit, userContext }) => {
 
   const removeShelter = async () => {
     try {
+      console.log('Removing shelter...');
       const response = await fetchData(`${API_BASE_URL}/shelter/remove`, {
         method: 'DELETE',
         headers: {
@@ -48,7 +55,7 @@ const InfoCard = ({ shelter, onEdit, userContext }) => {
       const data = await response.json();
       console.warn(data.message);
       userContext.setUser(data.updatedUser);
-      Router.push('/swipePage?created=false');
+      router.push('/swipePage?created=false');
     } catch (error) {
       console.error('Error deleting animal:', error.message);
     }
@@ -86,7 +93,7 @@ const InfoCard = ({ shelter, onEdit, userContext }) => {
             </a>
           </p>
           <p className="text-sm md:text-base lg:text-lg text-gray-600">
-            <strong>O schronisku:</strong> {shelter.shortNote}
+            <strong>O schronisku:</strong> {shelter.description}
           </p>
         </div>
       </div>
