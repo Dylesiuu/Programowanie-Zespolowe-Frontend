@@ -64,6 +64,21 @@ const MapComponent = ({
           components.county;
       }
 
+      let locationString = '';
+
+      if (detailLevel === 'full') {
+        locationString = result.formatted; // pełny adres
+      } else if (detailLevel === 'city') {
+        locationString =
+          components.city ||
+          components.town ||
+          components.village ||
+          components.hamlet ||
+          components.county;
+      }
+
+      setLocationName(locationString);
+      setLocationNameState(locationString);
       setLocationName(locationString);
       setLocationNameState(locationString);
     } catch (error) {
