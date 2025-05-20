@@ -68,7 +68,7 @@ const mockAnimals = [
     location: "Schronisko 'Psia Ostoja', Wrocław",
     description:
       'Luna to młoda, energiczna suczka, która uwielbia biegać. Wymaga doświadczonego opiekuna, który zapewni jej dużo ruchu i konsekwentne szkolenie. Nie nadaje się do mieszkania w bloku - potrzebuje domu z ogrodem.',
-    images: ['/animals/dog2.jpg', '/animals/dog2_2.jpg', '/animals/dog2_3.jpg'],
+    images: ['/img/dog2.jpeg', '/img/dog.jpg', '/animals/dog2_3.jpg'],
     shelter: "Schronisko 'Psia Ostoja'",
     traits: [
       'Biegacz',

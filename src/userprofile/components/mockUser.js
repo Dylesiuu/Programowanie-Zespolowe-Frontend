@@ -3,7 +3,7 @@ const mockUser = {
   name: 'Anna',
   lastname: 'Nowak',
   email: 'anna.nowak@example.com',
-  avatar: '/avatars/user1.jpg',
+  avatar: '/img/profile.png',
   city: 'Warszawa',
   about:
     'Jestem miłośniczką zwierząt od dziecka. Obecnie opiekuję się dwoma kotami, ale chętnie pomogę też innym zwierzakom w potrzebie. Pracuję zdalnie, więc mam dużo czasu dla moich pupili.',
