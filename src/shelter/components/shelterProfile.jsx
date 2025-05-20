@@ -5,6 +5,7 @@ import AnimalCard from './animalCard';
 import MobileInfoCard from './mobileInfoCard';
 import { UserContext } from '@/context/userContext';
 import { useAuthFetch } from '@/lib/authFetch';
+import { useRouter } from 'next/router';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -16,6 +17,7 @@ const ShelterProfile = ({ shelterId, animalId }) => {
   const userContext = useContext(UserContext);
   const [refreshShelter, setRefreshShelter] = useState(false);
   const fetchData = useAuthFetch();
+  const router = useRouter();
 
   useEffect(() => {
     const fetchShelterData = async () => {
@@ -58,7 +60,7 @@ const ShelterProfile = ({ shelterId, animalId }) => {
   }, [animalId, shelter?.animals]);
 
   const handleEdit = () => {
-    alert('Edit button clicked!');
+    router.push(`/shelterCreator?shelterId=${shelterId}`);
   };
 
   const handleAnimalClick = (animal) => {

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useRouter } from 'next/router';
 import { UserContext } from '@/context/userContext';
 import MapComponent from '../src/localization/components/mapComponent';
+import { useAuthFetch } from '@/lib/authFetch';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -19,12 +20,49 @@ const ShelterCreator = () => {
   const [showMap, setShowMap] = useState(false);
   const router = useRouter();
   const userContext = useContext(UserContext);
+  const fetchData = useAuthFetch();
+  const { shelterId } = router.query;
 
   useEffect(() => {
     if (!userContext.isLoggedIn()) {
       router.replace('/');
     }
   }, [router, userContext]);
+
+  const fetchAnimalData = async (id) => {
+    try {
+      const response = await fetchData(`${API_BASE_URL}/shelter/find-by-id`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userContext.token}`,
+        },
+        body: JSON.stringify({ shelterId: id }),
+      });
+
+      if (!response.ok) {
+        console.error(`HTTP error! Status: ${response.status}`);
+        return;
+      }
+
+      const data = await response.json();
+      setFormData({
+        name: data.shelter.name,
+        email: data.shelter.email,
+        phone: data.shelter.phoneNumber,
+        description: data.shelter.description,
+      });
+    } catch (error) {
+      console.error('Error fetching animal data:', error.message);
+    }
+  };
+
+  useEffect(() => {
+    if (shelterId && shelterId !== 'null') {
+      fetchAnimalData(shelterId);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [shelterId]);
 
   const validate = () => {
     const newErrors = {};
@@ -55,32 +93,61 @@ const ShelterCreator = () => {
     setIsSubmitting(true);
 
     try {
-      const res = await fetch(`${API_BASE_URL}/shelter/create`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${userContext.token}`,
-        },
-        body: JSON.stringify({
-          name: formData.name,
-          phoneNumber: formData.phone,
-          email: formData.email,
-          description: formData.description,
-          location: position,
-        }),
-      });
-
-      const data = await res.json();
-
-      if (res.ok) {
-        userContext.setUser(data.user);
-        userContext.setToken(data.token);
-        router.push({
-          pathname: '/swipePage',
-          query: { created: 'true' },
+      if (shelterId && shelterId !== 'null') {
+        const res = await fetch(`${API_BASE_URL}/shelter/edit`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${userContext.token}`,
+          },
+          body: JSON.stringify({
+            name: formData.name,
+            phoneNumber: formData.phone,
+            email: formData.email,
+            description: formData.description,
+            location: position,
+          }),
         });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          router.push(
+            `/shelterProfilePage?shelterId=${shelterId}&animalId=null`
+          );
+        } else {
+          alert(
+            data.message || 'Wystąpił błąd podczas aktualizacji schroniska.'
+          );
+        }
       } else {
-        alert(data.message || 'Wystąpił błąd podczas tworzenia schroniska.');
+        const res = await fetch(`${API_BASE_URL}/shelter/create`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${userContext.token}`,
+          },
+          body: JSON.stringify({
+            name: formData.name,
+            phoneNumber: formData.phone,
+            email: formData.email,
+            description: formData.description,
+            location: position,
+          }),
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          userContext.setUser(data.user);
+          userContext.setToken(data.token);
+          router.push({
+            pathname: '/swipePage',
+            query: { created: 'true' },
+          });
+        } else {
+          alert(data.message || 'Wystąpił błąd podczas tworzenia schroniska.');
+        }
       }
     } catch (err) {
       console.error(err);
@@ -97,7 +164,9 @@ const ShelterCreator = () => {
         className="mx-auto p-6 w-full max-w-2xl bg-white rounded-2xl shadow-md"
       >
         <h1 className="text-3xl font-bold mb-6 text-center">
-          Zarejestruj schronisko
+          {shelterId && shelterId !== 'null'
+            ? 'Zaktualizuj schronisko'
+            : 'Zarejestruj schronisko'}
         </h1>
 
         {[
@@ -163,7 +232,11 @@ const ShelterCreator = () => {
           disabled={isSubmitting}
           className="w-full bg-[#f4a261] hover:bg-[#e99549] text-white font-semibold py-2 px-4 rounded-xl transition disabled:opacity-50"
         >
-          {isSubmitting ? 'Wysyłanie...' : 'Zarejestruj'}
+          {isSubmitting
+            ? 'Wysyłanie...'
+            : shelterId && shelterId !== 'null'
+              ? 'Zaktualizuj'
+              : 'Zarejestruj'}
         </button>
       </form>
 
