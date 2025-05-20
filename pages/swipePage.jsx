@@ -8,7 +8,6 @@ import { UserContext } from '@/context/userContext';
 import { useRouter } from 'next/router';
 import { useAuthFetch } from '@/lib/authFetch';
 
-
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 const SwipePage = () => {
