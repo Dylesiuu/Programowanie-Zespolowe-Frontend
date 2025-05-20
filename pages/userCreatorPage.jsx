@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 const UserCreatorPage = () => {
   const userContext = useContext(UserContext);
   const router = useRouter();
+  const { userId } = router.query;
 
   useEffect(() => {
     if (userContext.isLoggedIn()) {
@@ -17,7 +18,7 @@ const UserCreatorPage = () => {
 
   return (
     <div className="m-0 p-0 max-h-[calc(100vh-3.75rem)] w-full h-full bg-white">
-      <UserCreator />
+      <UserCreator givenUserId={userId} />
     </div>
   );
 };
