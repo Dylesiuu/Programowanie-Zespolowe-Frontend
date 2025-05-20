@@ -67,7 +67,7 @@ const InfoCard = ({ shelter, onEdit, userContext }) => {
       <div className="flex flex-col w-full p-6 bg-white shadow-2xl rounded-3xl items-center justify-around">
         <h2
           data-testid="desktop-shelter-name"
-          className="text-lg md:text-xl lg:text-2xl font-bold text-gray-800 mb-6 md:mb-8"
+          className="text-lg md:text-xl lg:text-2xl font-bold text-gray-800 mb-6 md:mb-8 text-center"
         >
           {shelter.name}
         </h2>
