@@ -37,11 +37,17 @@ export const UserProvider = ({ children }) => {
     const checkAndRefresh = async () => {
       if (isTokenExpiredSoon(token)) {
         try {
-          console.log('Time now:', Math.floor(Date.now() / 1000));
-          console.log(
-            'Token expiration time:',
-            JSON.parse(atob(token.split('.')[1])).exp
-          );
+          if (
+            tokenFromHeaders &&
+            typeof tokenFromHeaders === 'string' &&
+            tokenFromHeaders.split('.').length === 3
+          ) {
+            console.log('Time now:', Math.floor(Date.now() / 1000));
+            console.log(
+              'Token expiration time:',
+              JSON.parse(atob(token.split('.')[1])).exp
+            );
+          }
           const res = await fetch(`${API_BASE_URL}/auth/refresh`, {
             method: 'POST',
             credentials: 'include',
