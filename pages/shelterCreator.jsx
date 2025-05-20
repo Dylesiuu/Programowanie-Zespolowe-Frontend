@@ -29,7 +29,7 @@ const ShelterCreator = () => {
     }
   }, [router, userContext]);
 
-  const fetchAnimalData = async (id) => {
+  const fetchShelterData = async (id) => {
     try {
       const response = await fetchData(`${API_BASE_URL}/shelter/find-by-id`, {
         method: 'POST',
@@ -52,6 +52,7 @@ const ShelterCreator = () => {
         phone: data.shelter.phoneNumber,
         description: data.shelter.description,
       });
+      setPosition([data.shelter.location[0], data.shelter.location[1]]);
     } catch (error) {
       console.error('Error fetching animal data:', error.message);
     }
@@ -59,7 +60,7 @@ const ShelterCreator = () => {
 
   useEffect(() => {
     if (shelterId && shelterId !== 'null') {
-      fetchAnimalData(shelterId);
+      fetchShelterData(shelterId);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shelterId]);
