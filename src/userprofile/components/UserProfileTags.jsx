@@ -9,6 +9,7 @@ const UserProfileTags = ({ userId, userTags }) => {
       <div className="flex flex-wrap items-center justify-between mb-4">
         <h2 className="text-xl text-[#CE8455] font-bold">Tagi</h2>
         <FaRegEdit
+          data-testid="edit-icon"
           className="w-6 h-6 text-[#CE8455] cursor-pointer"
           onClick={() => router.push(`/userCreatorPage?userId=${userId}`)}
         />
