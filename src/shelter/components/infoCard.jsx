@@ -130,7 +130,7 @@ const InfoCard = ({ shelter, onEdit, userContext }) => {
               <button
                 className="px-4 py-2 bg-[#FF0000] text-white rounded-lg hover:bg-[#CC0000] transition-all cursor-pointer"
                 onClick={() => {
-                  removeAnimal(animalId);
+                  removeShelter();
                   hideWarning();
                 }}
               >
