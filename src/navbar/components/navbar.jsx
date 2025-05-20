@@ -157,7 +157,6 @@ const Navbar = () => {
               <li
                 className="px-4 py-2 hover:bg-[#AA673C] cursor-pointer"
                 onClick={() => {
-                  alert('/profile');
                   router.push(
                     `/userProfilePage?userId=${userContext.user._id}`
                   );

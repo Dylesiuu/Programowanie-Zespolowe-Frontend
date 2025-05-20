@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useAuthFetch } from '@/lib/authFetch';
+import { useRouter } from 'next/router';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -10,6 +11,7 @@ const UserSearchBar = ({ userContext }) => {
   const [isSearchDropdownOpen, setIsSearchDropdownOpen] = useState(false);
   const searchDropdownRef = useRef(null);
   const fetchData = useAuthFetch();
+  const router = useRouter();
 
   const debounce = (func, delay) => {
     let timer;
@@ -113,7 +115,7 @@ const UserSearchBar = ({ userContext }) => {
                   key={user._id}
                   className="px-4 py-2 bg-[#CE8455] hover:bg-[#AA673C] cursor-pointer text-white"
                   onClick={() => {
-                    alert('profile/' + user._id);
+                    router.push(`/userProfilePage?userId=${user._id}`);
                     setIsSearchDropdownOpen(false);
                   }}
                 >
