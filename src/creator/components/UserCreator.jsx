@@ -34,7 +34,13 @@ const UserCreator = ({ givenUserId }) => {
     setShowSkipWarning(false);
   };
 
-  // Fetch all available traits from backend
+  const normalizeConflicts = (conflicts) => {
+    if (!conflicts) return [];
+    if (Array.isArray(conflicts)) return conflicts;
+    if (typeof conflicts === 'string') return [conflicts];
+    return [];
+  };
+
   useEffect(() => {
     const fetchAllTraits = async () => {
       try {
@@ -50,11 +56,15 @@ const UserCreator = ({ givenUserId }) => {
         );
 
         if (!response.ok) {
-          throw new Error('Failed to fetch traits');
+          console.error('Failed to fetch traits');
         }
 
         const data = await response.json();
-        setAllTraits(data.traits || []);
+        const normalizedTraits = data.traits.map((trait) => ({
+          ...trait,
+          conflicts: normalizeConflicts(trait.conflicts),
+        }));
+        setAllTraits(normalizedTraits || []);
       } catch (error) {
         console.error('Error fetching traits:', error);
       } finally {
@@ -65,41 +75,20 @@ const UserCreator = ({ givenUserId }) => {
     fetchAllTraits();
   }, []);
 
-  // Fetch user data if editing existing user
   useEffect(() => {
     if (givenUserId && givenUserId !== 'null' && allTraits.length > 0) {
       fetchUserData(givenUserId);
     }
   }, [givenUserId, allTraits]);
 
-  const fetchUserData = async (userId) => {
+  const fetchUserData = async () => {
     try {
-      const response = await fetchData(`${API_BASE_URL}/user/searchUserById`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ id: userId }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch user data');
-      }
-
-      const userData = await response.json();
-
-      // Map backend trait IDs to our local structure
-      const userTags = userData.traits
-        .map((traitId) => allTraits.find((trait) => trait._id === traitId))
+      const userTags = userContext.user.traits
+        .map((traitId) => allTraits.find((trait) => trait._id === traitId._id))
         .filter((tag) => tag !== undefined)
         .map((tag) => tag._id);
 
       setSelectedTags(userTags);
-
-      // Skip to completion if user already has traits
-      if (userTags.length > 0) {
-        setCurrentQuestionIndex(questions.length + 1);
-      }
     } catch (error) {
       console.error('Error fetching user data:', error);
     }
@@ -107,19 +96,40 @@ const UserCreator = ({ givenUserId }) => {
 
   const saveUserTraits = async () => {
     try {
-      const response = await fetchData(`${API_BASE_URL}/user/updateTraits`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          userId: givenUserId || userContext.user._id,
-          traits: selectedTags,
-        }),
-      });
+      if (givenUserId || userContext.user?._id) {
+        const response = await fetchData(`${API_BASE_URL}/user/removetrait`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${userContext.token}`,
+          },
+          body: JSON.stringify({
+            trait: userContext.user.traits.map((trait) => trait._id),
+          }),
+        });
 
-      if (!response.ok) {
-        throw new Error('Failed to save user traits');
+        if (!response.ok) {
+          console.error('Failed to delete user traits');
+        }
+      }
+
+      if (givenUserId || userContext.user?._id) {
+        const response = await fetchData(`${API_BASE_URL}/user/addtraits`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${userContext.token}`,
+          },
+          body: JSON.stringify({
+            trait: selectedTags,
+          }),
+        });
+
+        if (!response.ok) {
+          console.error('Failed to save user traits');
+        }
+        const data = await response.json();
+        userContext.setUser(data.user);
       }
 
       router.push('/swipePage');
@@ -128,7 +138,6 @@ const UserCreator = ({ givenUserId }) => {
     }
   };
 
-  // Prepare questions with options from fetched traits
   const preparedQuestions = questions.map((question) => {
     const questionTraits = allTraits.filter(
       (trait) => trait.collectionId === question.id
@@ -139,7 +148,7 @@ const UserCreator = ({ givenUserId }) => {
       options: questionTraits.map((trait) => ({
         text: trait.text,
         tags: [trait._id],
-        conflicts: trait.conflicts || [],
+        conflicts: normalizeConflicts(trait.conflicts),
       })),
     };
   });
@@ -149,33 +158,37 @@ const UserCreator = ({ givenUserId }) => {
       const isAnySelected = optionTags.some((tagId) =>
         prevTags.includes(tagId)
       );
-
       if (isAnySelected) {
         return prevTags.filter((tagId) => !optionTags.includes(tagId));
       }
 
-      const newConflicts = optionTags.flatMap((tagId) => {
+      const directConflicts = optionTags.flatMap((tagId) => {
         const trait = allTraits.find((t) => t._id === tagId);
-        return trait?.conflicts || [];
+        return trait ? normalizeConflicts(trait.conflicts) : [];
       });
 
-      const existingConflicts = prevTags.filter((tagId) =>
-        allTraits
-          .find((t) => t._id === tagId)
-          ?.conflicts?.some((conflictId) => optionTags.includes(conflictId))
-      );
+      const reverseConflicts = allTraits
+        .filter((trait) => {
+          return (
+            trait.conflicts &&
+            normalizeConflicts(trait.conflicts).some((conflictId) =>
+              optionTags.includes(conflictId)
+            )
+          );
+        })
+        .map((trait) => trait._id);
 
       const allConflicts = [
-        ...new Set([...newConflicts, ...existingConflicts]),
+        ...new Set([...directConflicts, ...reverseConflicts]),
       ];
 
-      return [
-        ...prevTags.filter((tagId) => !allConflicts.includes(tagId)),
-        ...optionTags,
-      ];
+      const filteredTags = prevTags.filter(
+        (tagId) => !allConflicts.includes(tagId)
+      );
+
+      return [...filteredTags, ...optionTags];
     });
   };
-
   const handleNext = () => {
     if (currentQuestionIndex < preparedQuestions.length) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
@@ -197,7 +210,7 @@ const UserCreator = ({ givenUserId }) => {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        Ładowanie...
+        Loading...
       </div>
     );
   }
@@ -219,10 +232,8 @@ const UserCreator = ({ givenUserId }) => {
   if (currentQuestionIndex > preparedQuestions.length) {
     return (
       <CompletionScreen
-        selectedTags={selectedTags.map((tagId) => {
-          const trait = allTraits.find((t) => t._id === tagId);
-          return trait ? trait._id : tagId;
-        })}
+        selectedTags={selectedTags}
+        allTraits={allTraits}
         onSubmit={saveUserTraits}
       />
     );
@@ -235,7 +246,7 @@ const UserCreator = ({ givenUserId }) => {
       {showSkipWarning && (
         <SkipWarning onConfirm={confirmSkip} onCancel={cancelSkip} />
       )}
-      <div className="flex flex-col justify-center min-h-screen bg-[#fefaf7]">
+      <div className="flex flex-col justify-center min-h-screen">
         <div className="mx-auto p-6 w-full max-w-6xl flex-grow flex flex-col">
           <div className="flex-grow flex flex-col justify-center">
             <Question
