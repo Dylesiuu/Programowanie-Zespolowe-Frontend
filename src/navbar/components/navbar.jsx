@@ -167,6 +167,16 @@ const Navbar = () => {
                 Ustawienia
               </li>
               <li
+                className="px-4 py-2 hover:bg-[#AA673C] cursor-pointer"
+                onClick={() =>
+                  router.push(
+                    `/shelterCreator`
+                  )
+                }
+              >
+                Stwórz Schronisko
+              </li>
+              <li
                 className="px-4 py-2 hover:bg-[#AA673C] hover:rounded-b-lg cursor-pointer"
                 onClick={() => {
                   userContext.logout();

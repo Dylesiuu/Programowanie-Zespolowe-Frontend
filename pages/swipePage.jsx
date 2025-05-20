@@ -18,12 +18,25 @@ const SwipePage = () => {
   const [error, setError] = useState(null);
   const userContext = useContext(UserContext);
   const router = useRouter();
+  const { created } = router.query;
+  const [showSuccess, setShowSuccess] = useState(false);
 
   useEffect(() => {
     if (!userContext.isLoggedIn()) {
       router.replace('/');
     }
   }, [router, userContext]);
+
+  useEffect(() => {
+    if (created === 'true') {
+      setShowSuccess(true);
+      const timeout = setTimeout(() => {
+        setShowSuccess(false);
+      }, 20000);
+
+      return () => clearTimeout(timeout);
+    }
+  }, [created]);
 
   useEffect(() => {
     const fetchPets = async () => {
@@ -48,9 +61,15 @@ const SwipePage = () => {
         });
 
         if (!response.ok) {
-          setError(
-            'Wygląda na to, że mamy problemy z serwerem. Spróbuj ponownie później.'
-          );
+          if (response.status === 404) {
+            setError(
+              'Brak zwierzaków w tej okolicy. Spróbuj zmienić lokalizację lub zwiększyć zasięg.'
+            );
+          } else {
+            setError(
+              'Wygląda na to, że mamy problemy z serwerem. Spróbuj ponownie później.'
+            );
+          }
           return;
         }
 
@@ -129,7 +148,7 @@ const SwipePage = () => {
   }, [handleSwipe]);
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-100">
+    <div className="flex flex-col min-h-screen bg-[url('/Union.svg')] bg-repeat bg-[length:150rem_100rem] bg-[#FFF0E9]">
       {/* Pasek lokalizacji */}
       <div className="flex justify-center px-4 mt-18">
         <LocationBar
@@ -138,6 +157,12 @@ const SwipePage = () => {
           onRangeChange={(newRange) => setRange(newRange)}
         />
       </div>
+
+      {showSuccess && (
+        <div className="mx-auto mt-4 px-4 py-2 bg-green-100 text-green-800 border border-green-300 rounded-xl text-center max-w-xl">
+          Schronisko zostało pomyślnie utworzone!
+        </div>
+      )}
 
       {isLoading && (
         <p className="text-center mt-4">Ładowanie zwierzaczków...</p>
