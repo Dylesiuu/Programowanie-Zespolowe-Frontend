@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const InfoCard = ({ shelter, onEdit, userContext }) => {
   const [locationName, setLocationName] = React.useState('');
+  const [isWarningVisible, setIsWarningVisible] = useState(false);
 
   const reverseGeocode = async (latlng) => {
     const { lat, lng } = latlng;
@@ -22,6 +23,36 @@ const InfoCard = ({ shelter, onEdit, userContext }) => {
   useEffect(() => {
     reverseGeocode({ lat: shelter.location[0], lng: shelter.location[1] });
   }, [shelter.location]);
+
+  const showWarning = () => {
+    setIsWarningVisible(true);
+  };
+
+  const hideWarning = () => {
+    setIsWarningVisible(false);
+  };
+
+  const removeShelter = async () => {
+    try {
+      const response = await fetchData(`${API_BASE_URL}/shelter/remove`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userContext.token}`,
+        },
+      });
+      if (!response.ok) {
+        console.error(`HTTP error! Status: ${response.status}`);
+        return;
+      }
+      const data = await response.json();
+      console.warn(data.message);
+      userContext.setUser(data.updatedUser);
+      Router.push('/swipePage?created=false');
+    } catch (error) {
+      console.error('Error deleting animal:', error.message);
+    }
+  };
 
   return (
     <div className="flex flex-col w-full h-full rounded-3xl shadow-2xl p-4 bg-[#fefaf7]/80 max-w-md md:max-w-lg lg:max-w-xl mx-auto space-y-6 justify-between items-center">
@@ -60,7 +91,7 @@ const InfoCard = ({ shelter, onEdit, userContext }) => {
         </div>
       </div>
       {/* Buttons */}
-      <div className="w-full flex justify-center">
+      <div className="w-full flex justify-center items-center gap-2">
         {userContext.user?.shelterId &&
           userContext.user.shelterId === shelter._id && (
             <button
@@ -74,7 +105,47 @@ const InfoCard = ({ shelter, onEdit, userContext }) => {
               Edytuj
             </button>
           )}
+        {userContext.user?.shelterId &&
+          userContext.user.shelterId === shelter._id && (
+            <button
+              className="mt-4 px-4 py-2 text-sm md:text-lg lg:text-xl
+                      bg-[#FF0000] text-white hover:bg-[#CC0000] rounded-full
+                     transition-all duration-300 transform hover:scale-105 shadow-lg
+                     w-full max-w-[200px] md:max-w-[240px] lg:max-w-[280px]"
+              onClick={showWarning}
+              data-testid="infoCard-edit-button"
+            >
+              Usuń
+            </button>
+          )}
       </div>
+      {/* Warning Window */}
+      {isWarningVisible && (
+        <div className="fixed inset-0 flex items-center justify-center backdrop-blur-sm z-50">
+          <div className="bg-white p-6 rounded-3xl shadow-2xl w-[90%] max-w-md">
+            <p className="text-gray-800 text-lg mb-4">
+              Czy na pewno chcesz usunąć swoje schronisko?
+            </p>
+            <div className="flex justify-end gap-4">
+              <button
+                className="px-4 py-2 bg-[#FF0000] text-white rounded-lg hover:bg-[#CC0000] transition-all cursor-pointer"
+                onClick={() => {
+                  removeAnimal(animalId);
+                  hideWarning();
+                }}
+              >
+                Tak
+              </button>
+              <button
+                className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 transition-all cursor-pointer"
+                onClick={hideWarning}
+              >
+                Nie
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

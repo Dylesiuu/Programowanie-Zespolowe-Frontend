@@ -8,7 +8,7 @@ export function useAuthFetch() {
   const fetchData = async (input, init = {}) => {
     if (process.env.NODE_ENV !== 'test') {
       const tokenFromHeaders =
-        init?.headers?.Authorization?.split(' ')[1] || null;
+        init?.headers?.Authorization?.split(' ')[1] || userContext.token;
 
       if (!tokenFromHeaders || isTokenExpired(tokenFromHeaders)) {
         try {
@@ -55,6 +55,9 @@ export function useAuthFetch() {
 
 function isTokenExpired(token) {
   try {
+    if (!token || typeof token !== 'string' || token.split('.').length !== 3) {
+      return true;
+    }
     const payload = JSON.parse(atob(token.split('.')[1]));
     const now = Math.floor(Date.now() / 1000);
     return payload.exp < now + 60;
