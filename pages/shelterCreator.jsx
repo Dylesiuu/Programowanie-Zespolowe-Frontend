@@ -73,6 +73,8 @@ const ShelterCreator = () => {
       const data = await res.json();
 
       if (res.ok) {
+        userContext.setUser(data.user);
+        userContext.setToken(data.token);
         router.push({
           pathname: '/swipePage',
           query: { created: 'true' },
