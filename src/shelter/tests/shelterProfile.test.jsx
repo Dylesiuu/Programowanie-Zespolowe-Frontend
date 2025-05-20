@@ -5,9 +5,16 @@ import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import ShelterProfile from '../components/shelterProfile';
 import { UserContext } from '@/context/userContext';
-
+const mockPush = jest.fn();
 jest.mock('next/router', () => ({
-  useRouter: jest.fn(),
+  useRouter: jest.fn(() => ({
+    push: mockPush,
+    replace: jest.fn(),
+    prefetch: jest.fn(),
+    pathname: '/',
+    query: {},
+    asPath: '/',
+  })),
 }));
 
 jest.mock('../components/animalCard', () => {
@@ -265,18 +272,6 @@ describe('ShelterProfile Component', () => {
     expect(infoCard).toHaveTextContent(`Email: ${mockShelter.email}`);
   });
 
-  it('calls onEdit when Edit Info button is clicked in InfoCard', async () => {
-    render(
-      <UserContext.Provider value={mockUserContext}>
-        <ShelterProfile shelterId={1} animalId={null} />
-      </UserContext.Provider>
-    );
-    window.alert = jest.fn();
-    const editButton = await screen.findByTestId('infoCard-edit-button');
-    await userEvent.click(editButton);
-    expect(window.alert).toHaveBeenCalledWith('Edit button clicked!');
-  });
-
   it('toggles MobileInfoCard visibility when menu button is clicked', async () => {
     render(
       <UserContext.Provider value={mockUserContext}>
@@ -323,18 +318,6 @@ describe('ShelterProfile Component', () => {
     });
     expect(mobileCard).toHaveTextContent(`Telefon: ${mockShelter.phoneNumber}`);
     expect(mobileCard).toHaveTextContent(`Email: ${mockShelter.email}`);
-  });
-
-  it('calls onEdit when Edit Info button is clicked in MobileInfoCard', async () => {
-    render(
-      <UserContext.Provider value={mockUserContext}>
-        <ShelterProfile shelterId={1} animalId={null} />
-      </UserContext.Provider>
-    );
-    window.alert = jest.fn();
-    const editButtons = await screen.findByTestId('mobile-edit-button');
-    await userEvent.click(editButtons);
-    expect(window.alert).toHaveBeenCalledWith('Edit button clicked!');
   });
 
   it('shows backdrop blur when MobileInfoCard is visible', async () => {
@@ -492,5 +475,29 @@ describe('ShelterProfile Component', () => {
         expect(fetch).toHaveBeenCalledTimes(4); // Initial fetch + refetch
       });
     });
+  });
+
+  it('calls onEdit when edit button is clicked in InfoCard (desktop)', async () => {
+    render(
+      <UserContext.Provider value={mockUserContext}>
+        <ShelterProfile shelterId={1} animalId={null} />
+      </UserContext.Provider>
+    );
+    window.alert = jest.fn();
+    const editButton = await screen.findByTestId('infoCard-edit-button');
+    await userEvent.click(editButton);
+    expect(mockPush).toHaveBeenCalledWith('/shelterCreator?shelterId=1');
+  });
+
+  it('calls onEdit when edit button is clicked in MobileInfoCard', async () => {
+    render(
+      <UserContext.Provider value={mockUserContext}>
+        <ShelterProfile shelterId={1} animalId={null} />
+      </UserContext.Provider>
+    );
+    window.alert = jest.fn();
+    const editButton = await screen.findByTestId('mobile-edit-button');
+    await userEvent.click(editButton);
+    expect(mockPush).toHaveBeenCalledWith('/shelterCreator?shelterId=1');
   });
 });
