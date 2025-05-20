@@ -17,7 +17,7 @@ const UserCreatorPage = () => {
   }, [router, userContext]);
 
   return (
-    <div className="m-0 p-0 max-h-[calc(100vh-3.75rem)] w-full h-full bg-white">
+    <div className="min-h-screen bg-[#FFF0E9] bg-[url('/cats.svg')] bg-repeat bg-[length:150rem_100rem] bg-fixed">
       <UserCreator givenUserId={userId} />
     </div>
   );

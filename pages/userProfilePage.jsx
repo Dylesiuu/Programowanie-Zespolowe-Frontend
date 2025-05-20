@@ -87,6 +87,7 @@ const UserProfilePage = () => {
     };
 
     if (userContext.user?._id && userId) {
+      console.log('sprawdzamy');
       fetchUserData();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -161,7 +162,7 @@ const UserProfilePage = () => {
 
           <div className="lg:col-span-1">
             <div className="bg-[#FFF9F5]/80 rounded-lg shadow-md p-6">
-              <UserProfileTags userTags={userData.tags} />
+              <UserProfileTags userId={userId} userTags={userData.tags} />
             </div>
           </div>
         </div>
