@@ -16,6 +16,18 @@ global.fetch = jest.fn(() =>
   })
 );
 
+const mockPush = jest.fn();
+jest.mock('next/router', () => ({
+  useRouter: jest.fn(() => ({
+    push: mockPush,
+    replace: jest.fn(),
+    prefetch: jest.fn(),
+    pathname: '/',
+    query: {},
+    asPath: '/',
+  })),
+}));
+
 describe('UserSearchBar', () => {
   const mockUserContext = {
     token: 'test-token',
@@ -79,8 +91,6 @@ describe('UserSearchBar', () => {
   });
 
   it('handles selecting a result from the dropdown', async () => {
-    window.alert = jest.fn();
-
     const inputField = screen.getByPlaceholderText(
       'Wpisz imię lub nazwisko użytkownika...'
     );
@@ -91,6 +101,6 @@ describe('UserSearchBar', () => {
 
     await userEvent.click(resultItems);
 
-    expect(window.alert).toHaveBeenCalledWith('profile/1');
+    expect(mockPush).toHaveBeenCalledWith('/userProfilePage?userId=1');
   });
 });

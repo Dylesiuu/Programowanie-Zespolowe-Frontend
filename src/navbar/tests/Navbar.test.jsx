@@ -16,7 +16,12 @@ describe('Navbar Component', () => {
 
   // Mock the UserContext value
   const mockUserContextValue = {
-    user: { name: 'John Doe', email: 'john.doe@example.com', shelterId: 1 },
+    user: {
+      _id: '123',
+      name: 'John Doe',
+      email: 'john.doe@example.com',
+      shelterId: 1,
+    },
     logout: mockLogout,
     isLoggedIn: () => true,
   };
@@ -120,6 +125,28 @@ describe('Navbar Component', () => {
       expect(
         screen.getByPlaceholderText('Wpisz imię lub nazwisko użytkownika...')
       ).toBeInTheDocument();
+    });
+  });
+
+  describe('Navbar dropdown navigation', () => {
+    it('navigates to Profile when "Profil" is clicked', async () => {
+      const profileImg = await screen.findAllByAltText('User Profile');
+      await userEvent.click(profileImg[0]);
+
+      const profileOption = await screen.findByText('Profil');
+      await userEvent.click(profileOption);
+
+      expect(mockPush).toHaveBeenCalledWith('/userProfilePage?userId=123');
+    });
+
+    it('navigates to shelter creator when "Stwórz Schronisko" is clicked', async () => {
+      const profileImg = await screen.findAllByAltText('User Profile');
+      await userEvent.click(profileImg[0]);
+
+      const createShelterOption = await screen.findByText('Stwórz Schronisko');
+      await userEvent.click(createShelterOption);
+
+      expect(mockPush).toHaveBeenCalledWith('/shelterCreator?shelterId=null');
     });
   });
 });
