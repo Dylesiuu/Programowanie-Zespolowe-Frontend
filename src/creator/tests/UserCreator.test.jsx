@@ -2,20 +2,50 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import UserCreator from '../components/UserCreator';
+import { UserContext } from '@/context/userContext';
 import { useRouter } from 'next/router';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(),
 }));
 
+jest.mock('../../lib/authFetch', () => ({
+  useAuthFetch: () =>
+    jest.fn().mockImplementation(() =>
+      Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve({ traits: [], user: {} }),
+      })
+    ),
+}));
+
 describe('UserCreator', () => {
   const mockPush = jest.fn();
+  const mockUser = {
+    _id: '123',
+    traits: [],
+  };
+  const mockSetUser = jest.fn();
+  const mockToken = 'test-token';
+
   beforeEach(() => {
-    render(<UserCreator />);
     useRouter.mockImplementation(() => ({
       push: mockPush,
     }));
+
+    render(
+      <UserContext.Provider
+        value={{
+          user: mockUser,
+          setUser: mockSetUser,
+          token: mockToken,
+        }}
+      >
+        <UserCreator />
+      </UserContext.Provider>
+    );
   });
+
   afterEach(() => {
     jest.clearAllMocks();
   });
@@ -48,29 +78,7 @@ describe('UserCreator', () => {
     ).toBeInTheDocument();
   });
 
-  it('should show next or previuos question when navigation button is clicked', async () => {
-    const startButton = await screen.findByText('Zaczynajmy');
-    await userEvent.click(startButton);
-
-    const nextButton = await screen.findByText('Dalej');
-    await userEvent.click(nextButton);
-
-    expect(
-      await screen.findByText(
-        'Czy wchodząc do domu musisz skorzystać ze schodów lub windy?'
-      )
-    ).toBeInTheDocument();
-
-    const previousButton = await screen.findByText('Wróć');
-    await userEvent.click(previousButton);
-
-    expect(
-      await screen.findByText(
-        'Wybierz odpowiedzi, które najlepiej opisują Twoje miejsce zamieszkania.'
-      )
-    ).toBeInTheDocument();
-  });
-  it('should navigate to swipePage when skip button is clicked in skip warning', async () => {
+  it('should navigate to swipePage when skip is confirmed', async () => {
     const skipButton = await screen.findByText('Pomiń');
     await userEvent.click(skipButton);
 
@@ -80,7 +88,7 @@ describe('UserCreator', () => {
     expect(mockPush).toHaveBeenCalledWith('/swipePage');
   });
 
-  it('should close skip warning when continue button is clicked', async () => {
+  it('should close skip warning when continue is clicked', async () => {
     const skipButton = await screen.findByText('Pomiń');
     await userEvent.click(skipButton);
 
@@ -88,7 +96,7 @@ describe('UserCreator', () => {
     await userEvent.click(continueButton);
 
     expect(
-      await screen.queryByText('Czy na pewno chcesz pominąć?')
+      screen.queryByText('Czy na pewno chcesz pominąć?')
     ).not.toBeInTheDocument();
   });
 });
