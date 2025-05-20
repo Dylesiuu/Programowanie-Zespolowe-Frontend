@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useRouter } from 'next/router';
 import { UserContext } from '@/context/userContext';
 import MapComponent from '../src/localization/components/mapComponent';
+import { useAuthFetch } from '@/lib/authFetch';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -18,6 +19,7 @@ const ShelterCreator = () => {
   const [locationName, setLocationName] = useState('');
   const [showMap, setShowMap] = useState(false);
   const router = useRouter();
+  const fetchData = useAuthFetch();
   const userContext = useContext(UserContext);
 
   useEffect(() => {
@@ -55,7 +57,7 @@ const ShelterCreator = () => {
     setIsSubmitting(true);
 
     try {
-      const res = await fetch(`${API_BASE_URL}/shelter/create`, {
+      const res = await fetchData(`${API_BASE_URL}/shelter/create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
