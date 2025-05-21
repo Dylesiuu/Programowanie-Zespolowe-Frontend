@@ -14,17 +14,17 @@ describe('AnimalsCard Component', () => {
     {
       id: 1,
       name: 'Bella',
-      images: ['/image1.jpg'],
+      images: [{ preview: '/image1.jpg' }],
     },
     {
       id: 2,
       name: 'Max',
-      images: ['/image2.jpg'],
+      images: [{ preview: '/image2.jpg' }],
     },
     {
       id: 3,
       name: 'Charlie',
-      images: ['/image3.jpg'],
+      images: [{ preview: '/image3.jpg' }],
     },
   ];
   const mockOnAnimalClick = jest.fn();
@@ -72,7 +72,7 @@ describe('AnimalsCard Component', () => {
       expect(image).toBeInTheDocument();
       expect(image).toHaveAttribute('src');
       expect(decodeURIComponent(image.getAttribute('src'))).toContain(
-        animal.images[0]
+        animal.images[0].preview
       );
     });
   });

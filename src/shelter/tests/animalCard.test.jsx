@@ -19,8 +19,13 @@ describe('AnimalCard Component', () => {
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum',
     gender: 'Female',
     type: 'Dog',
-    traits: ['Friendly', 'Playful', 'Energetic', 'Loyal'],
-    images: ['/image1.jpg', '/image2.jpg'],
+    traits: [
+      { text: 'Friendly' },
+      { text: 'Playful' },
+      { text: 'Energetic' },
+      { text: 'Loyal' },
+    ],
+    images: [{ preview: '/image1.jpg' }, { preview: '/image2.jpg' }],
     adopted: false,
   };
 
@@ -150,7 +155,7 @@ describe('AnimalCard Component', () => {
       user: {
         token: 'mockToken',
         shelterId: '1',
-        favourites: [mockAnimal._id],
+        favourites: [{ _id: mockAnimal._id }],
       },
     };
 
