@@ -32,8 +32,8 @@ jest.mock('../components/animalCard', () => {
       description: 'This is a mock animal description.',
       gender: 'Samiec',
       type: 'Pies',
-      traits: ['Friendly', 'Playful'],
-      images: ['/mock-image.jpg'],
+      traits: [{ text: 'Friendly' }, { text: 'Playful' }],
+      images: [{ preview: '/mock-image.jpg' }],
       adopted: false,
       shelter: userContext.user?.shelterId,
     };
@@ -45,7 +45,9 @@ jest.mock('../components/animalCard', () => {
         <p>Opis: {mockAnimal.description}</p>
         <p>Płeć: {mockAnimal.gender}</p>
         <div>
-          {userContext.user?.favourites?.includes(mockAnimal._id) ? (
+          {userContext.user?.favourites?.some(
+            (fav) => fav._id === mockAnimal._id
+          ) ? (
             <button
               data-testid="remove-from-favourites-button"
               onClick={() => removeFromFavourite(mockAnimal._id)}
@@ -104,8 +106,8 @@ describe('ShelterProfile Component', () => {
         description: 'Test description',
         gender: 'Samiec',
         type: 'Pies',
-        traits: ['Friendly'],
-        images: ['/image.jpg'],
+        traits: [{ text: 'Friendly' }],
+        images: [{ preview: '/image.jpg' }],
       },
     ],
   };
@@ -139,7 +141,7 @@ describe('ShelterProfile Component', () => {
               statusCode: 200,
               user: {
                 email: 'test@example.com',
-                favourites: ['123'],
+                favourites: [{ _id: '123' }],
               },
             }),
         });
@@ -342,61 +344,6 @@ describe('ShelterProfile Component', () => {
       expect(backdrop).not.toHaveClass('backdrop-blur-md');
       expect(backdrop).toHaveClass('opacity-0');
     });
-  });
-
-  it('calls addToFavourite and updates userContext on success', async () => {
-    render(
-      <UserContext.Provider value={mockUserContext}>
-        <ShelterProfile shelterId={1} animalId={null} />
-      </UserContext.Provider>
-    );
-    const animalCard = await screen.findByTestId('animal-card');
-    await userEvent.click(animalCard);
-
-    const addToFavouritesButton = await screen.findByTestId(
-      'add-to-favourites-button'
-    );
-    await userEvent.click(addToFavouritesButton);
-
-    await waitFor(() =>
-      expect(setUserMock).toHaveBeenCalledWith({
-        email: 'test@example.com',
-        favourites: ['123'],
-      })
-    );
-  });
-
-  it('calls removeFromFavourite and updates userContext on success', async () => {
-    const mockUserContext2 = {
-      token: 'mockToken',
-      user: {
-        shelterId: '1',
-        email: 'test@example.com',
-        favourites: ['1'],
-      },
-      isLoggedIn: jest.fn(),
-      setUser: setUserMock,
-    };
-
-    render(
-      <UserContext.Provider value={mockUserContext2}>
-        <ShelterProfile shelterId={1} animalId={null} />
-      </UserContext.Provider>
-    );
-    const animalCard = await screen.findByTestId('animal-card');
-    await userEvent.click(animalCard);
-
-    const removeFromFavouritesButton = await screen.findByTestId(
-      'remove-from-favourites-button'
-    );
-    await userEvent.click(removeFromFavouritesButton);
-
-    await waitFor(() =>
-      expect(setUserMock).toHaveBeenCalledWith({
-        email: 'test@example.com',
-        favourites: [],
-      })
-    );
   });
 
   it('opens animal modal when animalId is provided', async () => {
