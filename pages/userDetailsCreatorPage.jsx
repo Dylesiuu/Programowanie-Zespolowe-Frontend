@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react';
-import UserBasicInfoUpload from '../src/detailcreator/components/UserBasicInfoUpload';
+import UserBasicInfoUpload from '@/detailcreator/components/userBasicInfoUpload';
 import { UserContext } from '@/context/userContext';
 import { useRouter } from 'next/router';
 
@@ -16,7 +16,7 @@ const UserCreatorPage = () => {
   }, [router, userContext]);
 
   return (
-    <div className="min-h-screen bg-[#FFF0E9] bg-[url('/cats.svg')] bg-repeat bg-[length:150rem_100rem] bg-fixed pt-12">
+    <div className="min-h-screen bg-[#FFF0E9] bg-[url('/cats.svg')] bg-repeat bg-[length:150rem_100rem] bg-fixed pt-26">
       <UserBasicInfoUpload />
     </div>
   );

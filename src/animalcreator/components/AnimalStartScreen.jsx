@@ -32,14 +32,14 @@ const AnimalStartScreen = ({ onStart, onSkip }) => {
 
         <div className="flex flex-col gap-4 w-full mb-8">
           <button
-            onClick={() => handleAnimalSelect('kot')}
-            className="px-6 py-4 bg-[#fefaf7] text-[#CE8455] border-2 border-[#CE8455] rounded-3xl hover:bg-[#f0e6dc] transition-all text-lg"
+            onClick={() => handleAnimalSelect('cat')}
+            className="px-6 py-4 bg-[#fefaf7] text-[#CE8455] border-1 border-[#CE8455] rounded-3xl hover:bg-[#F1CFB8] transition-all text-lg"
           >
             Dodaj kota
           </button>
           <button
-            onClick={() => handleAnimalSelect('pies')}
-            className="px-6 py-4 bg-[#fefaf7] text-[#CE8455] border-2 border-[#CE8455] rounded-3xl hover:bg-[#f0e6dc] transition-all text-lg"
+            onClick={() => handleAnimalSelect('dog')}
+            className="px-6 py-4 bg-[#fefaf7] text-[#CE8455] border-1 border-[#CE8455] rounded-3xl hover:bg-[#F1CFB8] transition-all text-lg"
           >
             Dodaj psa
           </button>
