@@ -27,7 +27,7 @@ describe('AnimalStartScreen', () => {
     const understandButton = await screen.findByText('Rozumiem');
     await userEvent.click(understandButton);
 
-    expect(mockOnStart).toHaveBeenCalledWith('cat');
+    expect(mockOnStart).toHaveBeenCalledWith('kot');
   });
 
   it('calls onStart with "dog" when dog button is clicked', async () => {
@@ -40,7 +40,7 @@ describe('AnimalStartScreen', () => {
     const understandButton = await screen.findByText('Rozumiem');
     await userEvent.click(understandButton);
 
-    expect(mockOnStart).toHaveBeenCalledWith('dog');
+    expect(mockOnStart).toHaveBeenCalledWith('pies');
   });
 
   it('calls onSkip when cancel is clicked', async () => {
