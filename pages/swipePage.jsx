@@ -110,7 +110,7 @@ const SwipePage = () => {
     const email = userContext.user.email;
 
     try {
-      const response = await fetch(
+      const response = await fetchData(
         `${API_BASE_URL}/user/addfavourite/${email}`,
         {
           method: 'PATCH',

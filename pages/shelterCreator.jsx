@@ -19,8 +19,8 @@ const ShelterCreator = () => {
   const [locationName, setLocationName] = useState('');
   const [showMap, setShowMap] = useState(false);
   const router = useRouter();
-  const userContext = useContext(UserContext);
   const fetchData = useAuthFetch();
+  const userContext = useContext(UserContext);;
   const { shelterId } = router.query;
 
   useEffect(() => {
@@ -149,8 +149,7 @@ const ShelterCreator = () => {
         } else {
           alert(data.message || 'Wystąpił błąd podczas tworzenia schroniska.');
         }
-      }
-    } catch (err) {
+    }} catch (err) {
       console.error(err);
       alert('Błąd sieci.');
     } finally {
