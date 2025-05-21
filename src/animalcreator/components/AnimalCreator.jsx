@@ -71,7 +71,11 @@ const AnimalCreator = ({ givenAnimalId }) => {
       ...prev,
       type: animalType == 'pies',
     }));
-    setSelectedTags([]);
+    if (!givenAnimalId && givenAnimalId === 'null') {
+      setSelectedTags([]);
+    } else {
+      setSelectedTags(animalData.tags);
+    }
     setCurrentStep('basicInfo');
   };
 
@@ -266,7 +270,7 @@ const AnimalCreator = ({ givenAnimalId }) => {
         birthMonth: new Date(animalData.birthDate).getMonth() + 1,
         gender: animalData.gender,
         description: animalData.description,
-        traits: animalData.tags,
+        traits: selectedTags,
         images: await uploadPhotos(animalData.photos),
       };
 
@@ -336,6 +340,7 @@ const AnimalCreator = ({ givenAnimalId }) => {
         description: data.description,
         photos: data.images,
       });
+      setSelectedTags(data.traits);
       setCurrentStep('basicInfo');
     } catch (error) {
       console.error('Error fetching animal data:', error.message);
@@ -350,31 +355,47 @@ const AnimalCreator = ({ givenAnimalId }) => {
   }, [givenAnimalId]);
 
   const uploadPhotos = async (photos) => {
-    const formData = new FormData();
-    photos.forEach((photo) => {
-      formData.append('files', photo.file);
-    });
-    try {
-      const response = await fetchData(`${API_BASE_URL}/images/uploadAnimal`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${userContext.token}`,
-        },
-        body: formData,
+    const newPhotos = photos.filter((photo) => photo.file);
+    const existingPhotos = photos.filter((photo) => !photo.file);
+
+    let uploadedPhotos = [];
+    if (newPhotos.length > 0) {
+      const formData = new FormData();
+      newPhotos.forEach((photo) => {
+        formData.append('files', photo.file);
       });
-      if (!response.ok) {
-        console.err('Failed to upload photos');
+      try {
+        const response = await fetchData(
+          `${API_BASE_URL}/images/uploadAnimal`,
+          {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${userContext.token}`,
+            },
+            body: formData,
+          }
+        );
+        if (!response.ok) {
+          console.error('Failed to upload photos');
+        }
+        const data = await response.json();
+        uploadedPhotos = data.map((photo) => ({
+          publicId: photo.publicId,
+          preview: photo.url,
+        }));
+      } catch (error) {
+        console.error('Error uploading photos:', error);
+        alert('Wystąpił błąd podczas przesyłania zdjęć');
       }
-      const data = await response.json();
-      return data.map((photo) => ({
-        publicId: photo.publicId,
-        preview: photo.url,
-      }));
-    } catch (error) {
-      console.error('Error uploading photos:', error);
-      alert('Wystąpił błąd podczas przesyłania zdjęć');
-      return [];
     }
+
+    return [
+      ...uploadedPhotos,
+      ...existingPhotos.map((photo) => ({
+        publicId: photo.publicId,
+        preview: photo.preview,
+      })),
+    ];
   };
 
   useEffect(() => {
