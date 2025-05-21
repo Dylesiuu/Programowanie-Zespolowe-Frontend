@@ -7,8 +7,14 @@ import AnimalCard from '../components/animalCard';
 describe('AnimalCard Component', () => {
   const mockProps = {
     images: [
-      'https://pettownsendvet.com/wp-content/uploads/2023/01/iStock-1052880600-1024x683.jpg',
-      'https://upload.wikimedia.org/wikipedia/commons/1/1e/Dog_in_animal_shelter_in_Washington%2C_Iowa.jpg',
+      {
+        preview:
+          'https://pettownsendvet.com/wp-content/uploads/2023/01/iStock-1052880600-1024x683.jpg',
+      },
+      {
+        preview:
+          'https://upload.wikimedia.org/wikipedia/commons/1/1e/Dog_in_animal_shelter_in_Washington%2C_Iowa.jpg',
+      },
     ],
     name: 'Mike',
     gender: 'Male',
@@ -30,7 +36,7 @@ describe('AnimalCard Component', () => {
     expect(screen.getByText('Happy Tails Shelter')).toBeInTheDocument();
     expect(screen.getByAltText('Mike')).toHaveAttribute(
       'src',
-      mockProps.images[0]
+      mockProps.images[0].preview
     );
   });
 
@@ -41,13 +47,13 @@ describe('AnimalCard Component', () => {
     const prevButton = screen.getByText('‹');
     const image = screen.getByAltText('Mike');
 
-    expect(image).toHaveAttribute('src', mockProps.images[0]);
+    expect(image).toHaveAttribute('src', mockProps.images[0].preview);
 
     await userEvent.click(nextButton);
-    expect(image).toHaveAttribute('src', mockProps.images[1]);
+    expect(image).toHaveAttribute('src', mockProps.images[1].preview);
 
     await userEvent.click(prevButton);
-    expect(image).toHaveAttribute('src', mockProps.images[0]);
+    expect(image).toHaveAttribute('src', mockProps.images[0].preview);
   });
 
   test('toggles full image view on click', async () => {
