@@ -43,6 +43,7 @@ const AnimalCard = ({
 
       const data = await response.json();
       setAnimal(data);
+      console.log('Animal data:', data);
     } catch (error) {
       console.error('Error fetching animal data:', error.message);
     } finally {
@@ -181,7 +182,7 @@ const AnimalCard = ({
       {/* Animal Image Carousel */}
       <div className="w-full h-[40%] relative pb-4">
         <Image
-          src={animal.images[currentImageIndex]}
+          src={animal.images[currentImageIndex].preview}
           alt={animal.name}
           fill
           style={{ objectFit: 'cover' }}
@@ -247,12 +248,12 @@ const AnimalCard = ({
           {(animal.traits.length > 3
             ? animal.traits.slice(0, 3)
             : animal.traits
-          ).map((trait, index) => (
+          ).map((trait) => (
             <span
-              key={index}
+              key={trait._id}
               className="bg-[#fefaf7] text-[#CE8455] border border-[#CE8455] text-sm px-3 py-1 rounded-full shadow-lg"
             >
-              {trait}
+              {trait.text}
             </span>
           ))}
         </div>
@@ -372,7 +373,7 @@ const AnimalCard = ({
               ✕
             </button>
             <Image
-              src={animal.images[currentImageIndex]}
+              src={animal.images[currentImageIndex].preview}
               alt={`modal-${animal.name}`}
               width={800}
               height={600}

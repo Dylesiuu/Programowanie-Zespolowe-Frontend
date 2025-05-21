@@ -38,7 +38,7 @@ const AnimalCard = ({
         {images.length > 0 ? (
           <>
             <Image
-              src={images[currentImageIndex]}
+              src={images[currentImageIndex].preview}
               alt={name}
               width={400}
               height={400}

@@ -21,7 +21,7 @@ const AnimalsField = ({ animals, onAnimalClick, userContext, shelterId }) => {
                 onClick={() => onAnimalClick(animal)}
               >
                 <Image
-                  src={animal.images[0]}
+                  src={animal.images[0].preview}
                   alt={animal.name}
                   width={128}
                   height={128}
