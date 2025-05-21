@@ -13,7 +13,7 @@ const MainPage = () => {
   return (
     <div className="bg-gradient-to-b from-[#fff5ec] to-[#ffe8dc] min-h-screen text-[#333] p-8 box-border">
       <div className="flex justify-between items-center pb-8">
-        <h1 className="text-2xl font-bold text-[#264653]">Petfinity</h1>
+        <h1 className="text-2xl font-bold text-[#264653]">Petfiniti</h1>
         <div className="flex gap-4 flex-col md:flex-row">
           <Link href="/loginPage">
             <span className="bg-[#f4a261] text-white px-4 py-2 rounded-xl font-bold cursor-pointer text-center block">
@@ -34,7 +34,7 @@ const MainPage = () => {
             Adoptuj przyjaciela na całe życie
           </h2>
           <p className="text-[clamp(1rem,2.5vw,1.4rem)] mb-6">
-            Dzięki Petfinity łatwiej odnajdziesz futrzastego przyjaciela
+            Dzięki Petfiniti łatwiej odnajdziesz futrzastego przyjaciela
             idealnie dopasowanego do Twoich preferencji.
           </p>
           <div className="flex justify-center">
@@ -65,10 +65,10 @@ const MainPage = () => {
       <div className="flex flex-col md:flex-row items-center justify-center bg-[#fff4f3] px-10 py-24 gap-16 min-h-screen text-center md:text-left flex-wrap">
         <div className="max-w-xl">
           <h2 className="text-4xl text-[#e57a23] mb-6 font-semibold">
-            Poznaj Petfinity
+            Poznaj Petfiniti
           </h2>
           <p className="text-[clamp(1rem,2vw,1.2rem)] text-[#333] mb-4 leading-relaxed">
-            Petfinity powstało z miłości do zwierząt i potrzeby tworzenia
+            Petfiniti powstało z miłości do zwierząt i potrzeby tworzenia
             prawdziwych, wartościowych relacji między ludźmi a ich przyszłymi
             pupilami.
           </p>
