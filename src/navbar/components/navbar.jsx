@@ -161,23 +161,29 @@ const Navbar = () => {
               <li
                 className="px-4 py-2 hover:bg-[#AA673C] cursor-pointer"
                 onClick={() => {
-                  router.push(
-                    `/userProfilePage?userId=${userContext.user._id}`
-                  );
+                  {
+                    toggleDropdown();
+                    router.push(
+                      `/userProfilePage?userId=${userContext.user._id}`
+                    );
+                  }
                 }}
               >
                 Profil
               </li>
-              {/* <li
-                className="px-4 py-2 hover:bg-[#AA673C] cursor-pointer"
-                onClick={() => alert('/settings')}
-              >
-                Ustawienia
-              </li> */}
+              {/*<li*/}
+              {/*  className="px-4 py-2 hover:bg-[#AA673C] cursor-pointer"*/}
+              {/*  onClick={() => alert('/settings')}*/}
+              {/*>*/}
+              {/*  Ustawienia*/}
+              {/*</li>*/}
               {userContext.user?.shelterId === null && (
                 <li
                   className="px-4 py-2 hover:bg-[#AA673C] cursor-pointer"
-                  onClick={() => router.push(`/shelterCreator?shelterId=null`)}
+                  onClick={() => {
+                    toggleDropdown();
+                    router.push(`/shelterCreator?shelterId=null`);
+                  }}
                 >
                   Stwórz Schronisko
                 </li>

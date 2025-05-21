@@ -38,7 +38,7 @@ const AnimalCard = ({
             <div className="w-64 h-64 rounded-xl overflow-hidden relative shadow">
               <Image
                 fill
-                src={images[currentImageIndex]}
+                src={images[currentImageIndex].preview}
                 alt={name}
                 className="object-cover w-full h-full"
                 priority
@@ -176,7 +176,7 @@ const AnimalCard = ({
                             key={trait._id}
                             className="bg-[#fefaf7] text-[#CE8455] border border-[#CE8455] shadow-lg px-3 py-1 rounded-full text-sm"
                           >
-                            {trait.name}
+                            {trait.text}
                           </span>
                         ))}
                       </div>

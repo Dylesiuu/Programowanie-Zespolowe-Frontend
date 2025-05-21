@@ -50,6 +50,7 @@ const UserCreator = () => {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
+              Authorization: `Bearer ${userContext.token}`,
             },
           }
         );
