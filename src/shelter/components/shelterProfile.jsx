@@ -79,17 +79,14 @@ const ShelterProfile = ({ shelterId, animalId }) => {
 
   const addToFavourite = async (fav) => {
     try {
-      const response = await fetchData(
-        `${API_BASE_URL}/user/addfavourite/${userContext.user.email}`,
-        {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${userContext.token}`,
-          },
-          body: JSON.stringify({ favourites: [selectedAnimal._id] }),
-        }
-      );
+      const response = await fetchData(`${API_BASE_URL}/user/addfavourite`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userContext.token}`,
+        },
+        body: JSON.stringify({ favourites: [selectedAnimal._id] }),
+      });
 
       if (!response.ok) {
         console.error(`HTTP error! Status: ${response.status}`);
@@ -109,17 +106,14 @@ const ShelterProfile = ({ shelterId, animalId }) => {
 
   const removeFromFavourite = async (fav) => {
     try {
-      const response = await fetchData(
-        `${API_BASE_URL}/user/removefavourite/${userContext.user.email}`,
-        {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${userContext.token}`,
-          },
-          body: JSON.stringify({ favourites: [selectedAnimal._id] }),
-        }
-      );
+      const response = await fetchData(`${API_BASE_URL}/user/removefavourite`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userContext.token}`,
+        },
+        body: JSON.stringify({ favourites: [selectedAnimal._id] }),
+      });
 
       if (!response.ok) {
         console.error(`HTTP error! Status: ${response.status}`);

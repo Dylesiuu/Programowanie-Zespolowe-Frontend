@@ -273,7 +273,7 @@ const AnimalCard = ({
         )}
       </div>
       {/* Like Button */}
-      {userContext.user?.favourites?.includes(animal._id) ? (
+      {userContext.user?.favourites?.some((fav) => fav._id === animal._id) ? (
         <div className="flex justify-center py-1 lg:py-2">
           <button
             className="flex w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 bg-[#FF0000] text-white rounded-full items-center justify-center text-2xl transition-all duration-300 ease-in-out hover:bg-[#CC0000] hover:scale-110 cursor-pointer"
