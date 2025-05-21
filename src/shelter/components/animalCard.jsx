@@ -181,14 +181,20 @@ const AnimalCard = ({
 
       {/* Animal Image Carousel */}
       <div className="w-full h-[40%] relative pb-4">
-        <Image
-          src={animal.images[currentImageIndex].preview}
-          alt={animal.name}
-          fill
-          style={{ objectFit: 'cover' }}
-          className="rounded-2xl items-center cursor-pointer"
-          onClick={showImageModal}
-        />
+        {animal.images[currentImageIndex]?.preview ? (
+          <Image
+            src={animal.images[currentImageIndex].preview}
+            alt={animal.name}
+            fill
+            style={{ objectFit: 'cover' }}
+            className="rounded-2xl items-center cursor-pointer"
+            onClick={showImageModal}
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center text-gray-400 bg-gray-100 rounded-2xl">
+            Brak zdjęcia
+          </div>
+        )}
         {/* Navigation Buttons - Show only if more than one image */}
         {animal.images.length > 1 && (
           <>
@@ -245,8 +251,8 @@ const AnimalCard = ({
       <div className="flex flex-wrap items-center text-gray-600 mb-2 gap-1">
         <strong>Tagi: </strong>
         <div className="flex flex-wrap gap-1 lg:gap-2">
-          {(animal.traits.length > 3
-            ? animal.traits.slice(0, 3)
+          {(animal.traits.length > 2
+            ? animal.traits.slice(0, 2)
             : animal.traits
           ).map((trait) => (
             <span
@@ -257,7 +263,7 @@ const AnimalCard = ({
             </span>
           ))}
         </div>
-        {animal.traits.length > 3 && (
+        {animal.traits.length > 2 && (
           <button
             className="text-[#d46622] hover:underline cursor-pointer mt-2"
             onClick={showTraits}
@@ -347,12 +353,12 @@ const AnimalCard = ({
               ✕
             </button>
             <div className="flex flex-wrap gap-2 mb-4">
-              {animal.traits.map((trait, index) => (
+              {animal.traits.map((trait) => (
                 <span
-                  key={index}
+                  key={trait._id}
                   className="bg-[#fefaf7] text-[#CE8455] border border-[#CE8455] text-sm px-3 py-1 rounded-full shadow-lg"
                 >
-                  {trait}
+                  {trait.text}
                 </span>
               ))}
             </div>
@@ -372,13 +378,19 @@ const AnimalCard = ({
             >
               ✕
             </button>
-            <Image
-              src={animal.images[currentImageIndex].preview}
-              alt={`modal-${animal.name}`}
-              width={800}
-              height={600}
-              className="w-full h-auto object-contain rounded-lg"
-            />
+            {animal.images[currentImageIndex]?.preview ? (
+              <Image
+                src={animal.images[currentImageIndex].preview}
+                alt={`modal-${animal.name}`}
+                width={800}
+                height={600}
+                className="w-full h-auto object-contain rounded-lg"
+              />
+            ) : (
+              <div className="w-full h-96 flex items-center justify-center text-gray-400 bg-gray-100 rounded-lg">
+                Brak zdjęcia
+              </div>
+            )}
             {/* Navigation Buttons - Show only if more than one image */}
             {animal.images.length > 1 && (
               <>
