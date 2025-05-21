@@ -2,12 +2,14 @@ import React, { useState, useContext } from 'react';
 import { UserContext } from '@/context/userContext';
 import { useAuthFetch } from '@/lib/authFetch';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 const UserBasicInfoEditor = ({ userData, onUpdate }) => {
   const userContext = useContext(UserContext);
   const authFetch = useAuthFetch();
+  const router = useRouter();
 
   const [userInputs, setUserInputs] = useState({
     name: userData?.name || '',
@@ -163,8 +165,8 @@ const UserBasicInfoEditor = ({ userData, onUpdate }) => {
   };
 
   return (
-    <div className="flex justify-center items-center px-4">
-      <div className="w-full max-w-xl bg-[#FFF9F5]/80 rounded-lg shadow-md p-6 mb-6">
+    <div className="flex justify-center items-center px-4 h-full">
+      <div className="w-full max-w-lg bg-[#FFF9F5]/80 rounded-lg shadow-md p-10">
         {error && (
           <div className="mb-4 p-3 bg-red-100 text-red-700 rounded">
             {error}
@@ -176,11 +178,7 @@ const UserBasicInfoEditor = ({ userData, onUpdate }) => {
           </div>
         )}
 
-        {/* Sekcja zdjęcia profilowego */}
         <div className="mb-6 flex flex-col items-center">
-          {/*<label className="block text-gray-700 mb-2 self-start">*/}
-          {/*  Zdjęcie profilowe*/}
-          {/*</label>*/}
           <div className="relative w-32 h-32 rounded-full overflow-hidden bg-gray-200 mb-5">
             <Image
               src={avatarData.previewUrl}
@@ -243,16 +241,24 @@ const UserBasicInfoEditor = ({ userData, onUpdate }) => {
               className="w-full p-2 border border-[#CE8455] rounded focus:outline-none focus:ring-1 focus:ring-[#CE8455] resize-none overflow-auto rounded-2xl"
             />
           </div>
-
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className={`w-full px-4 py-2 bg-[#CE8455] text-white rounded-2xl hover:bg-[#b5734d] transition ${
-              isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
-            }`}
-          >
-            {isSubmitting ? 'Zapisywanie...' : 'Zapisz zmiany'}
-          </button>
+          <div className="flex flex-col gap-4">
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className={`w-full px-4 py-3 bg-[#CE8455] text-white rounded-2xl hover:bg-[#b5734d] transition ${
+                isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
+            >
+              {isSubmitting ? 'Zapisywanie...' : 'Zapisz zmiany'}
+            </button>
+            <button
+              type="button"
+              onClick={() => router.push(`/userProfilePage?userId=${userContext.user._id}`)}
+              className="w-full px-4 py-3 bg-[#F1CFB8] text-[#CE8455] hover:bg-[#DEC0AC] rounded-2xl  transition"
+            >
+              Wróć do profilu
+            </button>
+          </div>
         </form>
       </div>
     </div>
