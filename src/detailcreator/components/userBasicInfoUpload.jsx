@@ -6,21 +6,21 @@ import { useRouter } from 'next/router';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-const UserBasicInfoEditor = ({ userData, onUpdate }) => {
+const UserBasicInfoEditor = () => {
   const userContext = useContext(UserContext);
-  const authFetch = useAuthFetch();
+  const fetchData = useAuthFetch();
   const router = useRouter();
 
   const [userInputs, setUserInputs] = useState({
-    name: userData?.name || '',
-    lastname: userData?.lastname || '',
-    about: userData?.about || '',
+    name: userContext.user?.name || '',
+    lastname: userContext.user?.lastname || '',
+    description: userContext.user?.description || '',
   });
 
   const [avatarData, setAvatarData] = useState({
     file: null,
-    previewUrl: userData?.avatar?.url || '/img/default-avatar.svg',
-    existingPublicId: userData?.avatar?.publicId || '',
+    previewUrl: userContext.user?.avatar?.url || '/img/default-avatar.svg',
+    existingPublicId: userContext.user?.avatar?.publicId || '',
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -43,89 +43,40 @@ const UserBasicInfoEditor = ({ userData, onUpdate }) => {
     }
   };
 
-  const updateField = async (fieldName, value) => {
-    const endpointMap = {
-      name: 'update-name',
-      lastname: 'update-lastname',
-      about: 'update-about-temp',
-    };
-
-    const requestBody = { [fieldName]: value };
-
-    const response = await authFetch(
-      `${API_BASE_URL}/user/${endpointMap[fieldName]}`,
-      {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${userContext.token}`,
-        },
-        body: JSON.stringify(requestBody),
-      }
-    );
-
-    if (!response.ok)
-      throw new Error(`Nie udało się zaktualizować pola: ${fieldName}`);
-    return await response.json();
-  };
-
-  const handleAvatarUpload = async () => {
-    if (!avatarData.file && !avatarData.existingPublicId) {
-      return [
-        {
-          url: '/img/default-avatar.svg',
-          publicId: '',
-        },
-      ];
-    }
-
-    if (!avatarData.file) return null;
-
-    if (avatarData.existingPublicId) {
-      await authFetch(`${API_BASE_URL}/images/${avatarData.existingPublicId}`, {
-        method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${userContext.token}`,
-        },
-      });
-    }
-
-    const formData = new FormData();
-    formData.append('files', avatarData.file);
-
-    const uploadResponse = await authFetch(
-      `${API_BASE_URL}/images/uploadUser`,
-      {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${userContext.token}`,
-        },
-        body: formData,
-      }
-    );
-
-    if (!uploadResponse.ok) throw new Error('Błąd przesyłania zdjęcia');
-    return await uploadResponse.json();
-  };
-
-  const updateUserAvatar = async (imageData) => {
-    const response = await authFetch(`${API_BASE_URL}/user/update-avatar`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${userContext.token}`,
-      },
-      body: JSON.stringify({
-        avatar: {
-          url: imageData.url,
-          publicId: imageData.publicId || '',
-        },
-      }),
-    });
-
-    if (!response.ok) throw new Error('Błąd aktualizacji avataru');
-    return await response.json();
-  };
+  // const handleAvatarUpload = async (photo) => {
+  //   try {
+  //     const response = await fetchData(
+  //       `${API_BASE_URL}/images/${userContext.user.avatar.publicId}`,
+  //       {
+  //         method: 'DELETE',
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //           Authorization: `Bearer ${userContext.token}`,
+  //         },
+  //       }
+  //     );
+  //     if (!response.ok) console.error('Nie udało się zaktualizować imienia');
+  //
+  //     const data = await response.json();
+  //     console.log(data.message);
+  //
+  //     const formData = new FormData();
+  //     formData.append('files', photo.file);
+  //     const newAvatar = await fetchData(`${API_BASE_URL}/images/uploadUser`, {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         Authorization: `Bearer ${userContext.token}`,
+  //       },
+  //       body: formData,
+  //     });
+  //     if (!newAvatar.ok) console.error('Nie udało się zaktualizować zdjęcia');
+  //     const newData = await newAvatar.json();
+  //   } catch (error) {
+  //     console.error('Error uploading new avatar:', error);
+  //   }
+  //   return Array.isArray(newData) ? newData[0] : newData;
+  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -134,26 +85,57 @@ const UserBasicInfoEditor = ({ userData, onUpdate }) => {
     setSuccess(false);
 
     try {
-      const updates = [];
-      for (const [field, value] of Object.entries(userInputs)) {
-        if (value !== userData?.[field]) {
-          updates.push(updateField(field, value));
-        }
+      // if (userContext.user.avatar.preview !== avatarData.previewUrl) {
+      // }
+
+      if (userContext.user.name !== userInputs.name) {
+        const response = await fetchData(`${API_BASE_URL}/user/update-name`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${userContext.token}`,
+          },
+          body: JSON.stringify({ name: userInputs.name }),
+        });
+        if (!response.ok) console.error('Nie udało się zaktualizować imienia');
+
+        const data = await response.json();
+        userContext.setUser(data.user);
       }
+      if (userContext.user.lastname !== userInputs.lastname) {
+        const response = await fetchData(
+          `${API_BASE_URL}/user/update-lastname`,
+          {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${userContext.token}`,
+            },
+            body: JSON.stringify({ lastname: userInputs.lastname }),
+          }
+        );
+        if (!response.ok) console.error('Nie udało się zaktualizować nazwiska');
 
-      let avatarUpdate = null;
-      if (avatarData.file) {
-        const uploadedImages = await handleAvatarUpload();
-        avatarUpdate = await updateUserAvatar(uploadedImages[0]);
+        const data = await response.json();
+        userContext.setUser(data.user);
       }
+      if (userContext.user.description !== userInputs.description) {
+        const response = await fetchData(
+          `${API_BASE_URL}/user/updateDescription`,
+          {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${userContext.token}`,
+            },
+            body: JSON.stringify({ description: userInputs.description }),
+          }
+        );
+        console.log(response);
+        if (!response.ok) console.error('Nie udało się zaktualizować opisu');
 
-      const allUpdates = [...updates, avatarUpdate].filter(Boolean);
-      const latestUserData =
-        allUpdates[allUpdates.length - 1]?.user || userData;
-
-      if (latestUserData) {
-        userContext.setUser(latestUserData);
-        if (onUpdate) onUpdate(latestUserData);
+        const data = await response.json();
+        userContext.setUser(data.user);
       }
 
       setSuccess(true);
@@ -234,8 +216,8 @@ const UserBasicInfoEditor = ({ userData, onUpdate }) => {
           <div>
             <label className="block text-gray-700 mb-2">Opis</label>
             <textarea
-              name="about"
-              value={userInputs.about}
+              name="description"
+              value={userInputs.description}
               onChange={handleTextChange}
               rows="4"
               className="w-full p-2 border border-[#CE8455] rounded focus:outline-none focus:ring-1 focus:ring-[#CE8455] resize-none overflow-auto rounded-2xl"
@@ -253,7 +235,9 @@ const UserBasicInfoEditor = ({ userData, onUpdate }) => {
             </button>
             <button
               type="button"
-              onClick={() => router.push(`/userProfilePage?userId=${userContext.user._id}`)}
+              onClick={() =>
+                router.push(`/userProfilePage?userId=${userContext.user._id}`)
+              }
               className="w-full px-4 py-3 bg-[#F1CFB8] text-[#CE8455] hover:bg-[#DEC0AC] rounded-2xl  transition"
             >
               Wróć do profilu
