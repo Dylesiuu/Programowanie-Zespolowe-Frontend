@@ -60,6 +60,7 @@ const UserCreator = () => {
         }
 
         const data = await response.json();
+        console.log('data:  ', data);
         const normalizedTraits = data.traits.map((trait) => ({
           ...trait,
           conflicts: normalizeConflicts(trait.conflicts),

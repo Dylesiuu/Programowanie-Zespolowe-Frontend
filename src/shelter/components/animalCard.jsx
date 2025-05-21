@@ -257,7 +257,7 @@ const AnimalCard = ({
           ).map((trait) => (
             <span
               key={trait._id}
-              className="bg-[#fefaf7] text-[#CE8455] border border-[#CE8455] text-sm px-3 py-1 rounded-full shadow-lg"
+              className="bg-[#fefaf7] text-[#CE8455] border border-[#CE8455] text-sm px-2 py-1 rounded-full shadow-lg"
             >
               {trait.text}
             </span>
