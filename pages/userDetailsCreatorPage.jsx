@@ -1,0 +1,25 @@
+import React, { useContext, useEffect } from 'react';
+import UserBasicInfoUpload from '../src/detailcreator/components/UserBasicInfoUpload';
+import { UserContext } from '@/context/userContext';
+import { useRouter } from 'next/router';
+
+const UserCreatorPage = () => {
+  const userContext = useContext(UserContext);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (userContext.isLoggedIn()) {
+      return;
+    }
+
+    router.replace('/');
+  }, [router, userContext]);
+
+  return (
+    <div className="min-h-screen bg-[#FFF0E9] bg-[url('/cats.svg')] bg-repeat bg-[length:150rem_100rem] bg-fixed pt-12">
+      <UserBasicInfoUpload />
+    </div>
+  );
+};
+
+export default UserCreatorPage;
