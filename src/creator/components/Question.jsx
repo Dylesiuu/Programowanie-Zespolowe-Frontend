@@ -2,7 +2,7 @@ import React from 'react';
 
 const Question = ({ question, selectedTags, onOptionClick }) => {
   const isOptionSelected = (optionTags) =>
-    optionTags.some((tagId) => selectedTags.includes(tagId));
+    optionTags.some((tag) => selectedTags.includes(tag));
 
   return (
     <div className="w-full flex flex-col items-center px-4 sm:px-6 md:px-8 py-8 sm:py-10 md:py-12 bg-[#FFF9F5]/70 rounded-4xl shadow-lg">

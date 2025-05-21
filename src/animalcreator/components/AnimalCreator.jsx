@@ -17,14 +17,14 @@ const AnimalCreator = ({ givenAnimalId }) => {
   const fileInputRef = useRef();
   const userContext = useContext(UserContext);
   const fetchData = useAuthFetch();
-
+  const [allTraits, setAllTraits] = useState([]);
   const currentDate = new Date().toISOString().split('T')[0];
-
   const [currentStep, setCurrentStep] = useState('start');
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-
   const STARTING_QUESTION_INDEX = 3;
   const MAX_PHOTOS = 50;
+  const [isLoading, setIsLoading] = useState(true);
+  const [selectedTags, setSelectedTags] = useState([]);
 
   const [animalData, setAnimalData] = useState({
     type: '',
@@ -36,17 +36,32 @@ const AnimalCreator = ({ givenAnimalId }) => {
     photos: [],
   });
 
-  const preparedQuestions = (
-    Array.isArray(animalQuestions) ? animalQuestions : []
-  ).map((question) => {
-    const questionTags = (Array.isArray(animalTags) ? animalTags : []).filter(
-      (tag) => tag.collectionId === question.id
+  // const preparedQuestions = (
+  //   Array.isArray(animalQuestions) ? animalQuestions : []
+  // ).map((question) => {
+  //   const questionTags = (Array.isArray(allTraits) ? allTraits : []).filter(
+  //     (tag) => tag.collectionId === question.id
+  //   );
+  //   return {
+  //     ...question,
+  //     options: questionTags.map((tag) => ({
+  //       text: tag.text,
+  //       tagId: tag._id,
+  //     })),
+  //   };
+  // });
+
+  const preparedQuestions = animalQuestions.map((question) => {
+    const questionTraits = allTraits.filter(
+      (trait) => trait.collectionId === question.id
     );
+
     return {
       ...question,
-      options: questionTags.map((tag) => ({
-        text: tag.text,
-        tags: [tag.id],
+      options: questionTraits.map((trait) => ({
+        text: trait.text,
+        tags: [trait._id],
+        conflicts: trait.conflicts,
       })),
     };
   });
@@ -54,46 +69,86 @@ const AnimalCreator = ({ givenAnimalId }) => {
   const handleStart = (animalType) => {
     setAnimalData((prev) => ({
       ...prev,
-      type: animalType == 'pies' ? true : false,
+      type: animalType == 'pies',
     }));
+    setSelectedTags([]);
     setCurrentStep('basicInfo');
   };
 
-  const handleOptionClick = (optionTags) => {
-    setAnimalData((prev) => {
-      const currentTags = prev.tags;
+  // const handleOptionClick = (optionTags) => {
+  //   setAnimalData((prev) => {
+  //     console.log('Previous tags:', prev.tags);
+  //     console.log('Option tags:', optionTags);
+  //     const currentTags = prev.tags;
+  //     console.log('Current tags:', currentTags);
 
+  //     const isAnySelected = optionTags.some((tagId) =>
+  //       currentTags.includes(tagId)
+  //     );
+  //     if (isAnySelected) {
+  //       return {
+  //         ...prev,
+  //         tags: currentTags.filter((tagId) => !optionTags.includes(tagId)),
+  //       };
+  //     }
+
+  //     const newConflicts = optionTags.flatMap(
+  //       (tagId) => allTraits.find((t) => t.id === tagId)?.conflicts || []
+  //     );
+
+  //     const existingConflicts = currentTags.filter((tagId) =>
+  //       allTraits
+  //         .find((t) => t.id === tagId)
+  //         ?.conflicts?.some((conflictId) => optionTags.includes(conflictId))
+  //     );
+
+  //     const allConflicts = [
+  //       ...new Set([...newConflicts, ...existingConflicts]),
+  //     ];
+
+  //     return {
+  //       ...prev,
+  //       tags: [
+  //         ...currentTags.filter((tagId) => !allConflicts.includes(tagId)),
+  //         ...optionTags,
+  //       ],
+  //     };
+  //   });
+  // };
+  const handleOptionClick = (optionTags) => {
+    setSelectedTags((prevTags) => {
       const isAnySelected = optionTags.some((tagId) =>
-        currentTags.includes(tagId)
+        prevTags.includes(tagId)
       );
       if (isAnySelected) {
-        return {
-          ...prev,
-          tags: currentTags.filter((tagId) => !optionTags.includes(tagId)),
-        };
+        return prevTags.filter((tagId) => !optionTags.includes(tagId));
       }
 
-      const newConflicts = optionTags.flatMap(
-        (tagId) => animalTags.find((t) => t.id === tagId)?.conflicts || []
-      );
+      const directConflicts = optionTags.flatMap((tagId) => {
+        const trait = allTraits.find((t) => t._id === tagId);
+        return trait ? trait.conflicts : [];
+      });
 
-      const existingConflicts = currentTags.filter((tagId) =>
-        animalTags
-          .find((t) => t.id === tagId)
-          ?.conflicts?.some((conflictId) => optionTags.includes(conflictId))
-      );
+      const reverseConflicts = allTraits
+        .filter((trait) => {
+          return (
+            trait.conflicts &&
+            trait.conflicts.some((conflictId) =>
+              optionTags.includes(conflictId)
+            )
+          );
+        })
+        .map((trait) => trait._id);
 
       const allConflicts = [
-        ...new Set([...newConflicts, ...existingConflicts]),
+        ...new Set([...directConflicts, ...reverseConflicts]),
       ];
 
-      return {
-        ...prev,
-        tags: [
-          ...currentTags.filter((tagId) => !allConflicts.includes(tagId)),
-          ...optionTags,
-        ],
-      };
+      const filteredTags = prevTags.filter(
+        (tagId) => !allConflicts.includes(tagId)
+      );
+
+      return [...filteredTags, ...optionTags];
     });
   };
 
@@ -215,16 +270,26 @@ const AnimalCreator = ({ givenAnimalId }) => {
         images: await uploadPhotos(animalData.photos),
       };
 
-      if (givenAnimalId) {
-        //Tu będzie fetch na edytowanie zwierząt
+      let url;
+      let method;
+
+      if (
+        givenAnimalId &&
+        givenAnimalId !== 'null' &&
+        givenAnimalId !== 'undefined'
+      ) {
+        url = `${API_BASE_URL}/animals/edit/${givenAnimalId}`;
+        method = 'PATCH';
+      } else {
+        url = `${API_BASE_URL}/animals/add`;
+        method = 'POST';
       }
 
       console.log('Form data:', formData);
-      console.log('Form data images:', formData.images);
-      console.log('Form data stringified:', JSON.stringify(formData));
-      const response = await fetchData(`${API_BASE_URL}/animals`, {
-        method: 'POST',
+      const response = await fetchData(url, {
+        method: method,
         headers: {
+          'Content-Type': 'application/json',
           Authorization: `Bearer ${userContext.token}`,
         },
         body: JSON.stringify(formData),
@@ -240,8 +305,8 @@ const AnimalCreator = ({ givenAnimalId }) => {
         console.error('Wystąpił błąd');
       }
     } catch (error) {
-      console.error('Error submitting animal:', error);
-      alert('Wystąpił błąd podczas dodawania zwierzęcia');
+      console.error('Error submitting/adding animal:', error);
+      alert('Wystąpił błąd podczas dodawania/edytowania zwierzęcia');
     }
   };
 
@@ -311,6 +376,45 @@ const AnimalCreator = ({ givenAnimalId }) => {
       return [];
     }
   };
+
+  useEffect(() => {
+    const fetchAllTraits = async () => {
+      try {
+        const response = await fetchData(
+          `${API_BASE_URL}/animals/getAllAnimalTraits`,
+          {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${userContext.token}`,
+            },
+            body: JSON.stringify(),
+          }
+        );
+
+        if (!response.ok) {
+          console.error('Failed to fetch traits:');
+        }
+
+        const data = await response.json();
+        console.log('Fetched traits:', data);
+        setAllTraits(data.traits);
+      } catch (error) {
+        console.error('Error fetching traits:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchAllTraits();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        Ładowanie...
+      </div>
+    );
+  }
 
   if (currentStep === 'start') {
     return (
@@ -435,7 +539,7 @@ const AnimalCreator = ({ givenAnimalId }) => {
     return (
       <AnimalCompletionScreen
         animalData={animalData}
-        animalTags={animalTags}
+        animalTags={allTraits}
         onSubmit={handleSubmit}
         onBack={() => setCurrentStep('details')}
       />
@@ -449,7 +553,7 @@ const AnimalCreator = ({ givenAnimalId }) => {
         <div className="flex-grow flex flex-col justify-center">
           <Question
             question={currentQuestion}
-            selectedTags={animalData.tags}
+            selectedTags={selectedTags}
             onOptionClick={handleOptionClick}
           />
         </div>
