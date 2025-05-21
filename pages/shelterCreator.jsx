@@ -95,7 +95,7 @@ const ShelterCreator = () => {
 
     try {
       if (shelterId && shelterId !== 'null') {
-        const res = await fetch(`${API_BASE_URL}/shelter/edit`, {
+        const res = await fetchData(`${API_BASE_URL}/shelter/edit`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -122,7 +122,7 @@ const ShelterCreator = () => {
           );
         }
       } else {
-        const res = await fetch(`${API_BASE_URL}/shelter/create`, {
+        const res = await fetchData(`${API_BASE_URL}/shelter/create`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
