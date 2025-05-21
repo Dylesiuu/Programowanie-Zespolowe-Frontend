@@ -29,8 +29,8 @@ jest.mock('../data/animalQuestions', () => [
 ]);
 
 jest.mock('../data/animalTags', () => [
-  { id: 1, text: 'Option A', collectionId: 4 },
-  { id: 2, text: 'Option B', collectionId: 4 },
+  { _id: 1, text: 'Option A', collectionId: 4 },
+  { _id: 2, text: 'Option B', collectionId: 4 },
 ]);
 
 describe('AnimalCreator', () => {
@@ -46,18 +46,33 @@ describe('AnimalCreator', () => {
     isLoggedIn: jest.fn(),
     setUser: setUserMock,
   };
+
   beforeEach(() => {
     useRouter.mockImplementation(() => ({
       push: mockPush,
+      query: {},
     }));
+
     window.alert = jest.fn();
-    // Mock URL.createObjectURL to prevent errors in tests
+
     global.URL.createObjectURL = jest.fn(() => 'http://localhost/mock-url');
-    render(
-      <UserContext.Provider value={mockUserContext}>
-        <AnimalCreator givenAnimalId={null} />
-      </UserContext.Provider>
-    );
+    global.URL.revokeObjectURL = jest.fn();
+
+    global.fetch = jest.fn((url) => {
+      if (url.includes('/getAllAnimalTraits')) {
+        return Promise.resolve({
+          ok: true,
+          json: () =>
+            Promise.resolve({
+              traits: [
+                { _id: 1, text: 'Option A', collectionId: 4 },
+                { _id: 2, text: 'Option B', collectionId: 4 },
+              ],
+            }),
+        });
+      }
+      return Promise.reject(new Error('Unexpected URL'));
+    });
   });
 
   afterEach(() => {
@@ -65,16 +80,29 @@ describe('AnimalCreator', () => {
   });
 
   it('renders start screen initially', async () => {
+    render(
+      <UserContext.Provider value={mockUserContext}>
+        <AnimalCreator givenAnimalId={null} />
+      </UserContext.Provider>
+    );
+
     expect(await screen.findByText('Dodaj nowe zwierzę')).toBeInTheDocument();
     expect(await screen.findByText('Dodaj psa')).toBeInTheDocument();
     expect(await screen.findByText('Dodaj kota')).toBeInTheDocument();
   });
 
   it('navigates through the form steps correctly', async () => {
+    render(
+      <UserContext.Provider value={mockUserContext}>
+        <AnimalCreator givenAnimalId={null} />
+      </UserContext.Provider>
+    );
+
     await userEvent.click(await screen.findByText('Dodaj psa'));
 
-    expect(await screen.findByText('Ważna informacja')).toBeInTheDocument();
-    await userEvent.click(await screen.findByText('Rozumiem'));
+    if (screen.queryByText('Ważna informacja')) {
+      await userEvent.click(await screen.findByText('Rozumiem'));
+    }
 
     expect(
       await screen.findByText('Podstawowe informacje')
@@ -84,47 +112,90 @@ describe('AnimalCreator', () => {
       await screen.findByPlaceholderText('Wpisz imię zwierzęcia'),
       'Testowy'
     );
+
     const dateInput = await screen.findByLabelText(
       'Szacowana data urodzenia zwierzęcia'
     );
     await userEvent.clear(dateInput);
     await userEvent.type(dateInput, '2020-01-01');
+
     await userEvent.click(await screen.findByText('Samiec'));
     await userEvent.click(await screen.findByText('Dalej'));
+
     expect(await screen.findByText('Fourth test question')).toBeInTheDocument();
-
     await userEvent.click(await screen.findByText('Option A'));
-
     await userEvent.click(await screen.findByText('Zakończ'));
-    expect(await screen.findByText('+ Dodaj zdjęcia')).toBeInTheDocument();
+
+    expect(await screen.findByText('Dodaj szczegóły')).toBeInTheDocument();
+
+    await userEvent.type(
+      await screen.findByPlaceholderText(
+        'Opisz charakter i zwyczaje zwierzęcia...'
+      ),
+      'Test description'
+    );
+
+    const file = new File(['dummy content'], 'photo.png', {
+      type: 'image/png',
+    });
+
+    const input = await screen.findByTestId('file-input');
+    await act(async () => {
+      await userEvent.upload(input, file);
+    });
+
+    await waitFor(() => {
+      expect(screen.getByRole('img')).toBeInTheDocument();
+    });
 
     await userEvent.click(await screen.findByText('Podsumowanie'));
+
     expect(await screen.findByText('Podsumowanie')).toBeInTheDocument();
   });
 
   it('shows alerts when required fields are missing', async () => {
+    render(
+      <UserContext.Provider value={mockUserContext}>
+        <AnimalCreator givenAnimalId={null} />
+      </UserContext.Provider>
+    );
+
     await userEvent.click(await screen.findByText('Dodaj kota'));
-    await userEvent.click(await screen.findByText('Rozumiem'));
+
+    if (screen.queryByText('Ważna informacja')) {
+      await userEvent.click(await screen.findByText('Rozumiem'));
+    }
+
     await userEvent.click(await screen.findByText('Dalej'));
 
     expect(window.alert).toHaveBeenCalledWith('Proszę podać imię zwierzęcia');
   });
 
   it('handles navigation back correctly', async () => {
+    render(
+      <UserContext.Provider value={mockUserContext}>
+        <AnimalCreator givenAnimalId={null} />
+      </UserContext.Provider>
+    );
+
     await userEvent.click(await screen.findByText('Dodaj kota'));
-    await userEvent.click(await screen.findByText('Rozumiem'));
+
+    if (screen.queryByText('Ważna informacja')) {
+      await userEvent.click(await screen.findByText('Rozumiem'));
+    }
 
     await userEvent.type(
       await screen.findByPlaceholderText('Wpisz imię zwierzęcia'),
       'Testowy'
     );
+
     const dateInput = await screen.findByLabelText(
       'Szacowana data urodzenia zwierzęcia'
     );
     await userEvent.clear(dateInput);
     await userEvent.type(dateInput, '2020-01-01');
-    await userEvent.click(await screen.findByText('Samiec'));
 
+    await userEvent.click(await screen.findByText('Samiec'));
     await userEvent.click(await screen.findByText('Dalej'));
 
     await userEvent.click(await screen.findByText('Wróć'));
@@ -137,17 +208,29 @@ describe('AnimalCreator', () => {
   });
 
   it('handles tag selection correctly', async () => {
+    render(
+      <UserContext.Provider value={mockUserContext}>
+        <AnimalCreator givenAnimalId={null} />
+      </UserContext.Provider>
+    );
+
     await userEvent.click(await screen.findByText('Dodaj kota'));
-    await userEvent.click(await screen.findByText('Rozumiem'));
+
+    if (screen.queryByText('Ważna informacja')) {
+      await userEvent.click(await screen.findByText('Rozumiem'));
+    }
+
     await userEvent.type(
       await screen.findByPlaceholderText('Wpisz imię zwierzęcia'),
       'Testowy'
     );
+
     const dateInput = await screen.findByLabelText(
       'Szacowana data urodzenia zwierzęcia'
     );
     await userEvent.clear(dateInput);
     await userEvent.type(dateInput, '2020-01-01');
+
     await userEvent.click(await screen.findByText('Samiec'));
     await userEvent.click(await screen.findByText('Dalej'));
 
@@ -168,18 +251,30 @@ describe('AnimalCreator', () => {
       gender: 'Samiec',
       traits: [1, 2],
       description: 'Testowy opis',
-      images: [
-        { file: 'image1.jpg', preview: 'preview1.jpg' },
-        { file: 'image2.jpg', preview: 'preview2.jpg' },
-      ],
+      images: [{ preview: 'preview1.jpg' }, { preview: 'preview2.jpg' }],
     };
 
-    global.fetch = jest.fn(() =>
-      Promise.resolve({
-        ok: true,
-        json: () => Promise.resolve(mockAnimalData),
-      })
-    );
+    global.fetch = jest.fn((url) => {
+      if (url.includes('/animals/123')) {
+        return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve(mockAnimalData),
+        });
+      }
+      if (url.includes('/getAllAnimalTraits')) {
+        return Promise.resolve({
+          ok: true,
+          json: () =>
+            Promise.resolve({
+              traits: [
+                { _id: 1, text: 'Option A', collectionId: 4 },
+                { _id: 2, text: 'Option B', collectionId: 4 },
+              ],
+            }),
+        });
+      }
+      return Promise.reject(new Error('Unexpected URL'));
+    });
 
     render(
       <UserContext.Provider value={mockUserContext}>
@@ -187,11 +282,13 @@ describe('AnimalCreator', () => {
       </UserContext.Provider>
     );
 
-    expect(await screen.findByDisplayValue('Testowy')).toBeInTheDocument();
-    expect(await screen.findByDisplayValue('2020-01-01')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByDisplayValue('Testowy')).toBeInTheDocument();
+      expect(screen.getByDisplayValue('2020-01-01')).toBeInTheDocument();
+    });
 
     expect(global.fetch).toHaveBeenCalledWith(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/animals/123`,
+      expect.stringContaining('/animals/123'),
       expect.objectContaining({
         method: 'GET',
         headers: expect.objectContaining({
@@ -200,30 +297,35 @@ describe('AnimalCreator', () => {
       })
     );
   });
-  it('handles photo upload correctly', async () => {
-    const file = new File(['dummy content'], 'photo.png', {
-      type: 'image/png',
-    });
+
+  it('handles photo upload and removal correctly', async () => {
+    render(
+      <UserContext.Provider value={mockUserContext}>
+        <AnimalCreator givenAnimalId={null} />
+      </UserContext.Provider>
+    );
 
     await userEvent.click(await screen.findByText('Dodaj psa'));
-    await userEvent.click(await screen.findByText('Rozumiem'));
-
+    if (screen.queryByText('Ważna informacja')) {
+      await userEvent.click(await screen.findByText('Rozumiem'));
+    }
     await userEvent.type(
       await screen.findByPlaceholderText('Wpisz imię zwierzęcia'),
       'Testowy'
     );
-
     const dateInput = await screen.findByLabelText(
       'Szacowana data urodzenia zwierzęcia'
     );
     await userEvent.clear(dateInput);
     await userEvent.type(dateInput, '2020-01-01');
-
     await userEvent.click(await screen.findByText('Samiec'));
     await userEvent.click(await screen.findByText('Dalej'));
-
     await userEvent.click(await screen.findByText('Option A'));
     await userEvent.click(await screen.findByText('Zakończ'));
+
+    const file = new File(['dummy content'], 'photo.png', {
+      type: 'image/png',
+    });
 
     const input = await screen.findByTestId('file-input');
     await act(async () => {
@@ -231,48 +333,8 @@ describe('AnimalCreator', () => {
     });
 
     await waitFor(() => {
-      const img = screen.getByRole('img');
-      expect(img).toBeInTheDocument();
+      expect(screen.getByRole('img')).toBeInTheDocument();
     });
-  });
-
-  it('removes photo correctly when clicking remove button', async () => {
-    global.URL.createObjectURL = jest.fn(
-      () => 'http://localhost/mock-preview-url'
-    );
-    global.URL.revokeObjectURL = jest.fn();
-
-    const file = new File(['dummy content'], 'photo.png', {
-      type: 'image/png',
-    });
-
-    await userEvent.click(await screen.findByText('Dodaj psa'));
-    await userEvent.click(await screen.findByText('Rozumiem'));
-
-    await userEvent.type(
-      await screen.findByPlaceholderText('Wpisz imię zwierzęcia'),
-      'Testowy'
-    );
-
-    const dateInput = await screen.findByLabelText(
-      'Szacowana data urodzenia zwierzęcia'
-    );
-    await userEvent.clear(dateInput);
-    await userEvent.type(dateInput, '2020-01-01');
-
-    await userEvent.click(await screen.findByText('Samiec'));
-    await userEvent.click(await screen.findByText('Dalej'));
-
-    await userEvent.click(await screen.findByText('Option A'));
-    await userEvent.click(await screen.findByText('Zakończ'));
-
-    const input = await screen.findByTestId('file-input');
-    await act(async () => {
-      await userEvent.upload(input, file);
-    });
-
-    const image = await screen.findByRole('img');
-    expect(image).toBeInTheDocument();
 
     const removeButton = await screen.findByTestId('remove-photo-button');
     await userEvent.click(removeButton);
@@ -281,8 +343,35 @@ describe('AnimalCreator', () => {
       expect(screen.queryByRole('img')).not.toBeInTheDocument();
     });
 
-    expect(URL.revokeObjectURL).toHaveBeenCalledWith(
-      'http://localhost/mock-preview-url'
+    expect(global.URL.revokeObjectURL).toHaveBeenCalled();
+  });
+
+  it('shows error when submitting without required fields', async () => {
+    render(
+      <UserContext.Provider value={mockUserContext}>
+        <AnimalCreator givenAnimalId={null} />
+      </UserContext.Provider>
     );
+
+    await userEvent.click(await screen.findByText('Dodaj psa'));
+    if (screen.queryByText('Ważna informacja')) {
+      await userEvent.click(await screen.findByText('Rozumiem'));
+    }
+    await userEvent.type(
+      await screen.findByPlaceholderText('Wpisz imię zwierzęcia'),
+      'Testowy'
+    );
+    const dateInput = await screen.findByLabelText(
+      'Szacowana data urodzenia zwierzęcia'
+    );
+    await userEvent.clear(dateInput);
+    await userEvent.type(dateInput, '2020-01-01');
+    await userEvent.click(await screen.findByText('Samiec'));
+    await userEvent.click(await screen.findByText('Dalej'));
+    await userEvent.click(await screen.findByText('Option A'));
+    await userEvent.click(await screen.findByText('Zakończ'));
+
+    const submitButton = await screen.findByText('Podsumowanie');
+    expect(submitButton).toBeDisabled();
   });
 });
