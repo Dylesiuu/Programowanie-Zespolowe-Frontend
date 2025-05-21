@@ -26,8 +26,8 @@ describe('AnimalCompletionScreen', () => {
   };
 
   const mockAnimalTags = [
-    { id: 1, text: 'Przyjazny' },
-    { id: 2, text: 'Aktywny' },
+    { _id: 1, text: 'Przyjazny' },
+    { _id: 2, text: 'Aktywny' },
   ];
 
   it('renders basic information correctly', async () => {

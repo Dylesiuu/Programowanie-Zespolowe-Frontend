@@ -30,7 +30,7 @@ const AnimalCard = ({
   };
 
   return (
-    <div className="w-[90%] max-w-[350px] bg-[#FEFEFE] border-[3px] border-[#AF6B6B] rounded-[22px] shadow-md px-[22px] pt-[15px] pb-[30px] mx-auto mb-5 relative flex flex-col items-center cursor-pointer hover:shadow-lg transition">
+    <div className="w-[90%] max-w-[350px] bg-[#FEFEFE] border-[3px] border-[#AF6B6B] rounded-[22px] shadow-md px-[22px] pt-[15px] pb-[30px] mx-auto mb-5 relative flex flex-col items-center cursor-pointer hover:shadow-lg transition z-[1000]">
       <div
         className="w-full aspect-[9/10] max-h-[350px] border border-[#AF6B6B] rounded-[22px] overflow-hidden flex items-center justify-center relative cursor-pointer"
         onClick={toggleFullImage}
@@ -99,8 +99,8 @@ const AnimalCard = ({
       <div className="flex flex-wrap gap-2 mt-3 w-full">
         {traits.map((trait) => (
           <span
-            key={trait}
-            className="bg-[#f4a261] text-[#3a281c] text-xs font-medium px-3 py-1 rounded-full"
+            key={`${trait}-${name}`}
+            className="bg-[#fefaf7] text-[#CE8455] border border-[#CE8455] text-xs font-medium px-3 py-1 rounded-full"
           >
             {trait}
           </span>

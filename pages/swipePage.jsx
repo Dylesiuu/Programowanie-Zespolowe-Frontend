@@ -76,7 +76,7 @@ const SwipePage = () => {
         const petData = await response.json();
         const formattedPets = petData.matchedAnimals.map((animal) => ({
           ...animal,
-          traits: animal.traits.map((t) => t.name),
+          traits: animal.traits.map((t) => t.text),
         }));
         setPets(formattedPets);
         setCurrentIndex(0);
@@ -108,29 +108,26 @@ const SwipePage = () => {
     const email = userContext.user.email;
 
     try {
-      const response = await fetch(
-        `${API_BASE_URL}/user/addfavourite/${email}`,
-        {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${userContext.token}`,
-          },
-          body: JSON.stringify({
-            favourites: [petId],
-          }),
-        }
-      );
+      const response = await fetch(`${API_BASE_URL}/user/addfavourite`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userContext.token}`,
+        },
+        body: JSON.stringify({
+          favourites: [petId],
+        }),
+      });
 
       const data = await response.json();
 
       if (response.ok) {
-        alert('Zwierzę zostało dodane do ulubionych!');
+        console.log('Zwierzę zostało dodane do ulubionych!');
       } else if (response.status === 400) {
         // Jeśli zwierzę jest już w ulubionych
         setLikeError('Zwierzę jest już w Twoich ulubionych!');
       } else {
-        alert(data.message || 'Błąd podczas dodawania do ulubionych');
+        console.error(data.message || 'Błąd podczas dodawania do ulubionych');
       }
     } catch (error) {
       console.error('Błąd przy dodawaniu do ulubionych:', error);

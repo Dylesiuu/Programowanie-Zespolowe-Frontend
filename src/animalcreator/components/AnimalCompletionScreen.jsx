@@ -129,11 +129,11 @@ const AnimalCompletionScreen = ({
           <h2 className="text-[#C9590F] text-xl font-semibold mb-4">Cechy:</h2>
           <div className="flex flex-wrap gap-3">
             {animalData.tags.map((tagId) => {
-              const tag = animalTags.find((t) => t.id === tagId);
+              const tag = animalTags.find((t) => t._id === tagId);
               return (
                 tag && (
                   <span
-                    key={tag.id}
+                    key={tag._id}
                     className="bg-[#fefaf7] hover:bg-[#f0e6dc] text-[#CE8455] border border-[#CE8455] px-4 py-2 rounded-full text-lg"
                   >
                     {tag.text}
