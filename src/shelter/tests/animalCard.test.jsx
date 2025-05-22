@@ -216,7 +216,7 @@ describe('AnimalCard Component', () => {
     await userEvent.click(adoptionButtonAdopted[1]);
 
     expect(mockAlert).toHaveBeenCalledWith(
-      'Zwierzę zostało już oznaczone jako zaadoptowane!'
+      'Zwierzę zostało oznaczone jako niezaadoptowane!'
     );
 
     mockAlert.mockRestore();
