@@ -77,7 +77,7 @@ const ShelterProfile = ({ shelterId, animalId }) => {
     setIsMobileCardVisible((prev) => !prev);
   };
 
-  const addToFavourite = async (fav) => {
+  const addToFavourite = async () => {
     try {
       const response = await fetchData(`${API_BASE_URL}/user/addfavourite`, {
         method: 'PATCH',
@@ -96,15 +96,17 @@ const ShelterProfile = ({ shelterId, animalId }) => {
       const data = await response.json();
       if (data.statusCode === 200) {
         userContext.setUser(data.user);
+        console.log('Added to favourites');
         return;
       }
+      console.log('data: ', data);
       console.error('Failed to add to favourites: ', data.message);
     } catch (error) {
       console.error('Error fetching shelter data:', error.message);
     }
   };
 
-  const removeFromFavourite = async (fav) => {
+  const removeFromFavourite = async () => {
     try {
       const response = await fetchData(`${API_BASE_URL}/user/removefavourite`, {
         method: 'DELETE',
@@ -123,6 +125,7 @@ const ShelterProfile = ({ shelterId, animalId }) => {
       const data = await response.json();
       if (data.statusCode === 200) {
         userContext.setUser(data.user);
+        console.log('Removed from favourites');
         return;
       }
       console.error('Failed to add to favourites: ', data.message);
