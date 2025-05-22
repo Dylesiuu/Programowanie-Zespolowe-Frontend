@@ -139,7 +139,9 @@ const Navbar = () => {
           <div className="flex-shrink-0">
             <button className="cursor-pointer" onClick={toggleDropdown}>
               <Image
-                src="/img/profile.png"
+                src={
+                  userContext.user?.avatar?.preview || '/img/default-avatar.svg'
+                }
                 alt="User Profile"
                 width={50}
                 height={50}
