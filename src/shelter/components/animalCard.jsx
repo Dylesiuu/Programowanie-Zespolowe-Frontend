@@ -53,7 +53,7 @@ const AnimalCard = ({
 
   const removeAnimal = async (id) => {
     try {
-      const response = await fetchData(`${API_BASE_URL}/animals/${id}`, {
+      const response = await fetchData(`${API_BASE_URL}/animals/remove/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -78,6 +78,30 @@ const AnimalCard = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [animalId]);
+
+  const handleAdoption = async (id) => {
+    try {
+      const response = await fetchData(
+        `${API_BASE_URL}/animals/${id}/adoption/${animal.shelter}`,
+        {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${userContext.token}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        console.error(`HTTP error! Status: ${response.status}`);
+        return;
+      }
+      const data = await response.json();
+      console.warn(data.message);
+      setAnimal(data);
+    } catch (error) {
+      console.error('Error while changind adopt status:', error.message);
+    }
+  };
 
   const showDescription = () => {
     setIsDescriptionVisible(true);
@@ -140,7 +164,7 @@ const AnimalCard = ({
   }
 
   return (
-    <div className="flex flex-col w-full h-full p-6 rounded-3xl shadow-2xl bg-white">
+    <div className="flex flex-col w-full h-full p-6 rounded-3xl shadow-2xl bg-white justify-between">
       {/* Trash Button */}
       <div className="absolute top-2 left-2">
         <button
@@ -315,13 +339,14 @@ const AnimalCard = ({
                   ? 'bg-[#FF0000] hover:bg-[#CC0000] text-[#fefaf7]' // Red button for adopted
                   : 'bg-[#4caf50] hover:bg-[#45a049] text-[#fefaf7]' // Green button for not adopted
               }`}
-              onClick={() =>
+              onClick={() => {
+                handleAdoption(animalId);
                 alert(
                   animal.adopted
-                    ? 'Zwierzę zostało już oznaczone jako zaadoptowane!'
+                    ? 'Zwierzę zostało oznaczone jako niezaadoptowane!'
                     : 'Zwierzę zostało oznaczone jako zaadoptowane!'
-                )
-              }
+                );
+              }}
             >
               Adopcja
             </button>

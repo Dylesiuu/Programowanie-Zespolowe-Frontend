@@ -47,11 +47,10 @@ const UserCreator = () => {
         const response = await fetchData(
           `${API_BASE_URL}/user/getAllUsertraits`,
           {
-            method: 'POST',
+            method: 'GET',
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({}),
           }
         );
 
