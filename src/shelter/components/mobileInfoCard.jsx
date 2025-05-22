@@ -93,7 +93,7 @@ const MobileInfoCard = ({ shelter, onEdit, toggleCard, userContext }) => {
           <p className="text-sm md:text-base lg:text-lg text-gray-600">
             <strong>Strona:</strong>{' '}
             <a
-              href={shelter.link}
+              href={shelter.website}
               target="_blank"
               rel="noopener noreferrer"
               className="text-[#d46622] hover:underline"
