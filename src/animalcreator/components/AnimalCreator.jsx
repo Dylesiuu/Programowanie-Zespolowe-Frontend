@@ -237,23 +237,33 @@ const AnimalCreator = ({ givenAnimalId }) => {
     });
     const photoToRemove = animalData.photos[index];
     if (photoToRemove && photoToRemove.publicId) {
-      try {
-        const response = await fetchData(
-          `${API_BASE_URL}/images?publicId=${photoToRemove.publicId}`,
-          {
-            method: 'DELETE',
-            headers: {
-              Authorization: `Bearer ${userContext.token}`,
-            },
-          }
-        );
+      fetchRemovePhoto(photoToRemove);
+    }
+  };
 
-        if (response.ok) {
-          console.log('Photo removed successfully');
-        } else console.error('Failed to remove photo from backend');
-      } catch (error) {
-        console.error('Error removing photo from backend:', error);
+  const fetchRemovePhoto = async (toRemove) => {
+    try {
+      const publicIds = Array.isArray(toRemove)
+        ? toRemove.map((item) => item.publicId)
+        : [toRemove.publicId];
+
+      const response = await fetchData(`${API_BASE_URL}/images`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${userContext.token}`,
+        },
+        body: JSON.stringify({
+          publicIds,
+        }),
+      });
+
+      if (response.ok) {
+        console.log('Photo(s) removed successfully');
+      } else {
+        console.error('Failed to remove photo(s) from backend');
       }
+    } catch (error) {
+      console.error('Error removing photo(s) from backend:', error);
     }
   };
 
@@ -289,7 +299,6 @@ const AnimalCreator = ({ givenAnimalId }) => {
         method = 'POST';
       }
 
-      console.log('Form data:', formData);
       const response = await fetchData(url, {
         method: method,
         headers: {
@@ -307,9 +316,11 @@ const AnimalCreator = ({ givenAnimalId }) => {
         );
       } else {
         console.error('Wystąpił błąd');
+        fetchRemovePhoto(animalData.photos);
       }
     } catch (error) {
       console.error('Error submitting/adding animal:', error);
+      fetchRemovePhoto(animalData.photos);
       alert('Wystąpił błąd podczas dodawania/edytowania zwierzęcia');
     }
   };
