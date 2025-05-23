@@ -5,9 +5,9 @@ const AnimalCompletionScreen = ({
   animalData,
   onSubmit,
   onBack,
-  animalTags = [],
   isSubmitting,
   selectedTags = [],
+  success,
 }) => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [showAllPhotos, setShowAllPhotos] = useState(false);
@@ -101,13 +101,13 @@ const AnimalCompletionScreen = ({
               </h2>
               <div className="relative">
                 <div className="flex overflow-x-auto pb-4 gap-4 scrollbar-hide max-h-48">
-                  {animalData.photos.map((photo, index) => (
-                    <div key={index} className="flex-shrink-0">
+                  {animalData.photos.map((photo) => (
+                    <div key={photo._id} className="flex-shrink-0">
                       <Image
                         width={500}
                         height={500}
                         src={photo.preview}
-                        alt={`Preview ${index}`}
+                        alt={`Preview ${photo._id}`}
                         className="w-32 h-32 object-cover rounded-lg cursor-pointer hover:opacity-80 transition-opacity"
                         onClick={() => setSelectedImage(photo.preview)}
                       />
@@ -170,6 +170,11 @@ const AnimalCompletionScreen = ({
             Potwierdź
           </button>
         </div>
+        {success && (
+          <div className="mb-4 p-3 bg-green-100 text-green-700 rounded text-center">
+            Zapisano dane!
+          </div>
+        )}
       </div>
     </div>
   );

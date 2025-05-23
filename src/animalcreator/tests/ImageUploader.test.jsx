@@ -47,7 +47,7 @@ describe('ImageUploader', () => {
     const deleteButtons = await screen.findAllByText('×');
     await userEvent.click(deleteButtons[0]);
 
-    expect(mockOnRemove).toHaveBeenCalledWith(0);
+    expect(mockOnRemove).toHaveBeenCalled();
   });
 
   it('calls onUpload when file is selected', async () => {

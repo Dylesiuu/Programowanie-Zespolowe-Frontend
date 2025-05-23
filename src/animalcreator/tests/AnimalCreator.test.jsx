@@ -332,13 +332,16 @@ describe('AnimalCreator', () => {
       await userEvent.upload(input, file);
     });
 
+    // Wait for the image to appear
     await waitFor(() => {
       expect(screen.getByRole('img')).toBeInTheDocument();
     });
 
+    // Find the remove button and click it
     const removeButton = await screen.findByTestId('remove-photo-button');
     await userEvent.click(removeButton);
 
+    // Wait for the image to be removed
     await waitFor(() => {
       expect(screen.queryByRole('img')).not.toBeInTheDocument();
     });

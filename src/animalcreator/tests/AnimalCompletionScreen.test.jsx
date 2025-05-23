@@ -17,7 +17,10 @@ describe('AnimalCompletionScreen', () => {
     name: 'Burek',
     birthDate: '2020-01-01',
     gender: 'Samiec',
-    tags: [1, 2],
+    tags: [
+      { _id: 1, text: 'Przyjazny' },
+      { _id: 2, text: 'Aktywny' },
+    ],
     description: 'Fajny piesek',
     photos: [
       { preview: 'photo1.jpg', width: 500, height: 500 },
@@ -36,7 +39,6 @@ describe('AnimalCompletionScreen', () => {
     render(
       <AnimalCompletionScreen
         animalData={mockAnimalData}
-        animalTags={mockAnimalTags}
         onSubmit={jest.fn()}
         onBack={jest.fn()}
       />
@@ -60,7 +62,7 @@ describe('AnimalCompletionScreen', () => {
         animalTags={mockAnimalTags}
         onSubmit={jest.fn()}
         onBack={jest.fn()}
-        selectedTags={mockAnimalTagIds}
+        selectedTags={mockAnimalTags}
       />
     );
 
