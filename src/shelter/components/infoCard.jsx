@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 const InfoCard = ({ shelter, onEdit, userContext }) => {
-  const [locationName, setLocationName] = React.useState('');
+  const [locationName, setLocationName] = useState('');
   const [isWarningVisible, setIsWarningVisible] = useState(false);
   const fetchData = useAuthFetch();
   const router = useRouter();

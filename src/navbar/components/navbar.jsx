@@ -98,7 +98,7 @@ const Navbar = () => {
             <div>
               <button
                 className="flex cursor-pointer items-center space-x-1"
-                onClick={() => alert('Panel')}
+                onClick={() => router.push('/adminPanelPage')}
               >
                 <span className="flex items-center">
                   <BiDesktop className="text-[1.5625rem]" />
@@ -168,18 +168,20 @@ const Navbar = () => {
               >
                 Profil
               </li>
-              <li
+              {/* <li
                 className="px-4 py-2 hover:bg-[#AA673C] cursor-pointer"
                 onClick={() => alert('/settings')}
               >
                 Ustawienia
-              </li>
-              <li
-                className="px-4 py-2 hover:bg-[#AA673C] cursor-pointer"
-                onClick={() => router.push(`/shelterCreator?shelterId=null`)}
-              >
-                Stwórz Schronisko
-              </li>
+              </li> */}
+              {userContext.user?.shelterId === null && (
+                <li
+                  className="px-4 py-2 hover:bg-[#AA673C] cursor-pointer"
+                  onClick={() => router.push(`/shelterCreator?shelterId=null`)}
+                >
+                  Stwórz Schronisko
+                </li>
+              )}
               <li
                 className="px-4 py-2 hover:bg-[#AA673C] hover:rounded-b-lg cursor-pointer"
                 onClick={() => {
