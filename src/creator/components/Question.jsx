@@ -1,8 +1,23 @@
 import React from 'react';
 
 const Question = ({ question, selectedTags, onOptionClick }) => {
-  const isOptionSelected = (optionTags) =>
-    optionTags.some((tag) => selectedTags.includes(tag));
+  // const isOptionSelected = (optionTags) => {
+  //   optionTags.some((tag) =>
+  //     selectedTags.some((selected) => selected._id === tag[0])
+  //   );
+  //   console.log('optiontags', optionTags);
+  //   console.log('selectedTags', selectedTags);
+  //   console.log('question', question);
+  // };
+
+  const isOptionSelected = (optionTags) => {
+    // console.log('optiontags', optionTags);
+    // console.log('selectedTags', selectedTags);
+    // console.log('question', question);
+    return optionTags.some((tag) =>
+      selectedTags.some((selected) => selected._id === tag)
+    );
+  };
 
   return (
     <div className="w-full flex flex-col items-center px-4 sm:px-6 md:px-8 py-8 sm:py-10 md:py-12 bg-[#FFF9F5]/70 rounded-4xl shadow-lg">
