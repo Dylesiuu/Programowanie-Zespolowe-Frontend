@@ -1,19 +1,7 @@
 import React from 'react';
 
 const Question = ({ question, selectedTags, onOptionClick }) => {
-  // const isOptionSelected = (optionTags) => {
-  //   optionTags.some((tag) =>
-  //     selectedTags.some((selected) => selected._id === tag[0])
-  //   );
-  //   console.log('optiontags', optionTags);
-  //   console.log('selectedTags', selectedTags);
-  //   console.log('question', question);
-  // };
-
   const isOptionSelected = (optionTags) => {
-    // console.log('optiontags', optionTags);
-    // console.log('selectedTags', selectedTags);
-    // console.log('question', question);
     return optionTags.some((tag) =>
       selectedTags.some((selected) => selected._id === tag)
     );

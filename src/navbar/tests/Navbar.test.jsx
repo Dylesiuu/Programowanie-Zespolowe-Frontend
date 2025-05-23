@@ -21,6 +21,7 @@ describe('Navbar Component', () => {
       name: 'John Doe',
       email: 'john.doe@example.com',
       shelterId: 1,
+      role: 'admin',
     },
     logout: mockLogout,
     isLoggedIn: () => true,

@@ -25,6 +25,7 @@ const AnimalCreator = ({ givenAnimalId }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedTags, setSelectedTags] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [successfullyAdded, setSuccessfullyAdded] = useState(false);
 
   const [animalData, setAnimalData] = useState({
     type: '',
@@ -35,21 +36,6 @@ const AnimalCreator = ({ givenAnimalId }) => {
     description: '',
     photos: [],
   });
-
-  // const preparedQuestions = (
-  //   Array.isArray(animalQuestions) ? animalQuestions : []
-  // ).map((question) => {
-  //   const questionTags = (Array.isArray(allTraits) ? allTraits : []).filter(
-  //     (tag) => tag.collectionId === question.id
-  //   );
-  //   return {
-  //     ...question,
-  //     options: questionTags.map((tag) => ({
-  //       text: tag.text,
-  //       tagId: tag._id,
-  //     })),
-  //   };
-  // });
 
   const preparedQuestions = animalQuestions.map((question) => {
     const questionTraits = allTraits.filter(
@@ -79,59 +65,16 @@ const AnimalCreator = ({ givenAnimalId }) => {
     setCurrentStep('basicInfo');
   };
 
-  // const handleOptionClick = (optionTags) => {
-  //   setAnimalData((prev) => {
-  //     console.log('Previous tags:', prev.tags);
-  //     console.log('Option tags:', optionTags);
-  //     const currentTags = prev.tags;
-  //     console.log('Current tags:', currentTags);
-
-  //     const isAnySelected = optionTags.some((tagId) =>
-  //       currentTags.includes(tagId)
-  //     );
-  //     if (isAnySelected) {
-  //       return {
-  //         ...prev,
-  //         tags: currentTags.filter((tagId) => !optionTags.includes(tagId)),
-  //       };
-  //     }
-
-  //     const newConflicts = optionTags.flatMap(
-  //       (tagId) => allTraits.find((t) => t.id === tagId)?.conflicts || []
-  //     );
-
-  //     const existingConflicts = currentTags.filter((tagId) =>
-  //       allTraits
-  //         .find((t) => t.id === tagId)
-  //         ?.conflicts?.some((conflictId) => optionTags.includes(conflictId))
-  //     );
-
-  //     const allConflicts = [
-  //       ...new Set([...newConflicts, ...existingConflicts]),
-  //     ];
-
-  //     return {
-  //       ...prev,
-  //       tags: [
-  //         ...currentTags.filter((tagId) => !allConflicts.includes(tagId)),
-  //         ...optionTags,
-  //       ],
-  //     };
-  //   });
-  // };
   const handleOptionClick = (optionTags) => {
     setSelectedTags((prevTags) => {
-      // optionTags is an array with one element: the clicked tag's _id
       const clickedTagId = optionTags[0];
       const clickedTrait = allTraits.find((t) => t._id === clickedTagId);
 
-      // If the tag is already selected, remove it (toggle off)
       const isSelected = prevTags.some((tag) => tag._id === clickedTagId);
       if (isSelected) {
         return prevTags.filter((tag) => tag._id !== clickedTagId);
       }
 
-      // Remove tags that are in conflict with the clicked tag
       const conflicts = clickedTrait?.conflicts || [];
       const filteredTags = prevTags.filter(
         (tag) => !conflicts.includes(tag._id)
@@ -212,18 +155,22 @@ const AnimalCreator = ({ givenAnimalId }) => {
     }));
   };
 
-  const removePhoto = async (index) => {
+  const removePhoto = async (preview) => {
     setAnimalData((prev) => {
-      const newPhotos = [...prev.photos];
-      const removedPhoto = newPhotos[index];
-      URL.revokeObjectURL(removedPhoto.preview);
-      newPhotos.splice(index, 1);
+      const newPhotos = prev.photos.filter(
+        (photo) => photo.preview !== preview
+      );
+      const removedPhoto = prev.photos.find(
+        (photo) => photo.preview === preview
+      );
+      if (removedPhoto) {
+        URL.revokeObjectURL(removedPhoto.preview);
+        if (removedPhoto.publicId) {
+          fetchRemovePhoto(removedPhoto);
+        }
+      }
       return { ...prev, photos: newPhotos };
     });
-    const photoToRemove = animalData.photos[index];
-    if (photoToRemove && photoToRemove.publicId) {
-      fetchRemovePhoto(photoToRemove);
-    }
   };
 
   const fetchRemovePhoto = async (toRemove) => {
@@ -297,9 +244,12 @@ const AnimalCreator = ({ givenAnimalId }) => {
       console.log('Response:', response);
 
       if (response.ok) {
-        router.push(
-          `/shelterProfilePage?shelterId=${userContext.user.shelterId}&animal=null`
-        );
+        setSuccessfullyAdded(true);
+        setTimeout(() => {
+          router.push(
+            `/shelterProfilePage?shelterId=${userContext.user.shelterId}&animal=null`
+          );
+        }, 1500);
       } else {
         console.error('Wystąpił błąd');
         fetchRemovePhoto(animalData.photos);
@@ -559,11 +509,11 @@ const AnimalCreator = ({ givenAnimalId }) => {
     return (
       <AnimalCompletionScreen
         animalData={animalData}
-        animalTags={allTraits}
         onSubmit={handleSubmit}
         onBack={() => setCurrentStep('details')}
         isSubmitting={isSubmitting}
         selectedTags={selectedTags}
+        success={successfullyAdded}
       />
     );
   }

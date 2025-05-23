@@ -49,7 +49,7 @@ describe('Question', () => {
     render(
       <Question
         question={mockQuestion}
-        selectedTags={[1]}
+        selectedTags={[{ _id: 1, text: 'Dom' }]}
         onOptionClick={() => {}}
       />
     );
