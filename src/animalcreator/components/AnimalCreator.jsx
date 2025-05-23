@@ -25,6 +25,7 @@ const AnimalCreator = ({ givenAnimalId }) => {
   const MAX_PHOTOS = 50;
   const [isLoading, setIsLoading] = useState(true);
   const [selectedTags, setSelectedTags] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [animalData, setAnimalData] = useState({
     type: '',
@@ -273,6 +274,7 @@ const AnimalCreator = ({ givenAnimalId }) => {
 
   const handleSubmit = async () => {
     try {
+      setIsSubmitting(true);
       const formData = {
         type: animalData.type,
         name: animalData.name,
@@ -318,10 +320,12 @@ const AnimalCreator = ({ givenAnimalId }) => {
         console.error('Wystąpił błąd');
         fetchRemovePhoto(animalData.photos);
       }
+      setIsSubmitting(false);
     } catch (error) {
       console.error('Error submitting/adding animal:', error);
       fetchRemovePhoto(animalData.photos);
       alert('Wystąpił błąd podczas dodawania/edytowania zwierzęcia');
+      setIsSubmitting(false);
     }
   };
 
@@ -574,6 +578,8 @@ const AnimalCreator = ({ givenAnimalId }) => {
         animalTags={allTraits}
         onSubmit={handleSubmit}
         onBack={() => setCurrentStep('details')}
+        isSubmitting={isSubmitting}
+        selectedTags={selectedTags}
       />
     );
   }

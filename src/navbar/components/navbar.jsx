@@ -94,17 +94,19 @@ const Navbar = () => {
         {/* Buttons for navigation */}
         <div className="flex flex-shrink-0 items-center justify-end space-x-[0.625rem] sm:space-x-1.5">
           {/* Admin control panel button */}
-          <div>
-            <button
-              className="flex cursor-pointer items-center space-x-1"
-              onClick={() => alert('Panel')}
-            >
-              <span className="flex items-center">
-                <BiDesktop className="text-[1.5625rem]" />
-              </span>
-              <span className="hidden md:block">Panel Kontrolny</span>
-            </button>
-          </div>
+          {userContext.user?.role === 'admin' && (
+            <div>
+              <button
+                className="flex cursor-pointer items-center space-x-1"
+                onClick={() => alert('Panel')}
+              >
+                <span className="flex items-center">
+                  <BiDesktop className="text-[1.5625rem]" />
+                </span>
+                <span className="hidden md:block">Panel Kontrolny</span>
+              </button>
+            </div>
+          )}
           {/* Shelter button */}
           {userContext.user?.shelterId && (
             <div>
