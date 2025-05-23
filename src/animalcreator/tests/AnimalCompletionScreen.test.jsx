@@ -30,6 +30,8 @@ describe('AnimalCompletionScreen', () => {
     { _id: 2, text: 'Aktywny' },
   ];
 
+  const mockAnimalTagIds = [1, 2];
+
   it('renders basic information correctly', async () => {
     render(
       <AnimalCompletionScreen
@@ -58,6 +60,7 @@ describe('AnimalCompletionScreen', () => {
         animalTags={mockAnimalTags}
         onSubmit={jest.fn()}
         onBack={jest.fn()}
+        selectedTags={mockAnimalTagIds}
       />
     );
 

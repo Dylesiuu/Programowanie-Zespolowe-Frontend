@@ -2,7 +2,6 @@ import React, { useState, useRef, useContext, useEffect } from 'react';
 import AnimalStartScreen from './AnimalStartScreen';
 import AnimalCompletionScreen from './AnimalCompletionScreen';
 import animalQuestions from '../data/animalQuestions';
-import animalTags from '../data/animalTags';
 import Question from '../../creator/components/Question';
 import NavigationButton from '../../creator/components/NavigationButton';
 import { useRouter } from 'next/router';
