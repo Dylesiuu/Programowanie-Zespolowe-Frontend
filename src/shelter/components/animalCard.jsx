@@ -252,7 +252,7 @@ const AnimalCard = ({
         <strong>Wiek:</strong> {animal.age}
       </p>
       {/* Description */}
-      <p className="text-gray-600 mb-2">
+      <p className="text-gray-600 mb-2 wrap-break-word">
         <strong>Opis: </strong>
         {animal.description.length > 100 ? (
           <>

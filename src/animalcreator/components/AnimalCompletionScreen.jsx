@@ -6,6 +6,8 @@ const AnimalCompletionScreen = ({
   onSubmit,
   onBack,
   animalTags = [],
+  isSubmitting,
+  selectedTags = [],
 }) => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [showAllPhotos, setShowAllPhotos] = useState(false);
@@ -128,7 +130,7 @@ const AnimalCompletionScreen = ({
         <div className="w-full mb-6 bg-[#FFF9F5] rounded-2xl shadow-md p-6">
           <h2 className="text-[#C9590F] text-xl font-semibold mb-4">Cechy:</h2>
           <div className="flex flex-wrap gap-3">
-            {animalData.tags.map((tagId) => {
+            {selectedTags.map((tagId) => {
               const tag = animalTags.find((t) => t._id === tagId);
               return (
                 tag && (
@@ -163,6 +165,8 @@ const AnimalCompletionScreen = ({
           <button
             onClick={onSubmit}
             className="px-8 py-3 bg-[#CE8455] text-white rounded-full text-lg font-medium hover:bg-[#C9590F] transition-colors"
+            disabled={isSubmitting}
+            style={isSubmitting ? { opacity: 0.6, cursor: 'not-allowed' } : {}}
           >
             Potwierdź
           </button>
