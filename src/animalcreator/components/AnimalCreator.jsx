@@ -121,38 +121,23 @@ const AnimalCreator = ({ givenAnimalId }) => {
   // };
   const handleOptionClick = (optionTags) => {
     setSelectedTags((prevTags) => {
-      const isAnySelected = optionTags.some((tagId) =>
-        prevTags.includes(tagId)
-      );
-      if (isAnySelected) {
-        return prevTags.filter((tagId) => !optionTags.includes(tagId));
+      // optionTags is an array with one element: the clicked tag's _id
+      const clickedTagId = optionTags[0];
+      const clickedTrait = allTraits.find((t) => t._id === clickedTagId);
+
+      // If the tag is already selected, remove it (toggle off)
+      const isSelected = prevTags.some((tag) => tag._id === clickedTagId);
+      if (isSelected) {
+        return prevTags.filter((tag) => tag._id !== clickedTagId);
       }
 
-      const directConflicts = optionTags.flatMap((tagId) => {
-        const trait = allTraits.find((t) => t._id === tagId);
-        return trait ? trait.conflicts : [];
-      });
-
-      const reverseConflicts = allTraits
-        .filter((trait) => {
-          return (
-            trait.conflicts &&
-            trait.conflicts.some((conflictId) =>
-              optionTags.includes(conflictId)
-            )
-          );
-        })
-        .map((trait) => trait._id);
-
-      const allConflicts = [
-        ...new Set([...directConflicts, ...reverseConflicts]),
-      ];
-
+      // Remove tags that are in conflict with the clicked tag
+      const conflicts = clickedTrait?.conflicts || [];
       const filteredTags = prevTags.filter(
-        (tagId) => !allConflicts.includes(tagId)
+        (tag) => !conflicts.includes(tag._id)
       );
 
-      return [...filteredTags, ...optionTags];
+      return [...filteredTags, clickedTrait];
     });
   };
 
@@ -281,7 +266,7 @@ const AnimalCreator = ({ givenAnimalId }) => {
         birthMonth: new Date(animalData.birthDate).getMonth() + 1,
         gender: animalData.gender,
         description: animalData.description,
-        traits: selectedTags,
+        traits: selectedTags.map((tag) => tag._id),
         images: await uploadPhotos(animalData.photos),
       };
 
