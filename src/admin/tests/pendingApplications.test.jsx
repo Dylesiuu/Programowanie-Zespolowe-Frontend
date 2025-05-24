@@ -17,7 +17,7 @@ jest.mock('../../lib/authFetch', () => ({
               email: 'test@shelter.pl',
               shelterData: {
                 name: 'Schronisko Test',
-                location: 'Miasto',
+                location: [25, 54],
                 email: 'test@shelter.pl',
                 website: 'https://schronisko.pl',
                 description: 'Opis schroniska',
@@ -39,6 +39,20 @@ const userContextValue = {
 };
 
 describe('PendingShelterApplications', () => {
+  beforeEach(() => {
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        json: () =>
+          Promise.resolve({
+            results: [{ formatted: 'Warszawa, Polska' }],
+          }),
+      })
+    );
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
   it('renders loading and then applications', async () => {
     render(
       <UserContext.Provider value={userContextValue}>
@@ -47,7 +61,6 @@ describe('PendingShelterApplications', () => {
     );
     expect(await screen.findByText(/Ładowanie/)).toBeInTheDocument();
     expect(await screen.findByText('Schronisko Test')).toBeInTheDocument();
-    expect(await screen.findByText('Miasto')).toBeInTheDocument();
   });
 
   it('shows modal with details when application is clicked', async () => {

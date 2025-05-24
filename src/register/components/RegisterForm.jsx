@@ -49,6 +49,7 @@ const RegisterForm = () => {
         const responseData = await response.json();
         userContext.setUser(responseData.user);
         userContext.setToken(responseData.token);
+        router.push();
       } else if (response.status === 409) {
         setError('global', {
           type: 'manual',
