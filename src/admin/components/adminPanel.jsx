@@ -3,6 +3,9 @@ import { UserContext } from '@/context/userContext';
 import { useAuthFetch } from '@/lib/authFetch';
 import AdminInfoPanel from './adminInfoPanel';
 import SheltersPanel from './sheltersPanel';
+import PendingShelterApplications from './pendingApplications';
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 const AdminPanel = () => {
   const [shelters, setShelters] = useState([]);
@@ -10,35 +13,32 @@ const AdminPanel = () => {
   const userContext = useContext(UserContext);
   const fetchData = useAuthFetch();
 
-  useEffect(() => {
-    const fetchShelters = async () => {
-      try {
-        const response = await fetchData(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/shelter/all`,
-          {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${userContext.token}`,
-            },
-          }
-        );
+  const fetchShelters = async () => {
+    try {
+      const response = await fetchData(`${API_BASE_URL}/shelter/all`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userContext.token}`,
+        },
+      });
+      if (!response.ok) {
         if (!response.ok) {
-          if (!response.ok) {
-            const errorText = await response.text();
-            console.error('Failed to fetch shelters:', errorText);
-          }
+          const errorText = await response.text();
+          console.error('Failed to fetch shelters:', errorText);
         }
-        const data = await response.json();
-        setShelters(data.shelters || []);
-      } catch (e) {
-        setShelters([]);
-        console.error('Error fetching shelters:', e);
-      } finally {
-        setLoading(false);
       }
-    };
+      const data = await response.json();
+      setShelters(data.shelters || []);
+    } catch (e) {
+      setShelters([]);
+      console.error('Error fetching shelters:', e);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     if (userContext.user?.role === 'admin') {
       console.log('Fetching shelters for admin');
       fetchShelters();
@@ -72,7 +72,7 @@ const AdminPanel = () => {
             <AdminInfoPanel user={userContext.user} />
             <div className="bg-[#FFF9F5]/80 rounded-lg shadow-md p-6">
               <div className="text-[#CE8455] font-semibold mb-2">
-                Panel administratora
+                Panel kontrolny
               </div>
               <div className="text-gray-700 text-sm">
                 Tutaj możesz przeglądać i zarządzać wszystkimi schroniskami w
@@ -92,9 +92,10 @@ const AdminPanel = () => {
               <div className="text-[#CE8455] font-semibold mb-2">
                 Statystyki (wkrótce)
               </div>
-              <div className="text-gray-700 text-sm text-center">
+              <div className="text-gray-700 text-sm text-center mb-4">
                 Tutaj pojawią się statystyki i narzędzia administracyjne.
               </div>
+              <PendingShelterApplications onUpdate={fetchShelters} />
             </div>
           </div>
         </div>

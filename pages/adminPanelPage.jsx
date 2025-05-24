@@ -6,7 +6,6 @@ import { useRouter } from 'next/router';
 const ShelterProfilePage = () => {
   const userContext = useContext(UserContext);
   const router = useRouter();
-  const { shelterId, animal: animalId } = router.query;
 
   useEffect(() => {
     if (userContext.isLoggedIn()) {

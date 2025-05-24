@@ -92,14 +92,18 @@ const MobileInfoCard = ({ shelter, onEdit, toggleCard, userContext }) => {
           </p>
           <p className="text-sm md:text-base lg:text-lg text-gray-600">
             <strong>Strona:</strong>{' '}
-            <a
-              href={shelter.website}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[#d46622] hover:underline"
-            >
-              {shelter.link}
-            </a>
+            {shelter.website ? (
+              <a
+                href={shelter.website}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[#d46622] hover:underline"
+              >
+                {shelter.website}
+              </a>
+            ) : (
+              <span className="text-gray-400">brak</span>
+            )}
           </p>
           <p className="text-sm md:text-base lg:text-lg text-gray-600">
             <strong>O schronisku:</strong> {shelter.description}
