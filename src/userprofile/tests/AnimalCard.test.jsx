@@ -3,6 +3,20 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import AnimalCard from '../components/AnimalCard';
 
+jest.mock('next/router', () => ({
+  useRouter: jest.fn(),
+}));
+
+global.fetch = jest.fn(() =>
+  Promise.resolve({
+    ok: true,
+    json: () =>
+      Promise.resolve({
+        shelter: { _id: 'schronisko123', name: 'Schronisko Warszawa' },
+      }),
+  })
+);
+
 describe('AnimalCard', () => {
   const mockAnimal = {
     images: ['/image1.jpg', '/image2.jpg'],
@@ -11,8 +25,13 @@ describe('AnimalCard', () => {
     age: '3 lata',
     description: 'Przyjazny piesek',
     traits: [{ _id: '1', text: 'Przyjazny' }],
-    shelter: 'Schronisko Warszawa',
+    shelter: 'schronisko123',
+    registrationNumber: 'REG123',
   };
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
 
   it('renders basic animal information', async () => {
     render(<AnimalCard {...mockAnimal} />);
