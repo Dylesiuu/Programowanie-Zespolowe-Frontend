@@ -45,10 +45,15 @@ const ShelterProfile = ({ shelterId, animalId }) => {
 
     if (shelterId && shelterId !== 'null') {
       fetchShelterData();
-      closeAnimalCard();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shelterId, refreshShelter]);
+
+  useEffect(() => {
+    if (refreshShelter) {
+      closeAnimalCard();
+    }
+  }, [refreshShelter]);
 
   useEffect(() => {
     if (animalId) {
