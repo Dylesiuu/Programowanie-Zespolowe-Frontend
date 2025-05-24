@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-const UserBasicInfoUpload = () => {
+const UserBasicInfoUpload = ({ isNew }) => {
   const userContext = useContext(UserContext);
   const fetchData = useAuthFetch();
   const router = useRouter();
@@ -211,7 +211,11 @@ const UserBasicInfoUpload = () => {
       setSuccess(true);
 
       setTimeout(() => {
-        router.push(`/userProfilePage?userId=${userContext.user._id}`);
+        if (isNew === 'true') {
+          router.push(`/userCreatorPage`);
+        } else {
+          router.push(`/userProfilePage?userId=${userContext.user._id}`);
+        }
       }, 1000);
     } catch (err) {
       setError(err.message);
@@ -254,7 +258,7 @@ const UserBasicInfoUpload = () => {
             />
             <label
               htmlFor="avatar"
-              className="px-4 py-2 bg-[#CE8455] text-white rounded cursor-pointer hover:bg-[#b5734d] transition rounded-2xl"
+              className="px-4 py-2 bg-[#CE8455] text-white cursor-pointer hover:bg-[#b5734d] transition rounded-2xl"
             >
               {avatarData.previewUrl ? 'Zmień zdjęcie' : 'Dodaj zdjęcie'}
             </label>
@@ -272,7 +276,7 @@ const UserBasicInfoUpload = () => {
               name="name"
               value={userInputs.name}
               onChange={handleTextChange}
-              className="w-full p-2 border border-[#CE8455] rounded focus:outline-none focus:ring-1 focus:ring-[#CE8455] rounded-2xl"
+              className="w-full p-2 border border-[#CE8455] focus:outline-none focus:ring-1 focus:ring-[#CE8455] rounded-2xl"
               required
             />
           </div>
@@ -287,7 +291,7 @@ const UserBasicInfoUpload = () => {
               name="lastname"
               value={userInputs.lastname}
               onChange={handleTextChange}
-              className="w-full p-2 border border-[#CE8455] rounded focus:outline-none focus:ring-1 focus:ring-[#CE8455] rounded-2xl"
+              className="w-full p-2 border border-[#CE8455] focus:outline-none focus:ring-1 focus:ring-[#CE8455] rounded-2xl"
               required
             />
           </div>
@@ -305,7 +309,7 @@ const UserBasicInfoUpload = () => {
               value={userInputs.description}
               onChange={handleTextChange}
               rows="4"
-              className="w-full p-2 border border-[#CE8455] rounded focus:outline-none focus:ring-1 focus:ring-[#CE8455] resize-none overflow-auto rounded-2xl"
+              className="w-full p-2 border border-[#CE8455] focus:outline-none focus:ring-1 focus:ring-[#CE8455] resize-none overflow-auto rounded-2xl"
             />
           </div>
           <div className="flex flex-col gap-4">
@@ -318,15 +322,17 @@ const UserBasicInfoUpload = () => {
             >
               {isSubmitting ? 'Zapisywanie...' : 'Zapisz zmiany'}
             </button>
-            <button
-              type="button"
-              onClick={() =>
-                router.push(`/userProfilePage?userId=${userContext.user._id}`)
-              }
-              className="w-full px-4 py-3 bg-[#F1CFB8] text-[#CE8455] hover:bg-[#DEC0AC] rounded-2xl  transition"
-            >
-              Wróć do profilu
-            </button>
+            {!isNew && (
+              <button
+                type="button"
+                onClick={() =>
+                  router.push(`/userProfilePage?userId=${userContext.user._id}`)
+                }
+                className="w-full px-4 py-3 bg-[#F1CFB8] text-[#CE8455] hover:bg-[#DEC0AC] rounded-2xl  transition"
+              >
+                Wróć do profilu
+              </button>
+            )}
           </div>
         </form>
       </div>
