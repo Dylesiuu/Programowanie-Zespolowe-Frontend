@@ -122,7 +122,7 @@ const ShelterCreator = () => {
           );
         }
       } else {
-        const res = await fetchData(`${API_BASE_URL}/shelter/create`, {
+        const res = await fetchData(`${API_BASE_URL}/shelter-applications`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -134,14 +134,15 @@ const ShelterCreator = () => {
             email: formData.email,
             description: formData.description,
             location: position,
+            website: '',
           }),
         });
 
         const data = await res.json();
 
         if (res.ok) {
-          userContext.setUser(data.user);
-          userContext.setToken(data.token);
+          // userContext.setUser(data.user);
+          // userContext.setToken(data.token);
           router.push({
             pathname: '/swipePage',
             query: { created: 'true' },
