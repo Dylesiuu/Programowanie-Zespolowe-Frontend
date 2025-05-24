@@ -11,7 +11,7 @@ import { useAuthFetch } from '@/lib/authFetch';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-const UserCreator = ({ user }) => {
+const UserCreator = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedTags, setSelectedTags] = useState([]);
   const [allTraits, setAllTraits] = useState([]);
@@ -27,7 +27,7 @@ const UserCreator = ({ user }) => {
 
   const confirmSkip = async () => {
     setShowSkipWarning(false);
-    await router.push(`/userDetailsCreatorPage?userId=${user._id}`);
+    await router.push(`/swipePage?created=false`);
   };
 
   const cancelSkip = () => {
@@ -41,7 +41,6 @@ const UserCreator = ({ user }) => {
     return [];
   };
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const fetchAllTraits = async () => {
       try {
@@ -75,6 +74,7 @@ const UserCreator = ({ user }) => {
     };
 
     fetchAllTraits();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -138,7 +138,7 @@ const UserCreator = ({ user }) => {
             Authorization: `Bearer ${userContext.token}`,
           },
           body: JSON.stringify({
-            trait: selectedTags,
+            trait: selectedTags.map((tag) => tag._id),
           }),
         });
 
@@ -149,7 +149,7 @@ const UserCreator = ({ user }) => {
         userContext.setUser(data.user);
       }
 
-      router.push('/swipePage');
+      router.push('/swipePage?created=false');
     } catch (error) {
       console.error('Error saving user traits:', error);
     }
@@ -169,41 +169,22 @@ const UserCreator = ({ user }) => {
       })),
     };
   });
-
   const handleOptionClick = (optionTags) => {
     setSelectedTags((prevTags) => {
-      const isAnySelected = optionTags.some((tagId) =>
-        prevTags.includes(tagId)
-      );
-      if (isAnySelected) {
-        return prevTags.filter((tagId) => !optionTags.includes(tagId));
+      const clickedTagId = optionTags[0];
+      const clickedTrait = allTraits.find((t) => t._id === clickedTagId);
+
+      const isSelected = prevTags.some((tag) => tag._id === clickedTagId);
+      if (isSelected) {
+        return prevTags.filter((tag) => tag._id !== clickedTagId);
       }
 
-      const directConflicts = optionTags.flatMap((tagId) => {
-        const trait = allTraits.find((t) => t._id === tagId);
-        return trait ? normalizeConflicts(trait.conflicts) : [];
-      });
-
-      const reverseConflicts = allTraits
-        .filter((trait) => {
-          return (
-            trait.conflicts &&
-            normalizeConflicts(trait.conflicts).some((conflictId) =>
-              optionTags.includes(conflictId)
-            )
-          );
-        })
-        .map((trait) => trait._id);
-
-      const allConflicts = [
-        ...new Set([...directConflicts, ...reverseConflicts]),
-      ];
-
+      const conflicts = clickedTrait?.conflicts || [];
       const filteredTags = prevTags.filter(
-        (tagId) => !allConflicts.includes(tagId)
+        (tag) => !conflicts.includes(tag._id)
       );
 
-      return [...filteredTags, ...optionTags];
+      return [...filteredTags, clickedTrait];
     });
   };
   const handleNext = () => {

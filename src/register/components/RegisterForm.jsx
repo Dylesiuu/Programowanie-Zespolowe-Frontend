@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { UserContext } from '@/context/userContext';
@@ -11,6 +11,7 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 const RegisterForm = () => {
   const router = useRouter();
   const userContext = useContext(UserContext);
+  const [loggedInNow, setIsLoggedIn] = useState(false);
 
   const {
     register,
@@ -29,6 +30,16 @@ const RegisterForm = () => {
     },
   });
 
+  useEffect(() => {
+    if (!userContext.isLoggedIn()) {
+      return;
+    }
+    if (!loggedInNow) {
+      router.replace('/swipePage');
+    }
+    return;
+  }, [loggedInNow, router, userContext]);
+
   const password = watch('password', '');
 
   const passwordRequirements =
@@ -38,6 +49,7 @@ const RegisterForm = () => {
     clearErrors('global');
 
     try {
+      setIsLoggedIn(false);
       const response = await fetch(`${API_BASE_URL}/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -49,7 +61,8 @@ const RegisterForm = () => {
         const responseData = await response.json();
         userContext.setUser(responseData.user);
         userContext.setToken(responseData.token);
-        router.push();
+        setIsLoggedIn(true);
+        router.push('/userDetailsCreatorPage?isNew=true');
       } else if (response.status === 409) {
         setError('global', {
           type: 'manual',

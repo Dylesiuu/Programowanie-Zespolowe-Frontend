@@ -9,7 +9,7 @@ const CompletionScreen = ({ selectedTags, allTraits, onSubmit }) => {
     <div className="flex flex-col items-center justify-center min-h-screen p-4">
       <div className="w-full max-w-md mx-auto flex flex-col items-center">
         <h1 className="text-2xl md:text-3xl font-bold mb-6 md:mb-8 text-center">
-          Twój profil został utworzony!
+          Twój profil został zaktualizowany!
         </h1>
 
         <div className="flex flex-col items-center justify-center w-full mb-8">

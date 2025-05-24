@@ -20,7 +20,7 @@ describe('CompletionScreen', () => {
     );
 
     expect(
-      await screen.findByText('Twój profil został utworzony!')
+      await screen.findByText('Twój profil został zaktualizowany!')
     ).toBeInTheDocument();
     expect(await screen.findByText('Dom')).toBeInTheDocument();
     expect(

@@ -5,15 +5,6 @@ import { useRouter } from 'next/router';
 
 const RegisterPage = () => {
   const userContext = useContext(UserContext);
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!userContext.isLoggedIn()) {
-      return;
-    }
-
-    router.replace('/swipePage');
-  }, [router, userContext]);
 
   return (
     <div className="m-0 p-0 h-[100vh] w-[100vw] bg-[url('/Union.svg')] bg-repeat bg-[length:150rem_100rem] bg-[#FFF0E9]">

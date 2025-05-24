@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 const UserCreatorPage = () => {
   const userContext = useContext(UserContext);
   const router = useRouter();
+  const { isNew } = router.query;
 
   useEffect(() => {
     if (userContext.isLoggedIn()) {
@@ -17,7 +18,7 @@ const UserCreatorPage = () => {
 
   return (
     <div className="min-h-screen bg-[#FFF0E9] bg-[url('/cats.svg')] bg-repeat bg-[length:150rem_100rem] bg-fixed pt-26">
-      <UserBasicInfoUpload />
+      <UserBasicInfoUpload isNew={isNew} />
     </div>
   );
 };
