@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { FaHeartBroken } from 'react-icons/fa';
+import RemoveFavouriteWarning from './RemoveFavouriteWarning';
 
 const AnimalCard = ({
   images = [],
@@ -10,10 +11,11 @@ const AnimalCard = ({
   description,
   traits = [],
   shelter,
-  onRemoveFromFavorites,
+  onRemoveFromFavourites,
 }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [showRemoveWarning, setShowRemoveWarning] = useState(false);
   const [showVirtualAdoptionModal, setShowVirtualAdoptionModal] =
     useState(false);
 
@@ -44,11 +46,20 @@ const AnimalCard = ({
     );
   };
 
-  const handleRemoveFromFavorites = (e) => {
+  const handleRemoveFromFavourites = (e) => {
     e.stopPropagation();
-    if (onRemoveFromFavorites) {
-      onRemoveFromFavorites();
+    setShowRemoveWarning(true);
+  };
+
+  const confirmRemove = () => {
+    setShowRemoveWarning(false);
+    if (onRemoveFromFavourites) {
+      onRemoveFromFavourites();
     }
+  };
+
+  const cancelRemove = () => {
+    setShowRemoveWarning(false);
   };
 
   return (
@@ -95,7 +106,6 @@ const AnimalCard = ({
           )}
         </div>
 
-        {/* Basic info */}
         <div className="p-4">
           <h2 className="text-xl font-bold text-gray-800">{name}</h2>
           <p className="text-gray-600">
@@ -103,7 +113,6 @@ const AnimalCard = ({
           </p>
         </div>
 
-        {/* Action buttons */}
         <div className="flex justify-between p-4 pt-0 gap-2">
           <button
             onClick={handleVirtualAdoption}
@@ -118,7 +127,7 @@ const AnimalCard = ({
             Adoptuj
           </button>
           <button
-            onClick={handleRemoveFromFavorites}
+            onClick={handleRemoveFromFavourites}
             className="bg-[#fefaf7] text-[#CE8455] border border-[#CE8455] p-1 rounded-lg hover:bg-[#f5e9e0] transition-all"
             title="Usuń z ulubionych"
           >
@@ -241,7 +250,6 @@ const AnimalCard = ({
                 </p>
               </div>
 
-              {/* Action buttons in expanded view */}
               <div className="flex justify-between p-4 border-t border-gray-200 gap-2">
                 <button
                   onClick={handleVirtualAdoption}
@@ -256,7 +264,7 @@ const AnimalCard = ({
                   Adoptuj
                 </button>
                 <button
-                  onClick={handleRemoveFromFavorites}
+                  onClick={handleRemoveFromFavourites}
                   className="bg-[#fefaf7] text-[#CE8455] border border-[#CE8455] p-2 rounded-lg hover:bg-[#f5e9e0] transition-all"
                   title="Usuń z ulubionych"
                 >
@@ -268,7 +276,6 @@ const AnimalCard = ({
         </>
       )}
 
-      {/* Virtual Adoption Modal */}
       {showVirtualAdoptionModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg p-6 max-w-md w-full">
@@ -309,6 +316,14 @@ const AnimalCard = ({
             </div>
           </div>
         </div>
+      )}
+
+      {showRemoveWarning && (
+        <RemoveFavouriteWarning
+          onConfirm={confirmRemove}
+          onCancel={cancelRemove}
+          animalName={name}
+        />
       )}
     </>
   );
