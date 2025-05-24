@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 const AnimalCard = ({
+  id,
   images = [],
   name,
   gender,
@@ -12,6 +14,12 @@ const AnimalCard = ({
 }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isFullImage, setIsFullImage] = useState(false);
+  const [showAllTraits, setShowAllTraits] = useState(false);
+
+  const maxVisibleTraits = 6;
+  const visibleTraits = showAllTraits
+    ? traits
+    : traits.slice(0, maxVisibleTraits);
 
   const handleNextImage = (event) => {
     event.stopPropagation();
@@ -89,7 +97,22 @@ const AnimalCard = ({
       )}
 
       <div className="w-full text-left mt-3 space-y-1">
-        <h2 className="text-2xl font-bold">{name}</h2>
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-bold">{name}</h2>
+          <Link
+            href={`/shelterProfilePage?shelterId=${shelter}&animal=${id}`}
+            passHref
+            legacyBehavior
+          >
+            <button
+              className="w-6 h-6 rounded-full bg-gray-300 text-gray-700 flex items-center justify-center text-xs font-bold cursor-pointer"
+              onClick={(e) => e.stopPropagation()}
+              aria-label="Info"
+            >
+              i
+            </button>
+          </Link>
+        </div>
         <p className="text-gray-600 text-sm">
           {gender}, {age}
         </p>
@@ -97,7 +120,7 @@ const AnimalCard = ({
       </div>
 
       <div className="flex flex-wrap gap-2 mt-3 w-full">
-        {traits.map((trait) => (
+        {visibleTraits.map((trait) => (
           <span
             key={`${trait}-${name}`}
             className="bg-[#fefaf7] text-[#CE8455] border border-[#CE8455] text-xs font-medium px-3 py-1 rounded-full"
@@ -105,6 +128,20 @@ const AnimalCard = ({
             {trait}
           </span>
         ))}
+        {traits.length > maxVisibleTraits && !showAllTraits && (
+          <Link
+            href={`/shelterProfilePage?shelterId=${shelter}&animal=${id}`}
+            passHref
+            legacyBehavior
+          >
+            <button
+              className="text-[#CE8455] text-xs underline"
+              onClick={(e) => e.stopPropagation()}
+            >
+              Zobacz więcej
+            </button>
+          </Link>
+        )}
       </div>
 
       <div className="w-full mt-3 text-sm italic text-gray-600 text-left">

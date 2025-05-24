@@ -186,6 +186,12 @@ const SwipePage = () => {
               <div className="w-full max-w-md flex flex-col items-center">
                 {/* AnimalCard z proporcjami */}
                 <div className="w-full aspect-[3/4]">
+                  {console.log('Current pet id:', pets[currentIndex]?._id)}
+                  {console.log(
+                    'Current pet shelter:',
+                    pets[currentIndex]?.shelter
+                  )}
+
                   <AnimalCard
                     id={pets[currentIndex]._id}
                     images={pets[currentIndex].images}
@@ -194,11 +200,10 @@ const SwipePage = () => {
                     age={pets[currentIndex].age}
                     location={pets[currentIndex].location}
                     traits={pets[currentIndex].traits}
-                    shelter={pets[currentIndex].shelterName}
+                    shelter={pets[currentIndex].shelter}
                   />
                 </div>
 
-                {/* Buttons bezpośrednio pod kartą */}
                 <Buttons
                   onDislike={() => handleSwipe('dislike')}
                   onLike={() => {
@@ -214,7 +219,7 @@ const SwipePage = () => {
               <p>Zmień lokalizację lub zasięg, aby zobaczyć więcej!</p>
               <Image
                 src="https://media1.tenor.com/m/t7_iTN0iYekAAAAd/sad-sad-cat.gif"
-                alt="Koniec piesków i kotków"
+                alt="Brak piesków i kotków"
                 width={400}
                 height={400}
                 unoptimized
