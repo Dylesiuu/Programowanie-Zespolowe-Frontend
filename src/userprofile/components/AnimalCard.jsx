@@ -153,7 +153,7 @@ const AnimalCard = ({
                     <div className="w-64 h-64 md:w-96 md:h-96 rounded-xl overflow-hidden relative shadow-lg">
                       <Image
                         fill
-                        src={images[currentImageIndex]}
+                        src={images[currentImageIndex].preview}
                         alt={name}
                         className="object-cover w-full h-full"
                         priority
