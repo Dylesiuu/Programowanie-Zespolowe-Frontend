@@ -11,7 +11,7 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 const UserProfilePage = () => {
   const [userData, setUserData] = useState(null);
-  const [favoriteAnimals, setFavoriteAnimals] = useState([]);
+  const [favouriteAnimals, setFavouriteAnimals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const authFetch = useAuthFetch();
@@ -19,81 +19,110 @@ const UserProfilePage = () => {
   const router = useRouter();
   const { userId } = router.query;
 
+  const handleRemoveFavourite = async (animalId) => {
+    try {
+      const response = await authFetch(`${API_BASE_URL}/user/removefavourite`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userContext.token}`,
+        },
+        body: JSON.stringify({
+          favourites: [animalId],
+        }),
+      });
+
+      if (!response.ok) {
+        console.error('Failed to remove favourite');
+      }
+
+      await fetchUserData();
+    } catch (err) {
+      console.error('Error removing favourite:', err);
+      setError('Wystąpił błąd podczas usuwania z ulubionych');
+    }
+  };
+
+  const fetchUserData = async () => {
+    try {
+      setLoading(true);
+
+      const response = await authFetch(`${API_BASE_URL}/user/searchUserById`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userContext.token}`,
+        },
+        body: JSON.stringify({ id: userId }),
+      });
+
+      if (!response.ok) {
+        console.error('Failed to fetch user data');
+      }
+
+      const user = await response.json();
+
+      setUserData({
+        _id: user._id,
+        name: user.name,
+        avatar:
+          typeof user.avatar === 'string'
+            ? user.avatar
+            : user.avatar?.preview || 'img/default-avatar.svg',
+        city: user.city || 'Nie podano',
+        description: user.description || 'Brak opisu',
+        tags: user.traits || [],
+        favourites: user.favourites || [],
+      });
+
+      console.log('userdata: ', userData);
+      console.log('user: ', user);
+
+      if (user.favourites && user.favourites.length > 0) {
+        const favouriteAnimals = [];
+        for (const animalId of user.favourites) {
+          const animalResponse = await authFetch(
+            `${API_BASE_URL}/animals/${animalId._id}`,
+            {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${userContext.token}`,
+              },
+            }
+          );
+          if (!animalResponse.ok) {
+            console.log('animalresponse: ', animalResponse);
+            console.error('Failed to fetch animal data');
+            continue;
+          }
+
+          const animal = await animalResponse.json();
+          favouriteAnimals.push(animal);
+        }
+        setFavouriteAnimals(favouriteAnimals);
+      }
+
+      setLoading(false);
+    } catch (err) {
+      console.error('Error:', err);
+      setError(err.message);
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     if (userContext.isLoggedIn()) {
       return;
     }
-
     router.replace('/');
   }, [router, userContext]);
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const response = await authFetch(
-          `${API_BASE_URL}/user/searchUserById`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${userContext.token}`,
-            },
-            body: JSON.stringify({ id: userId }),
-          }
-        );
-        if (!response.ok) console.error('Failed to fetch user data');
-
-        const user = await response.json();
-        setUserData({
-          _id: user._id,
-          name: user.name,
-          avatar:
-            typeof user.avatar === 'string'
-              ? user.avatar
-              : user.avatar?.preview || 'img/default-avatar.svg',
-          city: user.city || 'Nie podano',
-          description: user.description || 'Brak opisu',
-          tags: user.traits || [],
-          favourites: user.favourites || [],
-        });
-
-        if (user.favourites && user.favourites.length > 0) {
-          const favouriteAnimals = [];
-          for (const animalId of user.favourites) {
-            const animalResponse = await authFetch(
-              `${API_BASE_URL}/animals/${animalId._id}`,
-              {
-                method: 'GET',
-                headers: {
-                  'Content-Type': 'application/json',
-                  Authorization: `Bearer ${userContext.token}`,
-                },
-              }
-            );
-            if (!animalResponse.ok) {
-              console.error('Failed to fetch animal data');
-              continue;
-            }
-
-            const animal = await animalResponse.json();
-            favouriteAnimals.push(animal);
-          }
-          setFavoriteAnimals(favouriteAnimals);
-        }
-
-        setLoading(false);
-      } catch (err) {
-        console.error('Error:', err);
-        setError(err.message);
-        setLoading(false);
-      }
-    };
-
-    if (userContext.user?._id && userId) {
+    if (userId && userId !== 'undefined' && userId !== 'null') {
       fetchUserData();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userContext.user, userContext.user?.avatar, userId]);
+  }, [userId]);
 
   if (loading) {
     return (
@@ -140,9 +169,9 @@ const UserProfilePage = () => {
                 Zaserduszkowane zwierzęta
               </h2>
 
-              {favoriteAnimals.length > 0 ? (
+              {favouriteAnimals.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-h-[calc(100vh-200px)] overflow-y-auto">
-                  {favoriteAnimals.map((animal) => (
+                  {favouriteAnimals.map((animal) => (
                     <div key={animal._id}>
                       <AnimalCard
                         images={animal.images || []}
@@ -152,6 +181,9 @@ const UserProfilePage = () => {
                         description={animal.description}
                         traits={animal.traits || []}
                         shelter={animal.shelter}
+                        onRemoveFromFavourites={() =>
+                          handleRemoveFavourite(animal._id)
+                        }
                       />
                     </div>
                   ))}
