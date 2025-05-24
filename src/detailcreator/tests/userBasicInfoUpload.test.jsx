@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import UserBasicInfoUpload from '../components/UserBasicInfoUpload';
+import UserBasicInfoUpload from '../components/userBasicInfoUpload';
 import { UserContext } from '@/context/userContext';
 import { useRouter } from 'next/router';
 import { useAuthFetch } from '../../lib/authFetch';
