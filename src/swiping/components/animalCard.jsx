@@ -143,10 +143,6 @@ const AnimalCard = ({
           </Link>
         )}
       </div>
-
-      <div className="w-full mt-3 text-sm italic text-gray-600 text-left">
-        {shelter}
-      </div>
     </div>
   );
 };
