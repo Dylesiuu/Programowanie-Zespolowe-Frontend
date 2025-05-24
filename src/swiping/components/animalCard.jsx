@@ -76,7 +76,7 @@ const AnimalCard = ({
             )}
           </>
         ) : (
-          <div className="text-gray-500">No Image</div>
+          <div className="text-gray-500">Brak zdjęć</div>
         )}
       </div>
 
@@ -96,11 +96,11 @@ const AnimalCard = ({
         <p className="text-gray-500 text-sm">{location}</p>
       </div>
 
-      <div className="flex flex-wrap gap-2 mt-3 w-full">
+      <div className="flex flex-wrap gap-2 mt-3 w-full max-h-[100px] overflow-y-auto py-1">
         {traits.map((trait) => (
           <span
             key={`${trait}-${name}`}
-            className="bg-[#fefaf7] text-[#CE8455] border border-[#CE8455] text-xs font-medium px-3 py-1 rounded-full"
+            className="bg-[#fefaf7] text-[#CE8455] border border-[#CE8455] text-xs font-medium px-3 py-1 rounded-full whitespace-nowrap"
           >
             {trait}
           </span>
