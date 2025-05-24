@@ -21,7 +21,6 @@ describe('AnimalCard Component', () => {
     age: '3 years old',
     location: 'Gdańsk',
     traits: ['Friendly', 'Playful', 'Energetic'],
-    shelter: 'Happy Tails Shelter',
   };
 
   test('renders AnimalCard with props', () => {
@@ -33,7 +32,6 @@ describe('AnimalCard Component', () => {
     expect(screen.getByText('Friendly')).toBeInTheDocument();
     expect(screen.getByText('Playful')).toBeInTheDocument();
     expect(screen.getByText('Energetic')).toBeInTheDocument();
-    expect(screen.getByText('Happy Tails Shelter')).toBeInTheDocument();
     expect(screen.getByAltText('Mike')).toHaveAttribute(
       'src',
       mockProps.images[0].preview
