@@ -210,7 +210,7 @@ const SwipePage = () => {
             </div>
           ) : (
             <div className="flex-1 flex flex-col items-center justify-center text-center px-4">
-              <p>Koniec piesków i kotków :c</p>
+              <p>Brak piesków i kotków :c</p>
               <p>Zmień lokalizację lub zasięg, aby zobaczyć więcej!</p>
               <Image
                 src="https://media1.tenor.com/m/t7_iTN0iYekAAAAd/sad-sad-cat.gif"

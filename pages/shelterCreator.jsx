@@ -12,6 +12,7 @@ const ShelterCreator = () => {
     email: '',
     phone: '',
     description: '',
+    website: '',
   });
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -51,6 +52,7 @@ const ShelterCreator = () => {
         email: data.shelter.email,
         phone: data.shelter.phoneNumber,
         description: data.shelter.description,
+        website: data.shelter.website || '',
       });
       setPosition([data.shelter.location[0], data.shelter.location[1]]);
     } catch (error) {
@@ -71,6 +73,7 @@ const ShelterCreator = () => {
     if (!position) newErrors.position = 'Wymagana lokalizacja na mapie';
     if (!formData.email) newErrors.email = 'Wymagany email';
     if (!formData.phone) newErrors.phone = 'Wymagany telefon';
+    if (!formData.website) newErrors.website = 'Wymagany adres strony internetowej';
     if (!formData.description || formData.description.length < 10)
       newErrors.description = 'Wymagany opis, min 10 znaków';
 
@@ -107,6 +110,7 @@ const ShelterCreator = () => {
             email: formData.email,
             description: formData.description,
             location: position,
+            website: formData.website,
           }),
         });
 
@@ -134,7 +138,7 @@ const ShelterCreator = () => {
             email: formData.email,
             description: formData.description,
             location: position,
-            website: '',
+            website: formData.website,
           }),
         });
 
@@ -175,6 +179,7 @@ const ShelterCreator = () => {
           { label: 'Nazwa schroniska', name: 'name', type: 'text' },
           { label: 'Email', name: 'email', type: 'email' },
           { label: 'Telefon', name: 'phone', type: 'text' },
+          { label: 'Strona internetowa', name: 'website', type: 'text' },
         ].map(({ label, name, type }) => (
           <div key={name} className="mb-4">
             <label className="block text-sm font-semibold mb-1">{label}</label>
