@@ -113,6 +113,11 @@ describe('AnimalCreator', () => {
       'Testowy'
     );
 
+    await userEvent.type(
+      await screen.findByPlaceholderText('Wpisz numer ewidencyjny'),
+      'REG123'
+    );
+
     const dateInput = await screen.findByLabelText(
       'Szacowana data urodzenia zwierzęcia'
     );
@@ -189,6 +194,11 @@ describe('AnimalCreator', () => {
       'Testowy'
     );
 
+    await userEvent.type(
+      await screen.findByPlaceholderText('Wpisz numer ewidencyjny'),
+      'REG123'
+    );
+
     const dateInput = await screen.findByLabelText(
       'Szacowana data urodzenia zwierzęcia'
     );
@@ -223,6 +233,11 @@ describe('AnimalCreator', () => {
     await userEvent.type(
       await screen.findByPlaceholderText('Wpisz imię zwierzęcia'),
       'Testowy'
+    );
+
+    await userEvent.type(
+      await screen.findByPlaceholderText('Wpisz numer ewidencyjny'),
+      'REG123'
     );
 
     const dateInput = await screen.findByLabelText(
@@ -313,6 +328,11 @@ describe('AnimalCreator', () => {
       await screen.findByPlaceholderText('Wpisz imię zwierzęcia'),
       'Testowy'
     );
+
+    await userEvent.type(
+      await screen.findByPlaceholderText('Wpisz numer ewidencyjny'),
+      'REG123'
+    );
     const dateInput = await screen.findByLabelText(
       'Szacowana data urodzenia zwierzęcia'
     );
@@ -364,6 +384,11 @@ describe('AnimalCreator', () => {
       await screen.findByPlaceholderText('Wpisz imię zwierzęcia'),
       'Testowy'
     );
+    await userEvent.type(
+      await screen.findByPlaceholderText('Wpisz numer ewidencyjny'),
+      'REG123'
+    );
+
     const dateInput = await screen.findByLabelText(
       'Szacowana data urodzenia zwierzęcia'
     );
