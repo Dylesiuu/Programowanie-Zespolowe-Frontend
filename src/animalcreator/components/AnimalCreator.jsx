@@ -35,6 +35,7 @@ const AnimalCreator = ({ givenAnimalId }) => {
     tags: [],
     description: '',
     photos: [],
+    registrationNumber: '',
   });
 
   const preparedQuestions = animalQuestions.map((question) => {
@@ -98,6 +99,10 @@ const AnimalCreator = ({ givenAnimalId }) => {
         alert('Proszę wybrać płeć');
         return;
       }
+      if (!animalData.registrationNumber.trim()) {
+        alert('Proszę podać numer ewidencyjny');
+        return;
+      }
       setCurrentStep('questions');
       setCurrentQuestionIndex(STARTING_QUESTION_INDEX);
     } else if (currentStep === 'questions') {
@@ -118,15 +123,16 @@ const AnimalCreator = ({ givenAnimalId }) => {
 
   const handlePrevious = () => {
     if (currentStep === 'basicInfo') {
-      setAnimalData({
-        type: '',
-        name: '',
-        birthDate: '',
-        gender: '',
-        tags: [],
-        description: '',
-        photos: [],
-      });
+      // setAnimalData({
+      //   type: '',
+      //   name: '',
+      //   birthDate: '',
+      //   gender: '',
+      //   tags: [],
+      //   description: '',
+      //   photos: [],
+      //   registrationNumber: '',
+      // });
       setCurrentStep('start');
     } else if (currentStep === 'questions') {
       if (currentQuestionIndex === 3) {
@@ -215,6 +221,7 @@ const AnimalCreator = ({ givenAnimalId }) => {
         description: animalData.description,
         traits: selectedTags.map((tag) => tag._id),
         images: await uploadPhotos(animalData.photos),
+        registrationNumber: animalData.registrationNumber,
       };
 
       let url;
@@ -425,6 +432,28 @@ const AnimalCreator = ({ givenAnimalId }) => {
                     }
                     className="w-full p-4 border-2 border-[#CE8455] rounded-3xl bg-[#fefaf7] hover:bg-[#f0e6dc] focus:outline-none focus:ring-2 focus:ring-[#CE8455] transition-all"
                     placeholder="Wpisz imię zwierzęcia"
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="registrationNumber"
+                    className="block text-[#C9590F] mb-2"
+                  >
+                    Numer ewidencyjny
+                  </label>
+                  <input
+                    id="registrationNumber"
+                    type="text"
+                    value={animalData.registrationNumber}
+                    onChange={(e) =>
+                      setAnimalData((prev) => ({
+                        ...prev,
+                        registrationNumber: e.target.value,
+                      }))
+                    }
+                    className="w-full p-4 border-2 border-[#CE8455] rounded-3xl bg-[#fefaf7] hover:bg-[#f0e6dc] focus:outline-none focus:ring-2 focus:ring-[#CE8455] transition-all"
+                    placeholder="Wpisz numer ewidencyjny"
+                    required
                   />
                 </div>
 

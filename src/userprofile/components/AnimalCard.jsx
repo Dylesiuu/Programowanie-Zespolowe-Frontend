@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 
 const AnimalCard = ({
   images = [],
@@ -9,9 +10,12 @@ const AnimalCard = ({
   description,
   traits = [],
   shelter,
+  registrationNumber = '',
 }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [shelterDetails, setShelterDetails] = useState(null);
+  const router = useRouter();
 
   const handleNextImage = (e) => {
     e.stopPropagation();
@@ -26,6 +30,33 @@ const AnimalCard = ({
   const toggleExpand = () => {
     setIsExpanded(!isExpanded);
   };
+
+  const fetchShelterDetails = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/shelter/find-by-id`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ shelterId: shelter }),
+        }
+      );
+      if (!response.ok) throw new Error('Failed to fetch shelter details');
+      const data = await response.json();
+      setShelterDetails(data.shelter);
+    } catch (error) {
+      console.error('Error fetching shelter details:', error);
+      return null;
+    }
+  };
+
+  useEffect(() => {
+    if (shelter && shelter !== 'undefine') {
+      fetchShelterDetails();
+    }
+  }, [shelter]);
 
   return (
     <>
@@ -147,6 +178,12 @@ const AnimalCard = ({
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <h3 className="font-semibold text-[#CE8455] text-sm">
+                        NUMER EWIDENCYJNY
+                      </h3>
+                      <p className="text-gray-800">{registrationNumber}</p>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-[#CE8455] text-sm">
                         WIEK
                       </h3>
                       <p className="text-gray-800">{age}</p>
@@ -161,7 +198,20 @@ const AnimalCard = ({
                       <h3 className="font-semibold text-[#CE8455] text-sm">
                         SCHRONISKO
                       </h3>
-                      <p className="text-gray-800">{shelter}</p>
+                      <p
+                        className="text-gray-800 cursor-pointer hover:underline"
+                        onClick={() =>
+                          shelterDetails &&
+                          shelterDetails._id &&
+                          router.push(
+                            `/shelterProfilePage?shelterId=${shelter}&animal=null`
+                          )
+                        }
+                        tabIndex={0}
+                        role="button"
+                      >
+                        {shelterDetails.name}
+                      </p>
                     </div>
                   </div>
 

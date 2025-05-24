@@ -151,7 +151,7 @@ const UserProfilePage = () => {
                         age={animal.age}
                         description={animal.description}
                         traits={animal.traits || []}
-                        shelter={animal.shelter?.name || 'Brak danych'}
+                        shelter={animal.shelter}
                       />
                     </div>
                   ))}
