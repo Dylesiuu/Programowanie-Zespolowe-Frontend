@@ -238,7 +238,7 @@ const ShelterCreator = () => {
             ? 'Wysyłanie...'
             : shelterId && shelterId !== 'null'
               ? 'Zaktualizuj'
-              : 'Zarejestruj'}
+              : 'Aplikuj'}
         </button>
       </form>
 
