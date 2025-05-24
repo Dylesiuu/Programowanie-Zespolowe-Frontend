@@ -73,7 +73,8 @@ const ShelterCreator = () => {
     if (!position) newErrors.position = 'Wymagana lokalizacja na mapie';
     if (!formData.email) newErrors.email = 'Wymagany email';
     if (!formData.phone) newErrors.phone = 'Wymagany telefon';
-    if (!formData.website) newErrors.website = 'Wymagany adres strony internetowej';
+    if (!formData.website)
+      newErrors.website = 'Wymagany adres strony internetowej';
     if (!formData.description || formData.description.length < 10)
       newErrors.description = 'Wymagany opis, min 10 znaków';
 
