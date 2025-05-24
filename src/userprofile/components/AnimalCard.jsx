@@ -70,7 +70,7 @@ const AnimalCard = ({
   const handleRegularAdoption = (e) => {
     e.stopPropagation();
     window.open(
-      'https://docs.google.com/forms/d/e/1FAIpQLSfOBNjgDStLil5DujY24JXICzf061EoagzG-Mk0-no1z4N6rw/viewform?embedded=true',
+      'https://docs.google.com/forms/d/e/1FAIpQLSfOBNjgDStLil5DujY24JXICzf061EoagzG-Mk0-no1z4N6rw/formResponse?embedded=true',
       '_blank'
     );
   };
@@ -134,25 +134,26 @@ const AnimalCard = ({
           </p>
         </div>
 
+        {/* Action buttons */}
         <div className="flex justify-between p-4 pt-0 gap-2">
           <button
             onClick={handleVirtualAdoption}
-            className="flex-1 bg-[#CE8455] text-white py-1 text-sm rounded-lg hover:bg-[#AA673C] transition-all"
+            className="flex-1 bg-[#CE8455] text-white py-1 rounded-lg hover:bg-[#AA673C] transition-all"
           >
             Adopcja wirtualna
           </button>
           <button
             onClick={handleRegularAdoption}
-            className="flex-1 bg-[#4A4038] text-white py-1 text-sm rounded-lg hover:bg-[#2E2A24] transition-all"
+            className="flex-1 bg-[#4A4038] text-white py-1 rounded-lg hover:bg-[#2E2A24] transition-all"
           >
             Adoptuj
           </button>
           <button
             onClick={handleRemoveFromFavorites}
-            className="bg-[#fefaf7] text-[#CE8455] border border-[#CE8455] p-1.5 rounded-lg hover:bg-[#f5e9e0] transition-all"
+            className="bg-[#fefaf7] text-[#CE8455] border border-[#CE8455] p-1 rounded-lg hover:bg-[#f5e9e0] transition-all"
             title="Usuń z ulubionych"
           >
-            <FaHeartBroken className="text-sm" />
+            <FaHeartBroken />
           </button>
         </div>
       </div>
@@ -327,7 +328,7 @@ const AnimalCard = ({
               </h3>
               <button
                 onClick={() => setShowVirtualAdoptionModal(false)}
-                className="text-gray-500 hover:text-gray-700 "
+                className="text-gray-500 hover:text-gray-700"
               >
                 ×
               </button>
