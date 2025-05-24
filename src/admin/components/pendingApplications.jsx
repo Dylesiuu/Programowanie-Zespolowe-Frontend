@@ -10,6 +10,32 @@ const PendingShelterApplications = ({ onUpdate }) => {
   const userContext = useContext(UserContext);
   const [loading, setLoading] = useState(true);
   const fetchData = useAuthFetch();
+  const [locationName, setLocationName] = useState('');
+
+  const reverseGeocode = async (latlng) => {
+    const { lat, lng } = latlng;
+    const apiKey = process.env.NEXT_PUBLIC_MAP_TRANSLATE;
+    const url = `https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lng}&key=${apiKey}`;
+
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      const result = data.results[0];
+
+      setLocationName(result.formatted);
+    } catch (error) {
+      console.error('Reverse geocode error:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (selectedApp) {
+      reverseGeocode({
+        lat: selectedApp.shelterData.location[0],
+        lng: selectedApp.shelterData.location[1],
+      });
+    }
+  }, [selectedApp]);
 
   useEffect(() => {
     const fetchApplications = async () => {
@@ -74,8 +100,9 @@ const PendingShelterApplications = ({ onUpdate }) => {
               onClick={() => setSelectedApp(app)}
             >
               <span>
-                <span className="font-semibold text-[#CE8455]">{app.name}</span>
-                <span className="ml-2 text-gray-600">{app.location}</span>
+                <span className="font-semibold text-[#CE8455]">
+                  {app.shelterData.name}
+                </span>
               </span>
               <span className="text-xs text-gray-400">
                 Kliknij, aby zobaczyć szczegóły
@@ -104,8 +131,7 @@ const PendingShelterApplications = ({ onUpdate }) => {
               {selectedApp.shelterData.name}
             </div>
             <div className="mb-2">
-              <span className="font-semibold">Adres:</span>{' '}
-              {selectedApp.shelterData.location}
+              <span className="font-semibold">Adres:</span> {locationName}
             </div>
             <div className="mb-2">
               <span className="font-semibold">Email:</span>{' '}
