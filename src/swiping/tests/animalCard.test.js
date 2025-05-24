@@ -82,7 +82,7 @@ describe('AnimalCard Component', () => {
     const propsWithoutImage = { ...mockProps, images: [] };
     render(<AnimalCard {...propsWithoutImage} />);
 
-    expect(screen.getByText('No Image')).toBeInTheDocument();
+    expect(screen.getByText('Brak zdjęć')).toBeInTheDocument();
 
     expect(screen.queryByAltText('Mike')).not.toBeInTheDocument();
   });

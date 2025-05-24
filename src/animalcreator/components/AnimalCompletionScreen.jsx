@@ -16,7 +16,7 @@ const AnimalCompletionScreen = ({
     <div className="flex flex-col items-center justify-center min-h-screen p-4 pt-20 md:pt-24 ">
       {selectedImage && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 backdrop-blur-sm bg-[#CE8455]/30 transition-opacity flex items-center justify-center z-50 p-4"
           onClick={() => setSelectedImage(null)}
         >
           <div className="max-w-4xl w-full max-h-screen flex flex-col">

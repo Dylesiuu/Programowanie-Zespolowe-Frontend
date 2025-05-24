@@ -185,7 +185,9 @@ describe('AnimalCard Component', () => {
     const mockAlert = jest.spyOn(window, 'alert').mockImplementation(() => {});
 
     const adoptionButton = await screen.findByText('Adopcja');
-    expect(adoptionButton).toHaveClass('bg-[#4caf50]');
+    expect(adoptionButton).toHaveClass(
+      'px-4 py-2 text-lg md:text-xl rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg w-full bg-[#4F9C49] hover:bg-[#376d33] text-[#fefaf7]'
+    );
     await userEvent.click(adoptionButton);
 
     expect(mockAlert).toHaveBeenCalledWith(
@@ -212,7 +214,9 @@ describe('AnimalCard Component', () => {
     });
 
     const adoptionButtonAdopted = await screen.findAllByText('Adopcja');
-    expect(adoptionButtonAdopted[1]).toHaveClass('bg-[#FF0000]');
+    expect(adoptionButtonAdopted[1]).toHaveClass(
+      'px-4 py-2 text-lg md:text-xl rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg w-full bg-[#B12828] hover:bg-[#7c1c1c] text-[#fefaf7]'
+    );
     await userEvent.click(adoptionButtonAdopted[1]);
 
     expect(mockAlert).toHaveBeenCalledWith(

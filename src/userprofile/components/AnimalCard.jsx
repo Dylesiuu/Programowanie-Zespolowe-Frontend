@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { FaHeartBroken } from 'react-icons/fa';
 import RemoveFavouriteWarning from './RemoveFavouriteWarning';
+import { UserContext } from '@/context/userContext';
 
 const AnimalCard = ({
   images = [],
@@ -22,6 +23,7 @@ const AnimalCard = ({
   const router = useRouter();
   const [showVirtualAdoptionModal, setShowVirtualAdoptionModal] =
     useState(false);
+  const userContext = useContext(UserContext);
 
   const handleNextImage = (e) => {
     e.stopPropagation();
@@ -49,9 +51,10 @@ const AnimalCard = ({
           body: JSON.stringify({ shelterId: shelter }),
         }
       );
-      if (!response.ok) throw new Error('Failed to fetch shelter details');
+      if (!response.ok) console.error('Failed to fetch shelter details');
       const data = await response.json();
       setShelterDetails(data.shelter);
+      console.log('shelter: ', data.shelter);
     } catch (error) {
       console.error('Error fetching shelter details:', error);
       return null;
@@ -145,15 +148,18 @@ const AnimalCard = ({
         </div>
 
         <div className="flex justify-between p-4 pt-0 gap-2">
-          <button
-            onClick={handleVirtualAdoption}
-            className="flex-1 bg-[#CE8455] text-white py-1 rounded-lg hover:bg-[#AA673C] transition-all"
-          >
-            Adopcja wirtualna
-          </button>
+          {shelterDetails?.virtualAdoption &&
+            shelterDetails.virtualAdoption.trim() !== '' && (
+              <button
+                onClick={handleVirtualAdoption}
+                className="flex-1 bg-[#CE8455] text-white py-1 rounded-lg hover:bg-[#AA673C] transition-all"
+              >
+                Adopcja wirtualna
+              </button>
+            )}
           <button
             onClick={handleRegularAdoption}
-            className="flex-1 bg-[#4A4038] text-white py-1 rounded-lg hover:bg-[#2E2A24] transition-all"
+            className={`${shelterDetails?.virtualAdoption && shelterDetails.virtualAdoption.trim() !== '' ? 'flex-1' : 'flex-[2]'} bg-[#4A4038] text-white py-1 rounded-lg hover:bg-[#2E2A24] transition-all`}
           >
             Adoptuj
           </button>
@@ -301,15 +307,18 @@ const AnimalCard = ({
               </div>
 
               <div className="flex justify-between p-4 border-t border-gray-200 gap-2">
-                <button
-                  onClick={handleVirtualAdoption}
-                  className="flex-1 bg-[#CE8455] text-white py-2 rounded-lg hover:bg-[#AA673C] transition-all"
-                >
-                  Adopcja wirtualna
-                </button>
+                {shelterDetails?.virtualAdoption &&
+                  shelterDetails.virtualAdoption.trim() !== '' && (
+                    <button
+                      onClick={handleVirtualAdoption}
+                      className="flex-1 bg-[#CE8455] text-white py-2 rounded-lg hover:bg-[#AA673C] transition-all"
+                    >
+                      Adopcja wirtualna
+                    </button>
+                  )}
                 <button
                   onClick={handleRegularAdoption}
-                  className="flex-1 bg-[#4A4038] text-white py-2 rounded-lg hover:bg-[#2E2A24] transition-all"
+                  className={`${shelterDetails?.virtualAdoption && shelterDetails.virtualAdoption.trim() !== '' ? 'flex-1' : 'flex-[2]'} bg-[#4A4038] text-white py-2 rounded-lg hover:bg-[#2E2A24] transition-all`}
                 >
                   Adoptuj
                 </button>
@@ -327,45 +336,48 @@ const AnimalCard = ({
       )}
 
       {showVirtualAdoptionModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xl font-bold text-[#CE8455]">
-                Adopcja wirtualna
-              </h3>
+        <>
+          <div
+            className="fixed inset-0 backdrop-blur-sm bg-[#CE8455]/30 z-40 transition-opacity duration-300"
+            onClick={() => setShowVirtualAdoptionModal(false)}
+          />
+
+          <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
+            <div
+              className="relative bg-[#fefaf7] rounded-xl shadow-2xl w-full max-w-md max-h-[90vh] flex flex-col overflow-hidden animate-fadeIn"
+              onClick={(e) => e.stopPropagation()}
+            >
               <button
                 onClick={() => setShowVirtualAdoptionModal(false)}
-                className="text-gray-500 hover:text-gray-700"
+                className="absolute top-4 right-4 bg-[#CE8455] text-white rounded-full w-10 h-10 flex items-center justify-center shadow-md hover:bg-[#AA673C] transition-all z-[60]"
+                aria-label="Zamknij"
               >
-                ×
+                <span className="text-2xl font-bold">×</span>
               </button>
-            </div>
-            <div className="text-gray-700 mb-4">
-              <p>
-                Adopcja wirtualna to forma wsparcia zwierząt w schronisku bez
-                konieczności zabierania ich do domu.
-              </p>
-              <p className="mt-2">W ramach adopcji wirtualnej możesz:</p>
-              <ul className="list-disc pl-5 mt-2">
-                <li>Wspierać finansowo wybrane zwierzę</li>
-                <li>Otrzymywać regularne aktualizacje o swoim podopiecznym</li>
-                <li>Odwiedzać zwierzę w schronisku</li>
-                <li>Otrzymać certyfikat adopcji wirtualnej</li>
-              </ul>
-              <p className="mt-2">
-                Szczegóły możesz uzyskać bezpośrednio w schronisku {shelter}.
-              </p>
-            </div>
-            <div className="flex justify-end">
-              <button
-                onClick={() => setShowVirtualAdoptionModal(false)}
-                className="bg-[#CE8455] text-white px-4 py-2 rounded-lg hover:bg-[#AA673C] transition-all"
-              >
-                Zamknij
-              </button>
+
+              <div className="p-6 pt-12">
+                <h3 className="text-xl font-bold text-[#CE8455] mb-4">
+                  Adopcja wirtualna
+                </h3>
+                <div className="overflow-y-auto pr-2 max-h-[60vh]">
+                  <p className="text-gray-700 whitespace-pre-line">
+                    {shelterDetails?.virtualAdoption ||
+                      'Brak informacji o adopcji wirtualnej.'}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex justify-end p-4 border-t border-gray-200">
+                <button
+                  onClick={() => setShowVirtualAdoptionModal(false)}
+                  className="bg-[#CE8455] text-white px-6 py-2 rounded-lg hover:bg-[#AA673C] transition-all"
+                >
+                  Zamknij
+                </button>
+              </div>
             </div>
           </div>
-        </div>
+        </>
       )}
 
       {showRemoveWarning && (
