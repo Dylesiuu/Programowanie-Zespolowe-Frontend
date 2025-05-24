@@ -168,7 +168,7 @@ const AnimalCard = ({
       {/* Trash Button */}
       <div className="absolute top-2 left-2">
         <button
-          className="flex w-7 h-7 sm:w-9 sm:h-9 lg:w-11 lg:h-11 bg-[#FF0000] text-white rounded-full items-center justify-center text-2xl transition-all duration-300 ease-in-out hover:bg-[#CC0000] hover:scale-110 cursor-pointer"
+          className="flex w-7 h-7 sm:w-9 sm:h-9 lg:w-11 lg:h-11 bg-[#B12828] text-white rounded-full items-center justify-center text-2xl transition-all duration-300 ease-in-out hover:bg-[#7c1c1c] hover:scale-110 cursor-pointer"
           onClick={showWarning}
           data-testid="delete-animal-button"
         >
@@ -184,7 +184,7 @@ const AnimalCard = ({
             </p>
             <div className="flex justify-end gap-4">
               <button
-                className="px-4 py-2 bg-[#FF0000] text-white rounded-lg hover:bg-[#CC0000] transition-all cursor-pointer"
+                className="px-4 py-2 bg-[#B12828] text-white rounded-lg hover:bg-[#7c1c1c] transition-all cursor-pointer"
                 onClick={() => {
                   removeAnimal(animalId);
                   hideWarning();
@@ -300,7 +300,7 @@ const AnimalCard = ({
       {userContext.user?.favourites?.some((fav) => fav._id === animal._id) ? (
         <div className="flex justify-center py-1 lg:py-2">
           <button
-            className="flex w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 bg-[#FF0000] text-white rounded-full items-center justify-center text-2xl transition-all duration-300 ease-in-out hover:bg-[#CC0000] hover:scale-110 cursor-pointer"
+            className="flex w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 bg-[#B12828] text-white rounded-full items-center justify-center text-2xl transition-all duration-300 ease-in-out hover:bg-[#7c1c1c] hover:scale-110 cursor-pointer"
             onClick={() => removeFromFavourite(animal._id)}
             data-testid="remove-from-favourites-button"
           >
@@ -310,7 +310,7 @@ const AnimalCard = ({
       ) : (
         <div className="flex justify-center py-1 lg:py-2">
           <button
-            className="flex w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 bg-[#4caf50] text-white rounded-full items-center justify-center text-2xl transition-all duration-300 ease-in-out hover:bg-[#45a049] hover:scale-110 cursor-pointer"
+            className="flex w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 bg-[#4F9C49] text-white rounded-full items-center justify-center text-2xl transition-all duration-300 ease-in-out hover:bg-[#376d33] hover:scale-110 cursor-pointer"
             onClick={() => addToFavourite(animal._id)}
             data-testid="add-to-favourites-button"
           >
@@ -336,8 +336,8 @@ const AnimalCard = ({
             <button
               className={`px-4 py-2 text-lg md:text-xl rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg w-full ${
                 animal.adopted
-                  ? 'bg-[#FF0000] hover:bg-[#CC0000] text-[#fefaf7]' // Red button for adopted
-                  : 'bg-[#4caf50] hover:bg-[#45a049] text-[#fefaf7]' // Green button for not adopted
+                  ? 'bg-[#B12828] hover:bg-[#7c1c1c] text-[#fefaf7]' // Red button for adopted
+                  : 'bg-[#4F9C49] hover:bg-[#376d33] text-[#fefaf7]' // Green button for not adopted
               }`}
               onClick={() => {
                 handleAdoption(animalId);

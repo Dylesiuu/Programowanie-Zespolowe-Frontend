@@ -120,7 +120,7 @@ const InfoCard = ({ shelter, onEdit, userContext }) => {
           userContext.user.shelterId === shelter._id && (
             <button
               className="mt-4 px-4 py-2 text-sm md:text-lg lg:text-xl
-                      bg-[#FF0000] text-white hover:bg-[#CC0000] rounded-full
+                      bg-[#B12828] text-white hover:bg-[#7c1c1c] rounded-full
                      transition-all duration-300 transform hover:scale-105 shadow-lg
                      w-full max-w-[200px] md:max-w-[240px] lg:max-w-[280px]"
               onClick={showWarning}
@@ -139,7 +139,7 @@ const InfoCard = ({ shelter, onEdit, userContext }) => {
             </p>
             <div className="flex justify-end gap-4">
               <button
-                className="px-4 py-2 bg-[#FF0000] text-white rounded-lg hover:bg-[#CC0000] transition-all cursor-pointer"
+                className="px-4 py-2 bg-[#B12828] text-white rounded-lg hover:bg-[#7c1c1c] transition-all cursor-pointer"
                 onClick={() => {
                   removeShelter();
                   hideWarning();
