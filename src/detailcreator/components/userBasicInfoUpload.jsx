@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-const UserBasicInfoEditor = () => {
+const UserBasicInfoUpload = () => {
   const userContext = useContext(UserContext);
   const fetchData = useAuthFetch();
   const router = useRouter();
@@ -334,4 +334,4 @@ const UserBasicInfoEditor = () => {
   );
 };
 
-export default UserBasicInfoEditor;
+export default UserBasicInfoUpload;
