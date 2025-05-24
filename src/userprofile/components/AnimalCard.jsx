@@ -1,9 +1,8 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { FaHeartBroken } from 'react-icons/fa';
 import RemoveFavouriteWarning from './RemoveFavouriteWarning';
-import { UserContext } from '@/context/userContext';
 
 const AnimalCard = ({
   images = [],
@@ -23,7 +22,6 @@ const AnimalCard = ({
   const router = useRouter();
   const [showVirtualAdoptionModal, setShowVirtualAdoptionModal] =
     useState(false);
-  const userContext = useContext(UserContext);
 
   const handleNextImage = (e) => {
     e.stopPropagation();
