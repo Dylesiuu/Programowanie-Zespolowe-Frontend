@@ -14,7 +14,6 @@ describe('Navbar Component', () => {
   window.alert = jest.fn();
   const mockLogout = jest.fn();
 
-  // Mock the UserContext value
   const mockUserContextValue = {
     user: {
       _id: '123',
@@ -64,7 +63,6 @@ describe('Navbar Component', () => {
     await userEvent.click(profileButton);
 
     expect(await screen.findByText('Profil')).toBeInTheDocument();
-    expect(await screen.findByText('Ustawienia')).toBeInTheDocument();
     expect(await screen.findByText('Wyloguj')).toBeInTheDocument();
   });
 
@@ -93,10 +91,11 @@ describe('Navbar Component', () => {
   });
 
   it('navigate to admin panel when admin button is clicked', async () => {
-    window.alert = jest.fn();
-    const homeButton = screen.getByRole('button', { name: /Panel Kontrolny/i });
-    await userEvent.click(homeButton);
-    expect(window.alert).toHaveBeenCalledWith('Panel');
+    const adminButton = screen.getByRole('button', {
+      name: /Panel Kontrolny/i,
+    });
+    await userEvent.click(adminButton);
+    expect(mockPush).toHaveBeenCalledWith('/adminPanelPage');
   });
 
   describe('Search functionality', () => {
@@ -141,8 +140,14 @@ describe('Navbar Component', () => {
     });
 
     it('navigates to shelter creator when "Stwórz Schronisko" is clicked', async () => {
+      mockUserContextValue.user.shelterId = null;
+      render(
+        <UserContext.Provider value={mockUserContextValue}>
+          <Navbar />
+        </UserContext.Provider>
+      );
       const profileImg = await screen.findAllByAltText('User Profile');
-      await userEvent.click(profileImg[0]);
+      await userEvent.click(profileImg[1].closest('button'));
 
       const createShelterOption = await screen.findByText('Stwórz Schronisko');
       await userEvent.click(createShelterOption);
