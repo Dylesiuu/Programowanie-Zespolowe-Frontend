@@ -65,7 +65,24 @@ export const UserProvider = ({ children }) => {
           const data = await res.json();
           console.log('Token refreshed successfully');
           setToken(data.token);
-          console.log('New token:', data.token);
+
+          // const userRes = await fetch(`${API_BASE_URL}/user/searchUserById`, {
+          //   method: 'POST',
+          //   headers: {
+          //     Authorization: `Bearer ${token}`,
+          //   },
+          //   body: JSON.stringify({ id: user._id }),
+          // });
+
+          // if (!userRes.ok) {
+          //   console.error('Failed to refresh user data');
+          //   logout();
+          // }
+
+          // const userData = await userRes.json();
+
+          // setUser(userData.user);
+          // console.log('User data refreshed successfully');
         } catch (err) {
           console.error('Background refresh failed', err);
           logout();

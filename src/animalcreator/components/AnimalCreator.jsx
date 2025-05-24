@@ -447,6 +447,7 @@ const AnimalCreator = ({ givenAnimalId }) => {
                     }
                     className="w-full p-4 border-2 border-[#CE8455] rounded-3xl bg-[#fefaf7] hover:bg-[#f0e6dc] focus:outline-none focus:ring-2 focus:ring-[#CE8455] transition-all"
                     max={currentDate}
+                    min="1990-01-01"
                   />
                 </div>
 
