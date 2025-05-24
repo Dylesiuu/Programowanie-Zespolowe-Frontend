@@ -78,22 +78,37 @@ const UserCreator = ({ user }) => {
 
   useEffect(() => {
     if (userContext.user?._id && allTraits.length > 0) {
+      const mapTag = async () => {
+        try {
+          const userTags = userContext.user.traits
+            .map((traitId) =>
+              allTraits.find((trait) => trait._id === traitId._id)
+            )
+            .filter((tag) => tag !== undefined)
+            .map((tag) => tag._id);
+
+          setSelectedTags(userTags);
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+        }
+      };
+
       mapTag();
     }
-  }, [userContext.user?._id, allTraits]);
+  }, [userContext.user, allTraits]);
 
-  const mapTag = async () => {
-    try {
-      const userTags = userContext.user.traits
-        .map((traitId) => allTraits.find((trait) => trait._id === traitId._id))
-        .filter((tag) => tag !== undefined)
-        .map((tag) => tag._id);
-
-      setSelectedTags(userTags);
-    } catch (error) {
-      console.error('Error fetching user data:', error);
-    }
-  };
+  // const mapTag = async () => {
+  //   try {
+  //     const userTags = userContext.user.traits
+  //       .map((traitId) => allTraits.find((trait) => trait._id === traitId._id))
+  //       .filter((tag) => tag !== undefined)
+  //       .map((tag) => tag._id);
+  //
+  //     setSelectedTags(userTags);
+  //   } catch (error) {
+  //     console.error('Error fetching user data:', error);
+  //   }
+  // };
 
   const saveUserTraits = async () => {
     try {

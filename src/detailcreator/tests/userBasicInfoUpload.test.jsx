@@ -10,9 +10,10 @@ jest.mock('next/router', () => ({
   useRouter: jest.fn(),
 }));
 
+/* eslint-disable @next/next/no-img-element */
 jest.mock('next/image', () => ({
   __esModule: true,
-  default: (props) => <img {...props} />,
+  default: (props) => <img {...props} alt={props.alt || ''} />,
 }));
 
 jest.mock('../../lib/authFetch', () => ({
