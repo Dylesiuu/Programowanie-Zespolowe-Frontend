@@ -41,8 +41,23 @@ const SwipePage = () => {
   }, [created]);
 
   useEffect(() => {
+    if (userContext.user?.location && userContext.user.location.length === 2) {
+      const timeout = setTimeout(() => {
+        setLocation({
+          lat: userContext.user.location[0],
+          lng: userContext.user.location[1],
+        });
+      }, 1000); // 1000 ms = 1 second delay
+
+      return () => clearTimeout(timeout);
+    }
+  }, [userContext.user]);
+
+  useEffect(() => {
     const fetchPets = async () => {
-      if (!location) return;
+      if (!location) {
+        return;
+      }
 
       setIsLoading(true);
       setError(null);
@@ -76,11 +91,18 @@ const SwipePage = () => {
         }
 
         const petData = await response.json();
-        const formattedPets = petData.matchedAnimals.map((animal) => ({
-          ...animal,
-          traits: animal.traits.map((t) => t.text),
-        }));
-        setPets(formattedPets);
+        const formattedPets = Array.isArray(petData.matchedAnimals)
+          ? petData.matchedAnimals.map((animal) => ({
+              ...animal,
+              traits: animal.traits.map((t) => t.text),
+            }))
+          : [];
+
+        setPets(
+          Array.isArray(formattedPets) && formattedPets.length > 0
+            ? formattedPets
+            : []
+        );
         setCurrentIndex(0);
       } catch (error) {
         console.error('Błąd podczas pobierania zwierząt', error);
