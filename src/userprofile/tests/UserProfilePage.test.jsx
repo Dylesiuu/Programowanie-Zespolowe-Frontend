@@ -52,7 +52,7 @@ describe('UserProfilePage', () => {
       name: 'Test User',
       avatar: '/avatar.jpg',
       city: 'Warsaw',
-      about: 'Test about',
+      description: 'Test about',
       traits: [],
       favourites: [],
     };
@@ -65,7 +65,9 @@ describe('UserProfilePage', () => {
     renderWithContext(<UserProfilePage />);
 
     expect(await screen.findByText(mockUserData.name)).toBeInTheDocument();
-    expect(await screen.findByText(mockUserData.about)).toBeInTheDocument();
+    expect(
+      await screen.findByText(mockUserData.description)
+    ).toBeInTheDocument();
   });
 
   it('displays favorite animals when available', async () => {

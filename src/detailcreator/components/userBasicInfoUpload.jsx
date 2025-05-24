@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { UserContext } from '@/context/userContext';
 import { useAuthFetch } from '@/lib/authFetch';
 import Image from 'next/image';
@@ -19,13 +19,44 @@ const UserBasicInfoEditor = () => {
 
   const [avatarData, setAvatarData] = useState({
     file: null,
-    previewUrl: userContext.user?.avatar?.url || '/img/default-avatar.svg',
+    previewUrl: userContext.user?.avatar?.preview || '/img/default-avatar.svg',
     existingPublicId: userContext.user?.avatar?.publicId || '',
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
+
+  useEffect(() => {
+    const fetchLatestUser = async () => {
+      try {
+        const res = await fetchData(`${API_BASE_URL}/user/searchUserById`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${userContext.token}`,
+          },
+          body: JSON.stringify({ id: userContext.user._id }),
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          userContext.setUser(data);
+          setAvatarData((prev) => ({
+            ...prev,
+            previewUrl: data.avatar?.preview || '/img/default-avatar.svg',
+            existingPublicId: data.avatar?.publicId || '',
+          }));
+        } else {
+          console.error('Nie udało się pobrać danych użytkownika');
+        }
+      } catch (err) {
+        console.error('Błąd przy pobieraniu danych użytkownika:', err);
+      }
+    };
+
+    fetchLatestUser();
+  }, []);
 
   const handleTextChange = (e) => {
     const { name, value } = e.target;
@@ -43,40 +74,75 @@ const UserBasicInfoEditor = () => {
     }
   };
 
-  // const handleAvatarUpload = async (photo) => {
-  //   try {
-  //     const response = await fetchData(
-  //       `${API_BASE_URL}/images/${userContext.user.avatar.publicId}`,
-  //       {
-  //         method: 'DELETE',
-  //         headers: {
-  //           'Content-Type': 'application/json',
-  //           Authorization: `Bearer ${userContext.token}`,
-  //         },
-  //       }
-  //     );
-  //     if (!response.ok) console.error('Nie udało się zaktualizować imienia');
-  //
-  //     const data = await response.json();
-  //     console.log(data.message);
-  //
-  //     const formData = new FormData();
-  //     formData.append('files', photo.file);
-  //     const newAvatar = await fetchData(`${API_BASE_URL}/images/uploadUser`, {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //         Authorization: `Bearer ${userContext.token}`,
-  //       },
-  //       body: formData,
-  //     });
-  //     if (!newAvatar.ok) console.error('Nie udało się zaktualizować zdjęcia');
-  //     const newData = await newAvatar.json();
-  //   } catch (error) {
-  //     console.error('Error uploading new avatar:', error);
-  //   }
-  //   return Array.isArray(newData) ? newData[0] : newData;
-  // };
+  const handleAvatarUpload = async (photo) => {
+    try {
+      if (userContext.user?.avatar?.publicId) {
+        const response = await fetchData(`${API_BASE_URL}/images`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${userContext.token}`,
+          },
+          body: JSON.stringify({
+            publicIds: [userContext.user.avatar.publicId],
+          }),
+        });
+        if (!response.ok) {
+          console.error('Nie udało się usunąć poprzedniego avatara');
+        }
+      }
+
+      const formData = new FormData();
+      formData.append('files', photo.file);
+
+      const uploadResponse = await fetch(`${API_BASE_URL}/images/uploadUser`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${userContext.token}`,
+        },
+        body: formData,
+      });
+
+      if (!uploadResponse.ok) {
+        console.error('Nie udało się przesłać nowego avatara');
+        return;
+      }
+
+      const uploadResult = await uploadResponse.json();
+      const avatarInfo = Array.isArray(uploadResult)
+        ? uploadResult[0]
+        : uploadResult;
+
+      const updateResponse = await fetchData(
+        `${API_BASE_URL}/user/updateUserAvatar`,
+        {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${userContext.token}`,
+          },
+          body: JSON.stringify({
+            avatar: {
+              publicId: avatarInfo.publicId,
+              preview: avatarInfo.url,
+            },
+          }),
+        }
+      );
+
+      if (!updateResponse.ok) {
+        console.error('Nie udało się zaktualizować avatara u użytkownika');
+        return;
+      }
+
+      const updatedUser = await updateResponse.json();
+      userContext.setUser(updatedUser.user);
+
+      return avatarInfo;
+    } catch (error) {
+      console.error('Błąd przy aktualizacji avatara:', error);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -85,8 +151,12 @@ const UserBasicInfoEditor = () => {
     setSuccess(false);
 
     try {
-      // if (userContext.user.avatar.preview !== avatarData.previewUrl) {
-      // }
+      if (
+        avatarData.file &&
+        userContext.user?.avatar?.preview !== avatarData.previewUrl
+      ) {
+        await handleAvatarUpload(avatarData);
+      }
 
       if (userContext.user.name !== userInputs.name) {
         const response = await fetchData(`${API_BASE_URL}/user/update-name`, {
@@ -139,6 +209,10 @@ const UserBasicInfoEditor = () => {
       }
 
       setSuccess(true);
+
+      setTimeout(() => {
+        router.push(`/userProfilePage?userId=${userContext.user._id}`);
+      }, 1000);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -155,7 +229,7 @@ const UserBasicInfoEditor = () => {
           </div>
         )}
         {success && (
-          <div className="mb-4 p-3 bg-green-100 text-green-700 rounded">
+          <div className="mb-4 p-3 bg-[#ecd2c0] text-[#C16A2E] rounded">
             Zaktualizowano dane!
           </div>
         )}
@@ -172,8 +246,8 @@ const UserBasicInfoEditor = () => {
           </div>
           <div>
             <input
-              type="file"
               id="avatar"
+              type="file"
               accept="image/*"
               onChange={handleAvatarChange}
               className="hidden"
@@ -187,11 +261,13 @@ const UserBasicInfoEditor = () => {
           </div>
         </div>
 
-        {/* Formularz */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-gray-700 mb-2">Imię</label>
+            <label htmlFor="nameinput" className="block text-gray-700 mb-2">
+              Imię
+            </label>
             <input
+              id="nameinput"
               type="text"
               name="name"
               value={userInputs.name}
@@ -202,8 +278,11 @@ const UserBasicInfoEditor = () => {
           </div>
 
           <div>
-            <label className="block text-gray-700 mb-2">Nazwisko</label>
+            <label htmlFor="lastnameinput" className="block text-gray-700 mb-2">
+              Nazwisko
+            </label>
             <input
+              id="lastnameinput"
               type="text"
               name="lastname"
               value={userInputs.lastname}
@@ -214,8 +293,14 @@ const UserBasicInfoEditor = () => {
           </div>
 
           <div>
-            <label className="block text-gray-700 mb-2">Opis</label>
+            <label
+              htmlFor="descriptioninput"
+              className="block text-gray-700 mb-2"
+            >
+              Opis
+            </label>
             <textarea
+              id="descriptioninput"
               name="description"
               value={userInputs.description}
               onChange={handleTextChange}

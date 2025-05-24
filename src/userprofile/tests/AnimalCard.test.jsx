@@ -10,7 +10,7 @@ describe('AnimalCard', () => {
     gender: 'Samiec',
     age: '3 lata',
     description: 'Przyjazny piesek',
-    traits: [{ _id: '1', name: 'Przyjazny' }],
+    traits: [{ _id: '1', text: 'Przyjazny' }],
     shelter: 'Schronisko Warszawa',
   };
 
@@ -47,7 +47,7 @@ describe('AnimalCard', () => {
 
     expect(await screen.findByText('TAGI')).toBeInTheDocument();
     expect(
-      await screen.findByText(mockAnimal.traits[0].name)
+      await screen.findByText(mockAnimal.traits[0].text)
     ).toBeInTheDocument();
   });
 
