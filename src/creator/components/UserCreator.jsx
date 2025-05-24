@@ -11,7 +11,7 @@ import { useAuthFetch } from '@/lib/authFetch';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-const UserCreator = () => {
+const UserCreator = ({ user }) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedTags, setSelectedTags] = useState([]);
   const [allTraits, setAllTraits] = useState([]);
@@ -27,7 +27,7 @@ const UserCreator = () => {
 
   const confirmSkip = async () => {
     setShowSkipWarning(false);
-    await router.push('/swipePage');
+    await router.push(`/userDetailsCreatorPage?userId=${user._id}`);
   };
 
   const cancelSkip = () => {

@@ -47,9 +47,12 @@ const UserProfilePage = () => {
         setUserData({
           _id: user._id,
           name: user.name,
-          avatar: user.avatar || 'img/default-avatar.svg',
+          avatar:
+            typeof user.avatar === 'string'
+              ? user.avatar
+              : user.avatar?.preview || 'img/default-avatar.svg',
           city: user.city || 'Nie podano',
-          about: user.about || 'Brak opisu',
+          description: user.description || 'Brak opisu',
           tags: user.traits || [],
           favourites: user.favourites || [],
         });
@@ -90,7 +93,7 @@ const UserProfilePage = () => {
       fetchUserData();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userContext.user, userId]);
+  }, [userContext.user, userContext.user?.avatar, userId]);
 
   if (loading) {
     return (
@@ -119,7 +122,7 @@ const UserProfilePage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#FFF0E9] bg-[url('/cats.svg')] bg-repeat bg-[length:150rem_100rem] bg-fixed ">
+    <div className="min-h-screen bg-[#FFF0E9] bg-[url('/cats.svg')] bg-repeat bg-[length:150rem_100rem] bg-fixed p-16">
       <div className="container mx-auto py-8 px-4">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           <div className="lg:col-span-1 space-y-6">
@@ -127,13 +130,13 @@ const UserProfilePage = () => {
               <ProfilePersonalInfo user={userData} />
             </div>
             <div className="bg-[#FFF9F5]/80 rounded-lg shadow-md p-6">
-              <ProfileAbout about={userData.about} />
+              <ProfileAbout description={userData.description} />
             </div>
           </div>
 
           <div className="lg:col-span-2">
             <div className="bg-[#FFF9F5]/80 rounded-lg shadow-md p-6">
-              <h2 className="text-2xl text-[#CE8455] font-bold mb-6">
+              <h2 className="text-2xl text-[#4A4038] font-bold mb-6">
                 Zaserduszkowane zwierzęta
               </h2>
 

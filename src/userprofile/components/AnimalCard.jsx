@@ -189,7 +189,7 @@ const AnimalCard = ({
                 <h3 className="font-semibold text-[#CE8455] text-sm mb-2">
                   OPIS
                 </h3>
-                <p className="text-gray-700 whitespace-pre-line leading-relaxed">
+                <p className="flex-1 overflow-y-auto pr-2 whitespace-pre-line leading-relaxed text-gray-700">
                   {description || 'Brak opisu'}
                 </p>
               </div>

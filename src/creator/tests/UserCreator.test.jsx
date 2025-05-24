@@ -41,7 +41,7 @@ describe('UserCreator', () => {
           token: mockToken,
         }}
       >
-        <UserCreator />
+        <UserCreator user={mockUser} />
       </UserContext.Provider>
     );
   });
@@ -78,14 +78,16 @@ describe('UserCreator', () => {
     ).toBeInTheDocument();
   });
 
-  it('should navigate to swipePage when skip is confirmed', async () => {
+  it('should navigate to userDetailsInfoPage when skip is confirmed', async () => {
     const skipButton = await screen.findByText('Pomiń');
     await userEvent.click(skipButton);
 
     const confirmButton = await screen.findByText('Pomiń i przejdź dalej');
     await userEvent.click(confirmButton);
 
-    expect(mockPush).toHaveBeenCalledWith('/swipePage');
+    expect(mockPush).toHaveBeenCalledWith(
+      `/userDetailsCreatorPage?userId=${mockUser._id}`
+    );
   });
 
   it('should close skip warning when continue is clicked', async () => {

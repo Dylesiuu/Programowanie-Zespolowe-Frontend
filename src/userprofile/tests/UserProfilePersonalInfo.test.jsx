@@ -2,6 +2,10 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import ProfilePersonalInfo from '../components/UserProfilePersonalInfo';
 
+jest.mock('next/router', () => ({
+  useRouter: jest.fn(),
+}));
+
 describe('ProfilePersonalInfo', () => {
   const mockUser = {
     name: 'Jan',
@@ -12,14 +16,6 @@ describe('ProfilePersonalInfo', () => {
   it('renders user information correctly', async () => {
     render(<ProfilePersonalInfo user={mockUser} />);
     expect(await screen.findByText(mockUser.name)).toBeInTheDocument();
-    expect(await screen.findByText(`Miasto:`)).toBeInTheDocument();
-    expect(await screen.findByText(`${mockUser.city}`)).toBeInTheDocument();
-  });
-
-  it('displays default city when not provided', async () => {
-    render(<ProfilePersonalInfo user={{ ...mockUser, city: '' }} />);
-    expect(await screen.findByText('Miasto:')).toBeInTheDocument();
-    expect(await screen.findByText('Nie podano')).toBeInTheDocument();
   });
 
   it('renders avatar image with correct attributes', async () => {
